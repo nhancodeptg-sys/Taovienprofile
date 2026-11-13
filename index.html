@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghép Viền Profile Play Together</title>
+    <title>Ghép & Chỉnh Sửa Viền Profile Play Together</title>
     <style>
         :root {
             --bg-color: #f1f5f9;
@@ -28,25 +28,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         header h1 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: var(--primary);
         }
 
         .main-container {
             display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 25px;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
             width: 100%;
-            max-width: 950px;
+            max-width: 980px;
         }
 
         @media (max-width: 768px) {
@@ -58,7 +58,7 @@
         .preview-section {
             background: var(--card-bg);
             border-radius: 16px;
-            padding: 25px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -76,6 +76,12 @@
             background: #e2e8f0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 4px solid var(--primary);
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .canvas-wrapper:active {
+            cursor: grabbing;
         }
 
         #avatarCanvas {
@@ -90,60 +96,59 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             border: 1px solid var(--border-color);
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         .control-group h3 {
-            font-size: 1rem;
-            margin-bottom: 10px;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
             color: var(--accent);
             border-left: 3px solid var(--accent);
-            padding-left: 8px;
+            padding-left: 6px;
         }
 
-        .frame-list {
+        .control-row {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 6px;
         }
 
-        .frame-item {
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            cursor: pointer;
-            overflow: hidden;
+        .control-row.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .btn-control {
             background: #f8fafc;
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px;
+            font-size: 0.85rem;
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 600;
             transition: all 0.2s;
         }
 
-        .frame-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .frame-item.active {
+        .btn-control:hover {
+            background: #e2e8f0;
             border-color: var(--primary);
-            box-shadow: 0 0 8px rgba(2, 132, 199, 0.4);
-            transform: scale(1.03);
         }
 
         input[type="file"], input[type="text"] {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             background: #f8fafc;
             color: var(--text-color);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             outline: none;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         input[type="text"]:focus {
@@ -152,33 +157,29 @@
 
         .btn {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             border-radius: 8px;
             border: none;
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: #fff;
             font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
+            transition: opacity 0.2s;
         }
 
         .btn:hover {
             opacity: 0.9;
         }
 
-        .btn:active {
-            transform: scale(0.98);
-        }
-
         .btn-download {
             background: linear-gradient(135deg, #10b981, #059669);
-            margin-top: 15px;
-            font-size: 1rem;
+            margin-top: 10px;
+            font-size: 0.95rem;
         }
 
         .sticker-list {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
@@ -186,34 +187,29 @@
             background: #f1f5f9;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 8px 12px;
+            padding: 6px 10px;
             color: var(--text-color);
             cursor: pointer;
-            font-size: 1.1rem;
-            transition: background 0.2s;
-        }
-
-        .sticker-btn:hover {
-            background: #e2e8f0;
+            font-size: 1rem;
         }
 
         .helper-text {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #64748b;
-            margin-top: 4px;
+            margin-bottom: 4px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>✨ Ghép Viền Profile Play Together ✨</h1>
+        <h1>✨ Ghép & Chỉnh Sửa Viền Profile ✨</h1>
     </header>
 
     <div class="main-container">
         <!-- Khung xem trước ảnh -->
         <div class="preview-section">
-            <div class="canvas-wrapper">
+            <div class="canvas-wrapper" id="canvasWrapper">
                 <canvas id="avatarCanvas" width="400" height="400"></canvas>
             </div>
             <button class="btn btn-download" onclick="downloadImage()">💾 Tải Ảnh Thành Quả</button>
@@ -221,30 +217,57 @@
 
         <!-- Bảng điều khiển -->
         <div class="control-section">
-            <!-- 1. Chọn viền -->
+            <!-- 1. Tải ảnh & Link -->
             <div class="control-group">
-                <h3>1. Chọn Viền Profile</h3>
-                <div class="frame-list" id="frameList"></div>
-            </div>
-
-            <!-- 2. Tải hoặc dán link ảnh -->
-            <div class="control-group">
-                <h3>2. Tải Ảnh / Dán Link</h3>
+                <h3>1. Ảnh Avatar Của Bạn</h3>
                 <input type="file" id="uploadImage" accept="image/*" onchange="handleFileUpload(event)">
-                <div class="helper-text" style="margin-bottom: 6px;">Hoặc dán link ảnh trực tiếp:</div>
+                <div class="helper-text">Hoặc dán link ảnh trực tiếp:</div>
                 <input type="text" id="imageUrlInput" placeholder="https://example.com/avatar.jpg">
-                <button class="btn" onclick="handleImageUrl()">Áp Dụng Link Ảnh</button>
+                <button class="btn" onclick="handleImageUrl()" style="padding: 6px; font-size: 0.85rem;">Áp Dụng Link Ảnh</button>
             </div>
 
-            <!-- 3. Thêm Sticker -->
+            <!-- 2. Điều chỉnh Avatar -->
             <div class="control-group">
-                <h3>3. Thêm Sticker Nhanh</h3>
-                <div class="sticker-list">
+                <h3>2. Chỉnh Sửa Avatar (Zoom & Vị Trí)</h3>
+                <div class="helper-text">💡 Chạm & kéo trực tiếp ảnh trên khung tròn để dịch chuyển</div>
+                <div class="control-row two-col">
+                    <button class="btn-control" onclick="adjustAvatar('zoom', 1.05)">🔍 Phóng to (+)</button>
+                    <button class="btn-control" onclick="adjustAvatar('zoom', 0.95)">🔎 Thu nhỏ (-)</button>
+                </div>
+                <div class="control-row">
+                    <button class="btn-control" onclick="adjustAvatar('x', -10)">⬅️ Trái</button>
+                    <button class="btn-control" onclick="adjustAvatar('y', -10)">⬆️ Lên</button>
+                    <button class="btn-control" onclick="adjustAvatar('y', 10)">⬇️ Xuống</button>
+                    <button class="btn-control" onclick="adjustAvatar('x', 10)">➡️ Phải</button>
+                </div>
+            </div>
+
+            <!-- 3. Điều chỉnh Viền -->
+            <div class="control-group">
+                <h3>3. Chỉnh Sửa Viền Profile</h3>
+                <div class="helper-text">🔒 Viền cố định chuẩn tâm tuyệt đối, không bị dịch chuyển</div>
+                <div class="control-row two-col">
+                    <button class="btn-control" onclick="adjustFrame('zoom', 1.02)">🔍 Viền To (+)</button>
+                    <button class="btn-control" onclick="adjustFrame('zoom', 0.98)">🔎 Viền Nhỏ (-)</button>
+                </div>
+            </div>
+
+            <!-- 4. Thêm Sticker & Điều khiển -->
+            <div class="control-group">
+                <h3>4. Sticker Trang Trí</h3>
+                <div class="helper-text">💡 Chạm giữ & kéo trực tiếp sticker để di chuyển</div>
+                <div class="sticker-list" style="margin-bottom: 8px;">
                     <button class="sticker-btn" onclick="addSticker('⭐')">⭐</button>
                     <button class="sticker-btn" onclick="addSticker('👑')">👑</button>
                     <button class="sticker-btn" onclick="addSticker('💖')">💖</button>
                     <button class="sticker-btn" onclick="addSticker('🔥')">🔥</button>
-                    <button class="sticker-btn" onclick="clearStickers()">Xóa Sticker</button>
+                    <button class="sticker-btn" onclick="clearStickers()" style="font-size: 0.8rem; background: #fee2e2; color: #dc2626;">Xóa hết</button>
+                </div>
+                <div class="control-row">
+                    <button class="btn-control" onclick="moveSticker('x', -10)">⬅️</button>
+                    <button class="btn-control" onclick="moveSticker('y', -10)">⬆️</button>
+                    <button class="btn-control" onclick="moveSticker('y', 10)">⬇️</button>
+                    <button class="btn-control" onclick="moveSticker('x', 10)">➡️</button>
                 </div>
             </div>
         </div>
@@ -255,91 +278,177 @@
         const ctx = canvas.getContext('2d');
 
         let userImage = null;
-        let currentFrameIndex = 0;
-        let activeStickers = [];
+        const frameUrl = "https://cdn.upanhlaylink.com/i/aDFs1RJv.png";
+        let loadedFrame = null;
 
-        const frameUrls = [
-            "https://cdn.upanhlaylink.com/i/aDFs1RJv.png",
-            "https://cdn.upanhlaylink.com/i/NtA6Z43M.png",
-            "https://cdn.upanhlaylink.com/i/4k9CRIBy.png"
-        ];
+        // Thông số vị trí & kích thước Avatar
+        let avatarState = { scale: 1.0, x: 0, y: 0 };
+        // Thông số Viền (cố định tuyệt đối không dịch chuyển)
+        let frameState = { scale: 1.16 };
 
-        let loadedFrames = [];
+        // Danh sách Sticker
+        let stickers = [];
+        let selectedStickerIndex = null;
 
-        const defaultAvatar = new Image();
-        defaultAvatar.crossOrigin = "anonymous";
-        defaultAvatar.src = "https://cdn.upanhlaylink.com/i/aDFs1RJv.png";
-
-        function preloadFrames(callback) {
-            let loadedCount = 0;
-            frameUrls.forEach((url, index) => {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                img.onload = () => {
-                    loadedFrames[index] = img;
-                    loadedCount++;
-                    if (loadedCount === frameUrls.length) {
-                        if (callback) callback();
-                    }
-                };
-                img.src = url;
-            });
-        }
-
-        function initFrameSelector() {
-            const listEl = document.getElementById('frameList');
-            frameUrls.forEach((url, index) => {
-                const item = document.createElement('div');
-                item.className = `frame-item ${index === 0 ? 'active' : ''}`;
-                
-                const imgThumb = document.createElement('img');
-                imgThumb.src = url;
-                item.appendChild(imgThumb);
-
-                item.onclick = () => {
-                    document.querySelectorAll('.frame-item').forEach(el => el.classList.remove('active'));
-                    item.classList.add('active');
-                    currentFrameIndex = index;
-                    redrawCanvas();
-                };
-                listEl.appendChild(item);
-            });
+        function preloadFrame(callback) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => {
+                loadedFrame = img;
+                if (callback) callback();
+            };
+            img.src = frameUrl;
         }
 
         function redrawCanvas() {
-            // Xóa sạch toàn bộ khung canvas trước khi vẽ mới
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 1. Vẽ ảnh avatar người dùng (hoặc ảnh mặc định) vừa khít hình tròn
-            const imgToDraw = userImage || defaultAvatar;
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(200, 200, 200, 0, Math.PI * 2);
-            ctx.clip();
+            // 1. Vẽ Avatar (nếu người dùng chưa tải ảnh thì để trống hoặc nền xám nhạt)
+            if (userImage) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(200, 200, 200, 0, Math.PI * 2);
+                ctx.clip();
 
-            let hRatio = canvas.width / imgToDraw.width;
-            let vRatio = canvas.height / imgToDraw.height;
-            let ratio = Math.max(hRatio, vRatio);
-            let centerShiftX = (canvas.width - imgToDraw.width * ratio) / 2;
-            let centerShiftY = (canvas.height - imgToDraw.height * ratio) / 2;
+                let baseRatio = Math.max(canvas.width / userImage.width, canvas.height / userImage.height);
+                let currentW = userImage.width * baseRatio * avatarState.scale;
+                let currentH = userImage.height * baseRatio * avatarState.scale;
+                let currentX = (canvas.width - currentW) / 2 + avatarState.x;
+                let currentY = (canvas.height - currentH) / 2 + avatarState.y;
 
-            ctx.drawImage(imgToDraw, 0, 0, imgToDraw.width, imgToDraw.height, 
-                          centerShiftX, centerShiftY, imgToDraw.width * ratio, imgToDraw.height * ratio);
-            ctx.restore();
-
-            // 2. Vẽ viền profile hiện tại chuẩn tâm tuyệt đối, phủ kín kích thước canvas
-            if (loadedFrames[currentFrameIndex]) {
-                const frameImg = loadedFrames[currentFrameIndex];
-                ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+                ctx.drawImage(userImage, currentX, currentY, currentW, currentH);
+                ctx.restore();
+            } else {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(200, 200, 200, 0, Math.PI * 2);
+                ctx.clip();
+                ctx.fillStyle = "#e2e8f0";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#64748b";
+                ctx.font = "18px sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("Chưa có ảnh avatar", 200, 205);
+                ctx.restore();
             }
 
-            // 3. Vẽ các Sticker
-            activeStickers.forEach(sticker => {
-                ctx.font = `${sticker.size}px sans-serif`;
-                ctx.fillText(sticker.text, sticker.x, sticker.y);
+            // 2. Vẽ Viền Profile (Cố định chuẩn tâm tuyệt đối)
+            if (loadedFrame) {
+                ctx.save();
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.scale(frameState.scale, frameState.scale);
+                ctx.drawImage(loadedFrame, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+                ctx.restore();
+            }
+
+            // 3. Vẽ Stickers
+            stickers.forEach((st, idx) => {
+                ctx.font = `${st.size}px sans-serif`;
+                ctx.fillText(st.text, st.x, st.y);
+                if (idx === selectedStickerIndex) {
+                    ctx.strokeStyle = '#0284c7';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(st.x - 5, st.y - st.size + 5, st.size * 0.8, st.size);
+                }
             });
         }
+
+        // Điều khiển Avatar
+        function adjustAvatar(type, val) {
+            if (type === 'zoom') {
+                avatarState.scale *= val;
+            } else if (type === 'x') {
+                avatarState.x += val;
+            } else if (type === 'y') {
+                avatarState.y += val;
+            }
+            redrawCanvas();
+        }
+
+        // Điều chỉnh Viền (Chỉ phóng to/nhỏ)
+        function adjustFrame(type, val) {
+            if (type === 'zoom') {
+                frameState.scale *= val;
+            }
+            redrawCanvas();
+        }
+
+        // Thêm sticker
+        function addSticker(emoji) {
+            stickers.push({
+                text: emoji,
+                x: 160 + Math.random() * 40,
+                y: 200 + Math.random() * 40,
+                size: 45
+            });
+            selectedStickerIndex = stickers.length - 1;
+            redrawCanvas();
+        }
+
+        function clearStickers() {
+            stickers = [];
+            selectedStickerIndex = null;
+            redrawCanvas();
+        }
+
+        function moveSticker(axis, val) {
+            if (selectedStickerIndex !== null && stickers[selectedStickerIndex]) {
+                if (axis === 'x') stickers[selectedStickerIndex].x += val;
+                if (axis === 'y') stickers[selectedStickerIndex].y += val;
+                redrawCanvas();
+            }
+        }
+
+        // Tương tác chạm, kéo thả Avatar hoặc Sticker (Viền bị khóa cố định không thể dịch chuyển)
+        const wrapper = document.getElementById('canvasWrapper');
+        let isDragging = false;
+        let startX, startY;
+
+        wrapper.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            
+            const rect = canvas.getBoundingClientRect();
+            const clickX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const clickY = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+            selectedStickerIndex = null;
+            for (let i = stickers.length - 1; i >= 0; i--) {
+                let st = stickers[i];
+                if (clickX >= st.x - 10 && clickX <= st.x + 40 && clickY >= st.y - 40 && clickY <= st.y + 10) {
+                    selectedStickerIndex = i;
+                    break;
+                }
+            }
+            redrawCanvas();
+        });
+
+        window.addEventListener('pointermove', (e) => {
+            if (!isDragging) return;
+            let dx = e.clientX - startX;
+            let dy = e.clientY - startY;
+            startX = e.clientX;
+            startY = e.clientY;
+
+            let scaleFactor = canvas.width / wrapper.clientWidth;
+
+            if (selectedStickerIndex !== null && stickers[selectedStickerIndex]) {
+                stickers[selectedStickerIndex].x += dx * scaleFactor;
+                stickers[selectedStickerIndex].y += dy * scaleFactor;
+            } else {
+                avatarState.x += dx * 0.8;
+                avatarState.y += dy * 0.8;
+            }
+            redrawCanvas();
+        });
+
+        window.addEventListener('pointerup', () => {
+            isDragging = false;
+        });
 
         function handleFileUpload(event) {
             const file = event.target.files[0];
@@ -349,6 +458,7 @@
                     const img = new Image();
                     img.onload = function() {
                         userImage = img;
+                        avatarState = { scale: 1.0, x: 0, y: 0 };
                         redrawCanvas();
                     }
                     img.src = e.target.result;
@@ -360,46 +470,38 @@
         function handleImageUrl() {
             const url = document.getElementById('imageUrlInput').value.trim();
             if (!url) {
-                alert('Vui lòng nhập đường dẫn (URL) ảnh hợp lệ!');
+                alert('Vui lòng nhập đường dẫn ảnh hợp lệ!');
                 return;
             }
             const img = new Image();
             img.crossOrigin = "anonymous";
             img.onload = function() {
                 userImage = img;
+                avatarState = { scale: 1.0, x: 0, y: 0 };
                 redrawCanvas();
             };
             img.onerror = function() {
-                alert('Không thể tải ảnh từ link này. Hãy chắc chắn link có đuôi ảnh (.jpg, .png)!');
+                alert('Không thể tải ảnh từ link này!');
             };
             img.src = url;
         }
 
-        function addSticker(emoji) {
-            activeStickers.push({
-                text: emoji,
-                x: 60 + Math.random() * 200,
-                y: 100 + Math.random() * 100,
-                size: 50
-            });
-            redrawCanvas();
-        }
-
-        function clearStickers() {
-            activeStickers = [];
-            redrawCanvas();
-        }
-
         function downloadImage() {
+            let tempIndex = selectedStickerIndex;
+            selectedStickerIndex = null;
+            redrawCanvas();
+
             const link = document.createElement('a');
             link.download = 'play-together-profile.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+
+            selectedStickerIndex = tempIndex;
+            redrawCanvas();
         }
 
         window.onload = () => {
-            initFrameSelector();
-            preloadFrames(() => {
+            preloadFrame(() => {
                 redrawCanvas();
             });
         };
