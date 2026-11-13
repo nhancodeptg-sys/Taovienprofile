@@ -3,487 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Viền Profile Trực Quan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Ghép Viền Profile Play Together</title>
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --accent: #ec4899;
-            --bg-gradient: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --text-main: #1e1b4b;
-            --text-muted: #6b7280;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --primary: #0284c7;
+            --accent: #6366f1;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: var(--bg-gradient);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
         }
 
-        .container {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            padding: 25px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.12);
-            max-width: 500px;
-            width: 100%;
+        header {
             text-align: center;
+            margin-bottom: 25px;
         }
 
-        h1 {
-            margin-bottom: 4px;
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
         }
 
-        .subtitle {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 15px;
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 25px;
+            width: 100%;
+            max-width: 950px;
         }
 
-        /* Khung Preview tương tác trực tiếp */
-        .preview-wrapper {
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .preview-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .canvas-wrapper {
             position: relative;
-            width: 250px;
-            height: 250px;
-            margin: 0 auto 15px;
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            background: #ffffff;
             overflow: hidden;
-            border: 4px solid #fff;
-            cursor: grab;
+            background: #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 4px solid var(--primary);
         }
 
-        .preview-wrapper:active {
-            cursor: grabbing;
-        }
-
-        #canvas {
+        #avatarCanvas {
             width: 100%;
             height: 100%;
             display: block;
-            pointer-events: none;
         }
 
-        .placeholder-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(243, 244, 246, 0.95);
+        .control-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 600;
-            pointer-events: none;
-            gap: 6px;
+            gap: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
         }
 
-        .placeholder-overlay span {
-            font-size: 28px;
+        .control-group h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+            border-left: 3px solid var(--accent);
+            padding-left: 8px;
         }
 
-        /* Hướng dẫn thao tác trực tiếp */
-        .interaction-guide {
-            background: #eef2ff;
-            border: 1px dashed #c7d2fe;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 12px;
-            color: #3730a3;
-            margin-bottom: 15px;
-            text-align: left;
-            line-height: 1.4;
-        }
-
-        .interaction-guide b {
-            color: var(--primary);
-        }
-
-        /* Nút tải ảnh */
-        .upload-group {
-            margin-bottom: 15px;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        .upload-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, var(--primary), #4338ca);
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 14px;
-            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
-            transition: all 0.2s;
-        }
-
-        .upload-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        /* Chọn viền hiện sẵn */
-        .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            text-align: left;
-            margin-bottom: 6px;
-            color: var(--text-main);
-        }
-
-        .border-presets {
-            display: flex;
+        .frame-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-bottom: 15px;
         }
 
-        .preset-btn {
-            flex: 1;
-            height: 65px;
-            border: 2px solid #e2e8f0;
-            background: #fff;
+        .frame-item {
+            border: 2px solid var(--border-color);
             border-radius: 10px;
             cursor: pointer;
             overflow: hidden;
+            background: #f8fafc;
+            aspect-ratio: 1;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 4px;
+            justify-content: center;
             transition: all 0.2s;
         }
 
-        .preset-btn img {
+        .frame-item img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            pointer-events: none;
+            object-fit: cover;
         }
 
-        .preset-btn.active {
+        .frame-item.active {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-            background: #eef2ff;
+            box-shadow: 0 0 8px rgba(2, 132, 199, 0.4);
+            transform: scale(1.03);
         }
 
-        /* Chế độ chọn thao tác nhanh (Đang chỉnh Ảnh hay Viền) */
-        .mode-selector {
-            display: flex;
-            background: #e2e8f0;
-            padding: 3px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .mode-btn {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            background: transparent;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .mode-btn.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        /* Nút tải về */
-        .download-btn {
-            display: none;
+        input[type="file"], input[type="text"] {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
-            transition: all 0.2s;
-            text-decoration: none;
-            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #f8fafc;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            outline: none;
+            margin-bottom: 8px;
         }
 
-        .download-btn:hover {
-            transform: translateY(-1px);
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #10b981, #059669);
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        .sticker-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sticker-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.2s;
+        }
+
+        .sticker-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .helper-text {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 4px;
         }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <div class="container">
-        <h1>Tạo Viền Profile</h1>
-        <div class="subtitle">Tương tác trực tiếp trên khung hình</div>
-        
-        <!-- Khung Preview tương tác trực tiếp -->
-        <div class="preview-wrapper" id="previewWrapper">
-            <canvas id="canvas" width="600" height="600"></canvas>
-            <div class="placeholder-overlay" id="placeholder">
-                <span>🖼️</span>
-                Tải ảnh lên để bắt đầu
+    <header>
+        <h1>✨ Ghép Viền Profile Play Together ✨</h1>
+    </header>
+
+    <div class="main-container">
+        <!-- Khung xem trước ảnh -->
+        <div class="preview-section">
+            <div class="canvas-wrapper">
+                <canvas id="avatarCanvas" width="400" height="400"></canvas>
             </div>
+            <button class="btn btn-download" onclick="downloadImage()">💾 Tải Ảnh Thành Quả</button>
         </div>
 
-        <!-- Hướng dẫn nhanh -->
-        <div class="interaction-guide">
-            ✨ <b>Mẹo thao tác trực tiếp:</b><br>
-            - <b>Kéo thả chuột</b> trực tiếp vào khung tròn để di chuyển.<br>
-            - <b>Lăn chuột (Scroll)</b> lên/xuống để phóng to/thu nhỏ.<br>
-            - Bật giữ phím <b>Shift + Kéo chuột</b> để dịch chuyển khung viền.
-        </div>
-
-        <div class="controls">
-            <!-- Chọn chế độ đang thao tác trực tiếp -->
-            <div class="mode-selector">
-                <button class="mode-btn active" id="btnModeImg" onclick="switchMode('img')">Đang chỉnh: 🖼️ Ảnh</button>
-                <button class="mode-btn" id="btnModeBorder" onclick="switchMode('border')">Đang chỉnh: 💍 Viền</button>
+        <!-- Bảng điều khiển -->
+        <div class="control-section">
+            <!-- 1. Chọn viền -->
+            <div class="control-group">
+                <h3>1. Chọn Viền Profile</h3>
+                <div class="frame-list" id="frameList"></div>
             </div>
 
-            <!-- Nút tải ảnh -->
-            <div class="upload-group">
-                <label for="imageUpload" class="upload-btn" id="uploadLabel">
-                    📁 Chọn ảnh đại diện của bạn
-                </label>
-                <input type="file" id="imageUpload" accept="image/*">
+            <!-- 2. Tải hoặc dán link ảnh -->
+            <div class="control-group">
+                <h3>2. Tải Ảnh / Dán Link</h3>
+                <input type="file" id="uploadImage" accept="image/*" onchange="handleFileUpload(event)">
+                <div class="helper-text" style="margin-bottom: 6px;">Hoặc dán link ảnh trực tiếp:</div>
+                <input type="text" id="imageUrlInput" placeholder="https://example.com/avatar.jpg">
+                <button class="btn" onclick="handleImageUrl()">Áp Dụng Link Ảnh</button>
             </div>
 
-            <!-- Chọn kiểu viền -->
-            <div class="section-group">
-                <div class="section-title">✨ Chọn khung viền mẫu</div>
-                <div class="border-presets">
-                    <button class="preset-btn active" onclick="setPreset(0)">
-                        <img src="https://cdn.upanhlaylink.com/i/Rxd53pjZ.png" alt="Viền 1">
-                    </button>
-                    <button class="preset-btn" onclick="setPreset(1)">
-                        <img src="https://cdn.upanhlaylink.com/i/iKLieQle.png" alt="Viền 2">
-                    </button>
+            <!-- 3. Thêm Sticker -->
+            <div class="control-group">
+                <h3>3. Thêm Sticker Nhanh</h3>
+                <div class="sticker-list">
+                    <button class="sticker-btn" onclick="addSticker('⭐')">⭐</button>
+                    <button class="sticker-btn" onclick="addSticker('👑')">👑</button>
+                    <button class="sticker-btn" onclick="addSticker('💖')">💖</button>
+                    <button class="sticker-btn" onclick="addSticker('🔥')">🔥</button>
+                    <button class="sticker-btn" onclick="clearStickers()">Xóa Sticker</button>
                 </div>
             </div>
         </div>
-
-        <!-- Nút tải về -->
-        <a id="downloadBtn" class="download-btn" download="profile-avatar.png">💾 Tải ảnh xuống ngay</a>
     </div>
 
     <script>
-        const imageUpload = document.getElementById('imageUpload');
-        const uploadLabel = document.getElementById('uploadLabel');
-        const canvas = document.getElementById('canvas');
+        const canvas = document.getElementById('avatarCanvas');
         const ctx = canvas.getContext('2d');
-        const placeholder = document.getElementById('placeholder');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const previewWrapper = document.getElementById('previewWrapper');
-
-        const btnModeImg = document.getElementById('btnModeImg');
-        const btnModeBorder = document.getElementById('btnModeBorder');
 
         let userImage = null;
-        let selectedBorderIndex = 0;
-        let editMode = 'img'; // 'img' hoặc 'border'
+        let currentFrameIndex = 0;
+        let activeStickers = [];
 
-        // Tọa độ & thông số phóng to
-        let imgOffsetX = 0, imgOffsetY = 0, imgScale = 1.0;
-        let borderOffsetX = 0, borderOffsetY = 0, borderScale = 1.0;
-
-        let isDragging = false;
-        let startX = 0, startY = 0;
-
-        const borderSources = [
-            "https://cdn.upanhlaylink.com/i/Rxd53pjZ.png",
-            "https://cdn.upanhlaylink.com/i/iKLieQle.png"
+        const frameUrls = [
+            "https://cdn.upanhlaylink.com/i/aDFs1RJv.png",
+            "https://cdn.upanhlaylink.com/i/NtA6Z43M.png",
+            "https://cdn.upanhlaylink.com/i/4k9CRIBy.png"
         ];
 
-        const borderImages = [];
-        borderSources.forEach((src, index) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.src = src;
-            borderImages[index] = img;
-        });
+        let loadedFrames = [];
 
-        // Chuyển chế độ chỉnh sửa nhanh
-        function switchMode(mode) {
-            editMode = mode;
-            if (mode === 'img') {
-                btnModeImg.classList.add('active');
-                btnModeBorder.classList.remove('active');
-            } else {
-                btnModeBorder.classList.add('active');
-                btnModeImg.classList.remove('active');
-            }
+        const defaultAvatar = new Image();
+        defaultAvatar.crossOrigin = "anonymous";
+        defaultAvatar.src = "https://cdn.upanhlaylink.com/i/aDFs1RJv.png";
+
+        function preloadFrames(callback) {
+            let loadedCount = 0;
+            frameUrls.forEach((url, index) => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    loadedFrames[index] = img;
+                    loadedCount++;
+                    if (loadedCount === frameUrls.length) {
+                        if (callback) callback();
+                    }
+                };
+                img.src = url;
+            });
         }
 
-        // Chọn ảnh
-        imageUpload.addEventListener('change', function(e) {
-            const file = e.target.files[0];
+        function initFrameSelector() {
+            const listEl = document.getElementById('frameList');
+            frameUrls.forEach((url, index) => {
+                const item = document.createElement('div');
+                item.className = `frame-item ${index === 0 ? 'active' : ''}`;
+                
+                const imgThumb = document.createElement('img');
+                imgThumb.src = url;
+                item.appendChild(imgThumb);
+
+                item.onclick = () => {
+                    document.querySelectorAll('.frame-item').forEach(el => el.classList.remove('active'));
+                    item.classList.add('active');
+                    currentFrameIndex = index;
+                    redrawCanvas();
+                };
+                listEl.appendChild(item);
+            });
+        }
+
+        function redrawCanvas() {
+            // Xóa sạch toàn bộ khung canvas trước khi vẽ mới
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Vẽ ảnh avatar người dùng (hoặc ảnh mặc định) vừa khít hình tròn
+            const imgToDraw = userImage || defaultAvatar;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(200, 200, 200, 0, Math.PI * 2);
+            ctx.clip();
+
+            let hRatio = canvas.width / imgToDraw.width;
+            let vRatio = canvas.height / imgToDraw.height;
+            let ratio = Math.max(hRatio, vRatio);
+            let centerShiftX = (canvas.width - imgToDraw.width * ratio) / 2;
+            let centerShiftY = (canvas.height - imgToDraw.height * ratio) / 2;
+
+            ctx.drawImage(imgToDraw, 0, 0, imgToDraw.width, imgToDraw.height, 
+                          centerShiftX, centerShiftY, imgToDraw.width * ratio, imgToDraw.height * ratio);
+            ctx.restore();
+
+            // 2. Vẽ viền profile hiện tại chuẩn tâm tuyệt đối, phủ kín kích thước canvas
+            if (loadedFrames[currentFrameIndex]) {
+                const frameImg = loadedFrames[currentFrameIndex];
+                ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+            }
+
+            // 3. Vẽ các Sticker
+            activeStickers.forEach(sticker => {
+                ctx.font = `${sticker.size}px sans-serif`;
+                ctx.fillText(sticker.text, sticker.x, sticker.y);
+            });
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
                         userImage = img;
-                        placeholder.style.display = 'none';
-                        uploadLabel.innerHTML = '📁 Đổi ảnh khác';
-                        downloadBtn.style.display = 'block';
-
-                        // Reset mặc định
-                        imgScale = 1.0; imgOffsetX = 0; imgOffsetY = 0;
-                        borderScale = 1.0; borderOffsetX = 0; borderOffsetY = 0;
-
-                        drawImage();
+                        redrawCanvas();
                     }
-                    img.src = event.target.result;
+                    img.src = e.target.result;
                 }
                 reader.readAsDataURL(file);
             }
-        });
+        }
 
-        // Chọn viền mẫu
-        function setPreset(index) {
-            selectedBorderIndex = index;
-            document.querySelectorAll('.preset-btn').forEach((btn, idx) => {
-                if (idx === index) btn.classList.add('active');
-                else btn.classList.remove('active');
+        function handleImageUrl() {
+            const url = document.getElementById('imageUrlInput').value.trim();
+            if (!url) {
+                alert('Vui lòng nhập đường dẫn (URL) ảnh hợp lệ!');
+                return;
+            }
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function() {
+                userImage = img;
+                redrawCanvas();
+            };
+            img.onerror = function() {
+                alert('Không thể tải ảnh từ link này. Hãy chắc chắn link có đuôi ảnh (.jpg, .png)!');
+            };
+            img.src = url;
+        }
+
+        function addSticker(emoji) {
+            activeStickers.push({
+                text: emoji,
+                x: 60 + Math.random() * 200,
+                y: 100 + Math.random() * 100,
+                size: 50
             });
-            if (userImage) drawImage();
+            redrawCanvas();
         }
 
-        // Thao tác Kéo thả trực tiếp chuột trên khung Preview
-        previewWrapper.addEventListener('mousedown', (e) => {
-            if (!userImage) return;
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging || !userImage) return;
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            startX = e.clientX;
-            startY = e.clientY;
-
-            const sensitivity = 1.8; // Độ nhạy khi kéo
-
-            // Nếu giữ phím Shift hoặc đang ở chế độ chỉnh viền thì dịch viền
-            if (e.shiftKey || editMode === 'border') {
-                borderOffsetX += dx * sensitivity;
-                borderOffsetY += dy * sensitivity;
-            } else {
-                imgOffsetX += dx * sensitivity;
-                imgOffsetY += dy * sensitivity;
-            }
-
-            drawImage();
-        });
-
-        window.addEventListener('mouseup', () => { isDragging = false; });
-
-        // Phóng to / Thu nhỏ bằng con lăn chuột (Scroll) trực tiếp trên khung ảnh
-        previewWrapper.addEventListener('wheel', (e) => {
-            if (!userImage) return;
-            e.preventDefault();
-
-            const zoomSpeed = 0.05;
-            if (e.deltaY < 0) {
-                // Lăn lên -> Phóng to
-                if (editMode === 'img') imgScale = Math.min(imgScale + zoomSpeed, 2.5);
-                else borderScale = Math.min(borderScale + zoomSpeed, 1.5);
-            } else {
-                // Lăn xuống -> Thu nhỏ
-                if (editMode === 'img') imgScale = Math.max(imgScale - zoomSpeed, 1.0);
-                else borderScale = Math.max(borderScale - zoomSpeed, 1.0);
-            }
-
-            drawImage();
-        }, { passive: false });
-
-        // Vẽ Canvas nét chuẩn
-        function drawImage() {
-            const width = canvas.width;
-            const height = canvas.height;
-
-            ctx.clearRect(0, 0, width, height);
-
-            if (!userImage) return;
-
-            // 1. Vẽ Ảnh cá nhân (Hình tròn)
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(width / 2, height / 2, width / 2, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.clip();
-
-            const imgW = userImage.width;
-            const imgH = userImage.height;
-            const baseSize = Math.min(imgW, imgH);
-            
-            const adjustedSize = baseSize / imgScale;
-            const startCropX = (imgW - adjustedSize) / 2 - imgOffsetX;
-            const startCropY = (imgH - adjustedSize) / 2 - imgOffsetY;
-
-            ctx.drawImage(userImage, startCropX, startCropY, adjustedSize, adjustedSize, 0, 0, width, height);
-            ctx.restore();
-
-            // 2. Vẽ Khung Viền đè lên trên
-            const borderImg = borderImages[selectedBorderIndex];
-            if (borderImg && borderImg.complete) {
-                ctx.save();
-                const bWidth = width * borderScale;
-                const bHeight = height * borderScale;
-                const bX = (width - bWidth) / 2 + borderOffsetX;
-                const bY = (height - bHeight) / 2 + borderOffsetY;
-
-                ctx.drawImage(borderImg, bX, bY, bWidth, bHeight);
-                ctx.restore();
-            }
-
-            // Cập nhật link tải
-            downloadBtn.href = canvas.toDataURL('image/png');
+        function clearStickers() {
+            activeStickers = [];
+            redrawCanvas();
         }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'play-together-profile.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        window.onload = () => {
+            initFrameSelector();
+            preloadFrames(() => {
+                redrawCanvas();
+            });
+        };
     </script>
 </body>
 </html>
