@@ -790,11 +790,11 @@
             }));
 
             currentFileName = fileName;
-            fileStatus.innerHTML = Đã nạp tệp: <strong>${escapeHtml(fileName)}</strong> (${rawData.length.toLocaleString()} mục) • Tự động lưu bộ nhớ đệm.;
+            fileStatus.innerHTML = `Đã nạp tệp: <strong>${escapeHtml(fileName)}</strong> (${rawData.length.toLocaleString()} mục) • Tự động lưu bộ nhớ đệm.`;
             currentPage = 1;
             applyFilters();
             saveToDB();
-            showToast(Đã nạp thành công ${rawData.length.toLocaleString()} mục!);
+            showToast(`Đã nạp thành công ${rawData.length.toLocaleString()} mục!`);
         } catch (err) {
             alert("Lỗi đọc tệp JSON: " + err.message);
         }
@@ -830,7 +830,7 @@
         rawData = DEFAULT_DATA.map(x => ({ ...x, _edited: false }));
         originalRootObj = null;
         currentFileName = "StringTable_vi.json";
-        fileStatus.innerHTML = Đang dùng dữ liệu mẫu • Hỗ trợ cấu trúc <code>m_TableData</code> hoặc mảng JSON trực tiếp.;
+        fileStatus.innerHTML = `Đang dùng dữ liệu mẫu • Hỗ trợ cấu trúc <code>m_TableData</code> hoặc mảng JSON trực tiếp.`;
         currentPage = 1;
         applyFilters();
         showToast("Đã xóa bộ nhớ đệm!");
@@ -915,7 +915,7 @@
         const safeText = escapeHtml(text);
         if (!keyword) return safeText;
         try {
-            const pattern = useRegex ? new RegExp((${keyword}), 'gi') : new RegExp((${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}), 'gi');
+            const pattern = useRegex ? new RegExp(`(${keyword})`, 'gi') : new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
             return safeText.replace(pattern, '<mark>$1</mark>');
         } catch { return safeText; }
     }
@@ -929,13 +929,13 @@
         const pageItems = filteredData.slice(start, start + rowsPerPage);
 
         const editedTotal = rawData.filter(x => x._edited).length;
-        resultCount.textContent = Hiển thị: ${filteredData.length.toLocaleString()} / ${rawData.length.toLocaleString()} mục;
-        editedCount.textContent = editedTotal > 0 ? • Đã sửa: ${editedTotal} mục : '';
+        resultCount.textContent = `Hiển thị: ${filteredData.length.toLocaleString()} / ${rawData.length.toLocaleString()} mục`;
+        editedCount.textContent = editedTotal > 0 ? `• Đã sửa: ${editedTotal} mục` : '';
 
-        pageInfo.textContent = Trang ${currentPage} / ${totalPages};
+        pageInfo.textContent = `Trang ${currentPage} / ${totalPages}`;
         pageJumpInput.value = currentPage;
         pageJumpInput.max = totalPages;
-        totalPagesText.textContent = / ${totalPages};
+        totalPagesText.textContent = `/ ${totalPages}`;
 
         document.getElementById('firstBtn').disabled = currentPage === 1;
         document.getElementById('prevBtn').disabled = currentPage === 1;
@@ -943,7 +943,7 @@
         document.getElementById('lastBtn').disabled = currentPage === totalPages;
 
         if (pageItems.length === 0) {
-            tableBody.innerHTML = <tr><td colspan="4" style="text-align:center; padding: 36px; color: var(--text-muted);">Không tìm thấy kết quả phù hợp.</td></tr>;
+            tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 36px; color: var(--text-muted);">Không tìm thấy kết quả phù hợp.</td></tr>`;
             return;
         }
 
@@ -1004,20 +1004,20 @@
             const copyIdBtn = document.createElement('button');
             copyIdBtn.className = 'btn-xs';
             copyIdBtn.textContent = 'Copy ID';
-            copyIdBtn.onclick = () => copyToClipboard(item.m_Id, Đã chép ID: ${item.m_Id});
+            copyIdBtn.onclick = () => copyToClipboard(item.m_Id, `Đã chép ID: ${item.m_Id}`);
 
             const copyPairBtn = document.createElement('button');
             copyPairBtn.className = 'btn-xs';
             copyPairBtn.title = 'Sao chép cả ID và Nội dung';
             copyPairBtn.textContent = '📋';
-            copyPairBtn.onclick = () => copyToClipboard(${item.m_Id}\t${item.m_Localized}, 'Đã chép ID + Nội dung');
+            copyPairBtn.onclick = () => copyToClipboard(`${item.m_Id}\t${item.m_Localized}`, 'Đã chép ID + Nội dung');
 
             const delBtn = document.createElement('button');
             delBtn.className = 'btn-xs danger-outline';
             delBtn.title = 'Xóa mục này';
             delBtn.textContent = '✕';
             delBtn.onclick = () => {
-                if (confirm(Xóa mục m_Id: ${item.m_Id}?)) {
+                if (confirm(`Xóa mục m_Id: ${item.m_Id}?`)) {
                     rawData = rawData.filter(x => x !== item);
                     saveToDB();
                     applyFilters();
@@ -1076,10 +1076,10 @@
     document.getElementById('exportCsvBtn').addEventListener('click', () => {
         const rows = [["m_Id", "m_Localized"]];
         filteredData.forEach(item => {
-            rows.push([`="${item.m_Id}", "${String(item.m_Localized).replace(/"/g, '""')}"`]);
+            rows.push([`="${item.m_Id}"`, `"${String(item.m_Localized).replace(/"/g, '""')}"`]);
         });
         downloadFile("\uFEFF" + rows.map(r => r.join(",")).join("\n"), currentFileName.replace(/\.json$/i, "") + ".csv", "text/csv;charset=utf-8");
-        showToast(Đã xuất ${filteredData.length.toLocaleString()} dòng ra CSV!);
+        showToast(`Đã xuất ${filteredData.length.toLocaleString()} dòng ra CSV!`);
     });
 
     // ================= PHÂN TÍCH & GIẢI NÉN BUNDLE THÀNH ZIP =================
@@ -1137,7 +1137,7 @@
     }
 
     function sanitizeFilename(name) {
-        return name.replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '').slice(0, 60) || 'item';
+        return name.replace(/[\\/:*?"<>|]/g, '_').replace(/\s+/g, '_').slice(0, 60) || 'item';
     }
 
     async function analyzeBundleFile(file) {
@@ -1186,14 +1186,14 @@
                 name: rawStr,
                 size: chunkBytes.length,
                 offset: offset,
-                zipPath: ${cls.folder}/${String(idx).padStart(3, '0')}_${sanitizeFilename(rawStr)}.txt
+                zipPath: `${cls.folder}/${String(idx).padStart(3, '0')}_${sanitizeFilename(rawStr)}.txt`
             });
         }
 
         bundleEntries = foundEntries;
         downloadBundleZipBtn.disabled = false;
 
-        bundleFileStatus.innerHTML = Đã phân tích: <strong>${escapeHtml(file.name)}</strong> (${(file.size / 1024).toFixed(1)} KB) • Tìm thấy <strong>${bundleEntries.length}</strong> thành phần/chuỗi có thể xuất ra ZIP.;
+        bundleFileStatus.innerHTML = `Đã phân tích: <strong>${escapeHtml(file.name)}</strong> (${(file.size / 1024).toFixed(1)} KB) • Tìm thấy <strong>${bundleEntries.length}</strong> thành phần/chuỗi có thể xuất ra ZIP.`;
 
         bundleInfoBanner.style.display = 'flex';
         bundleHeaderDetails.innerHTML = `
@@ -1204,12 +1204,12 @@
 
         // Cập nhật dropdown lọc nhóm
         const categories = [...new Set(bundleEntries.map(e => e.category))];
-        bundleCatFilter.innerHTML = <option value="ALL">Tất cả nhóm (${bundleEntries.length})</option> +
-            categories.map(c => <option value="${escapeHtml(c)}">${escapeHtml(c)}</option>).join('');
+        bundleCatFilter.innerHTML = `<option value="ALL">Tất cả nhóm (${bundleEntries.length})</option>` +
+            categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
 
         renderBundleSummary(categories);
         renderBundleTable('ALL');
-        showToast(Đã giải mã cấu trúc ${file.name}!);
+        showToast(`Đã giải mã cấu trúc ${file.name}!`);
     }
 
     function renderBundleSummary(categories) {
@@ -1218,7 +1218,7 @@
             const count = bundleEntries.filter(e => e.category === cat).length;
             const card = document.createElement('div');
             card.className = 'summary-card';
-            card.innerHTML = <div class="cat-name">${escapeHtml(cat)}</div><div class="cat-count">${count}</div>;
+            card.innerHTML = `<div class="cat-name">${escapeHtml(cat)}</div><div class="cat-count">${count}</div>`;
             card.addEventListener('click', () => {
                 bundleCatFilter.value = cat;
                 document.querySelectorAll('.summary-card').forEach(c => c.classList.remove('active'));
@@ -1238,7 +1238,7 @@
         const list = selectedCat === 'ALL' ? bundleEntries : bundleEntries.filter(e => e.category === selectedCat);
 
         if (list.length === 0) {
-            bundleTableBody.innerHTML = <tr><td colspan="5" style="text-align:center; padding: 28px; color: var(--text-muted);">Không có mục nào trong nhóm này.</td></tr>;
+            bundleTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 28px; color: var(--text-muted);">Không có mục nào trong nhóm này.</td></tr>`;
             return;
         }
 
@@ -1279,10 +1279,10 @@
         bundleEntries.forEach(item => {
             manifest.summaryByCategory[item.category] = (manifest.summaryByCategory[item.category] || 0) + 1;
             const content = [
-                Tên / Chuỗi nhận diện: ${item.name},
-                Nhóm phân loại: ${item.category},
-                Vị trí offset trong Bundle: ${item.offset} (0x${item.offset.toString(16).toUpperCase()}),
-                Kích thước trích xuất: ${item.size} bytes
+                `Tên / Chuỗi nhận diện: ${item.name}`,
+                `Nhóm phân loại: ${item.category}`,
+                `Vị trí offset trong Bundle: ${item.offset} (0x${item.offset.toString(16).toUpperCase()})`,
+                `Kích thước trích xuất: ${item.size} bytes`
             ].join('\n');
             zip.file(item.zipPath, content);
         });
@@ -1290,20 +1290,20 @@
         zip.file("BAO_CAO_TONG_QUAN.json", JSON.stringify(manifest, null, 2));
 
         // Tạo file tóm tắt dễ đọc bằng tiếng Việt
-        let readme = BÁO CÁO NỘI DUNG FILE BUNDLE: ${currentBundleName}\n====================================\n\n;
+        let readme = `BÁO CÁO NỘI DUNG FILE BUNDLE: ${currentBundleName}\n====================================\n\n`;
         Object.entries(manifest.summaryByCategory).forEach(([cat, count]) => {
-            readme += - ${cat}: ${count} mục\n;
+            readme += `- ${cat}: ${count} mục\n`;
         });
-        readme += \nChi tiết danh sách:\n;
+        readme += `\nChi tiết danh sách:\n`;
         bundleEntries.forEach((e, idx) => {
-            readme += ${idx + 1}. [${e.category}] ${e.name} -> ${e.zipPath}\n;
+            readme += `${idx + 1}. [${e.category}] ${e.name} -> ${e.zipPath}\n`;
         });
         zip.file("DANH_SACH_BEN_TRONG.txt", readme);
 
         const blob = await zip.generateAsync({ type: "blob" });
         const zipName = currentBundleName.replace(/\.[^/.]+$/, "") + "_giai_nen.zip";
         downloadFile(blob, zipName, "application/zip");
-        showToast(Đã tải xuống ${zipName}!);
+        showToast(`Đã tải xuống ${zipName}!`);
     });
 
     // ================= TIỆN ÍCH CHUNG =================
@@ -1362,7 +1362,7 @@
             rawData = saved.rawData;
             originalRootObj = saved.originalRootObj || null;
             currentFileName = saved.currentFileName || "StringTable_vi.json";
-            fileStatus.innerHTML = Đã khôi phục phiên làm việc: <strong>${escapeHtml(currentFileName)}</strong> (${rawData.length.toLocaleString()} mục • Lưu lúc ${saved.savedAt});
+            fileStatus.innerHTML = `Đã khôi phục phiên làm việc: <strong>${escapeHtml(currentFileName)}</strong> (${rawData.length.toLocaleString()} mục • Lưu lúc ${saved.savedAt})`;
         } else {
             rawData = DEFAULT_DATA.map(x => ({ ...x, _edited: false }));
         }
