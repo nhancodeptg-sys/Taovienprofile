@@ -266,7 +266,6 @@
         .action-group { display: inline-flex; gap: 4px; }
         .btn-xs { padding: 5px 8px; font-size: 12px; border-radius: 6px; }
 
-        /* Bundle Preview & Grid */
         .preview-box {
             border: 1px solid var(--border);
             background: var(--bg);
@@ -513,7 +512,7 @@
             <div>
                 <strong>📦 Nạp tệp Bundle Unity (<code>.bundle</code>, <code>.unity3d</code>, <code>.bin</code>...):</strong>
                 <div class="file-meta" id="bundleFileStatus">
-                    Dò ảnh nhúng thật (PNG/JPG/WEBP) để xem trước ngay, tách khối dữ liệu `.bin` chuẩn định dạng và đóng gói ra file <strong>.zip</strong>.
+                    Xem trước ảnh nhúng thật, phân nhóm tài nguyên và xuất ZIP theo cây thư mục chuẩn kiểu decompiler.
                 </div>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -534,11 +533,10 @@
             </div>
         </div>
 
-        <!-- Khung xem trước ảnh tìm thấy trong bundle -->
         <div class="preview-box" id="imagePreviewBox">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                 <strong id="imagePreviewTitle">🖼️ Ảnh xem trước trích xuất được từ Bundle:</strong>
-                <span style="font-size:12px; color:var(--text-muted);">Bấm vào ảnh để phóng to (Khi xuất ZIP sẽ lưu đúng đuôi .png/.jpg/.webp)</span>
+                <span style="font-size:12px; color:var(--text-muted);">Bấm vào ảnh để phóng to (Khi xuất ZIP sẽ nằm tại <code>images/</code>)</span>
             </div>
             <div class="preview-grid" id="imagePreviewGrid"></div>
         </div>
@@ -553,7 +551,7 @@
                         <th style="width: 175px;">Nhóm phân loại</th>
                         <th class="col-text">Tên / Chuỗi nhận diện được trong Bundle</th>
                         <th style="width: 110px;">Kích thước</th>
-                        <th style="width: 210px;">Đường dẫn khi xuất ZIP</th>
+                        <th style="width: 230px;">Đường dẫn trong ZIP</th>
                     </tr>
                 </thead>
                 <tbody id="bundleTableBody">
@@ -1021,10 +1019,10 @@
         showToast(`Đã xuất ${filteredData.length.toLocaleString()} dòng ra CSV!`);
     });
 
-    // ================= PHÂN TÍCH BUNDLE, XEM ẢNH & XUẤT ZIP ĐÚNG ĐUÔI =================
+    // ================= BUNDLE EXTRACTOR (DECOMPILER-STYLE ZIP) =================
     let currentBundleBuffer = null;
     let currentBundleName = "";
-    let bundleEntries = []; // { id, category, folder, ext, name, size, offset, bytes, dataUrl }
+    let bundleEntries = [];
     let embeddedImages = [];
 
     const bundleFileInput = document.getElementById('bundleFileInput');
@@ -1059,38 +1057,40 @@
     function classifyString(str) {
         const s = str.toLowerCase();
         if (/\.(png|jpg|jpeg|tga|psd|bmp|webp|exr|hdr)$/.test(s) || s.includes('texture') || s.includes('sprite')) {
-            return { category: 'Textures & Sprites', folder: 'Textures_Bin', ext: 'bin' };
+            return { category: 'Textures & Sprites', folder: 'textures', ext: 'bin' };
         }
         if (/\.mat$/.test(s) || s.includes('material') || s.includes('shader')) {
-            return { category: 'Materials & Shaders', folder: 'Materials_Bin', ext: 'bin' };
+            return { category: 'Materials & Shaders', folder: 'materials', ext: 'bin' };
         }
         if (/\.(fbx|obj|mesh)$/.test(s) || s.includes('mesh') || s.includes('model')) {
-            return { category: '3D Models & Mesh', folder: 'Models_Bin', ext: 'bin' };
+            return { category: '3D Models & Mesh', folder: 'models', ext: 'bin' };
         }
         if (s.includes('cab-') || s.includes('unityfs') || s.includes('archive:/')) {
-            return { category: 'Bundle Containers', folder: 'Containers_Bin', ext: 'bin' };
+            return { category: 'Bundle Containers', folder: 'containers', ext: 'bin' };
         }
-        return { category: 'Strings & Metadata', folder: 'Strings_Metadata', ext: 'txt' };
+        return { category: 'Strings & Metadata', folder: 'strings', ext: 'bin' };
     }
 
-    function sanitizeFilename(name) {
-        return name.replace(/[\\/:*?"<>|]/g, '_').replace(/\s+/g, '_').slice(0, 50) || 'item';
+    // Giữ tên gần với tên gốc bên trong container (kiểu decompiler)
+    function cleanDecompilerName(name, defaultExt) {
+        let base = name.replace(/^.*[\\/]/, '').replace(/[\\:*?"<>|]/g, '_').trim();
+        if (!base) base = 'entry';
+        if (base.length > 80) base = base.slice(0, 80);
+        const hasExt = /\.[a-z0-9]{2,6}$/i.test(base);
+        return hasExt ? base : `${base}.${defaultExt}`;
     }
 
-    // Dò các khối ảnh PNG / JPEG nhúng sẵn trong file bundle để xem trước thật
     function scanEmbeddedImages(bytes) {
         const imgs = [];
-        // PNG signature: 89 50 4E 47 0D 0A 1A 0A
         for (let i = 0; i < bytes.length - 12; i++) {
             if (bytes[i] === 0x89 && bytes[i + 1] === 0x50 && bytes[i + 2] === 0x4E && bytes[i + 3] === 0x47) {
-                // Tìm chunk IEND: 49 45 4E 44 AE 42 60 82
                 for (let j = i + 8; j < Math.min(bytes.length - 8, i + 4000000); j++) {
                     if (bytes[j] === 0x49 && bytes[j + 1] === 0x45 && bytes[j + 2] === 0x4E && bytes[j + 3] === 0x44) {
                         const endPos = j + 8;
                         const slice = bytes.slice(i, endPos);
                         const blob = new Blob([slice], { type: 'image/png' });
                         imgs.push({
-                            name: `embedded_img_${imgs.length + 1}.png`,
+                            name: `texture_${imgs.length + 1}.png`,
                             ext: 'png',
                             offset: i,
                             bytes: slice,
@@ -1119,28 +1119,24 @@
         const signature = fullText.slice(0, 16).replace(/[^\x20-\x7E]/g, '');
         const isUnityFS = signature.startsWith('UnityFS');
 
-        // 1. Dò ảnh nhúng thật
         embeddedImages = scanEmbeddedImages(bytes);
         renderImagePreview();
 
-        // 2. Quét chuỗi & tên tài nguyên
         const strRegex = /[\x20-\x7EÀ-ỹ]{4,120}/g;
         const foundEntries = [];
         const seenNames = new Set();
 
-        // Thêm các ảnh nhúng thật lên đầu danh sách
         embeddedImages.forEach((img, index) => {
             foundEntries.push({
                 id: index + 1,
                 category: 'Images (PNG Preview)',
-                folder: 'Images_PNG',
-                ext: img.ext,
+                folder: 'images',
+                fileName: img.name,
                 name: img.name,
                 size: img.bytes.length,
                 offset: img.offset,
                 bytes: img.bytes,
-                url: img.url,
-                isTextNote: false
+                url: img.url
             });
         });
 
@@ -1160,18 +1156,18 @@
             const offset = match.index;
             const chunkEnd = Math.min(bytes.length, offset + 2048);
             const chunkBytes = bytes.slice(offset, chunkEnd);
+            const fileName = cleanDecompilerName(rawStr, cls.ext);
 
             foundEntries.push({
                 id: ++idx,
                 category: cls.category,
                 folder: cls.folder,
-                ext: cls.ext,
+                fileName,
                 name: rawStr,
-                size: cls.ext === 'txt' ? rawStr.length : chunkBytes.length,
-                offset: offset,
-                bytes: cls.ext === 'txt' ? new TextEncoder().encode(rawStr) : chunkBytes,
-                url: null,
-                isTextNote: cls.ext === 'txt'
+                size: chunkBytes.length,
+                offset,
+                bytes: chunkBytes,
+                url: null
             });
         }
 
@@ -1248,7 +1244,7 @@
     bundleCatFilter.addEventListener('change', () => renderBundleTable(bundleCatFilter.value));
 
     function getZipPath(item) {
-        return `${item.folder}/${String(item.id).padStart(3, '0')}_${sanitizeFilename(item.name)}.${item.ext}`;
+        return `${item.folder}/${item.fileName}`;
     }
 
     function renderBundleTable(selectedCat) {
@@ -1274,7 +1270,7 @@
                     <div style="font-weight:600; display:flex; align-items:center; flex-wrap:wrap;">
                         <span>${escapeHtml(item.name)}</span>${previewAction}
                     </div>
-                    <div style="font-size:11.5px; color:var(--text-muted);">Offset: 0x${item.offset.toString(16).toUpperCase()} • Đuôi xuất: .${item.ext}</div>
+                    <div style="font-size:11.5px; color:var(--text-muted);">Offset: 0x${item.offset.toString(16).toUpperCase()}</div>
                 </td>
                 <td style="font-family:monospace; font-size:12px;">${item.size} B</td>
                 <td style="font-family:monospace; font-size:12px; color:var(--text-muted);">${escapeHtml(getZipPath(item))}</td>
@@ -1294,34 +1290,38 @@
         showToast("Đang đóng gói file .ZIP...");
         const zip = new JSZip();
 
-        const manifest = {
-            sourceBundle: currentBundleName,
-            totalBytes: currentBundleBuffer.byteLength,
-            embeddedImagesCount: embeddedImages.length,
-            extractedAt: new Date().toISOString(),
-            summaryByCategory: {}
+        const summary = {
+            source: currentBundleName,
+            size_bytes: currentBundleBuffer.byteLength,
+            images_found: embeddedImages.length,
+            total_entries: bundleEntries.length,
+            groups: {}
         };
 
+        const usedPaths = new Map();
+        const treeLines = [`${currentBundleName}/`];
+
         bundleEntries.forEach(item => {
-            manifest.summaryByCategory[item.category] = (manifest.summaryByCategory[item.category] || 0) + 1;
-            zip.file(getZipPath(item), item.bytes);
+            summary.groups[item.category] = (summary.groups[item.category] || 0) + 1;
+            let zipPath = getZipPath(item);
+            const count = usedPaths.get(zipPath) || 0;
+            if (count > 0) {
+                const dotIdx = zipPath.lastIndexOf('.');
+                zipPath = dotIdx > -1
+                    ? `${zipPath.slice(0, dotIdx)}_${count}${zipPath.slice(dotIdx)}`
+                    : `${zipPath}_${count}`;
+            }
+            usedPaths.set(getZipPath(item), count + 1);
+
+            zip.file(zipPath, item.bytes);
+            treeLines.push(`├── ${zipPath} (${item.size} B @ 0x${item.offset.toString(16)})`);
         });
 
-        zip.file("BAO_CAO_TONG_QUAN.json", JSON.stringify(manifest, null, 2));
-
-        let readme = `BÁO CÁO NỘI DUNG FILE BUNDLE: ${currentBundleName}\n====================================\n`;
-        readme += `Số ảnh PNG xem trước tìm thấy: ${embeddedImages.length}\n\n`;
-        Object.entries(manifest.summaryByCategory).forEach(([cat, count]) => {
-            readme += `- ${cat}: ${count} mục\n`;
-        });
-        readme += `\nChi tiết danh sách:\n`;
-        bundleEntries.forEach((e, idx) => {
-            readme += `${idx + 1}. [${e.category}] ${e.name} -> ${getZipPath(e)}\n`;
-        });
-        zip.file("DANH_SACH_BEN_TRONG.txt", readme);
+        zip.file("summary.json", JSON.stringify(summary, null, 2));
+        zip.file("tree.txt", treeLines.join("\n"));
 
         const blob = await zip.generateAsync({ type: "blob" });
-        const zipName = currentBundleName.replace(/\.[^/.]+$/, "") + "_giai_nen.zip";
+        const zipName = currentBundleName.replace(/\.[^/.]+$/, "") + "_decompiled.zip";
         downloadFile(blob, zipName, "application/zip");
         showToast(`Đã tải xuống ${zipName}!`);
     });
