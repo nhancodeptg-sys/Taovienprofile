@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unity StringTable Pro & Bundle Extractor</title>
-    <!-- Thư viện tạo file ZIP phía client -->
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <style>
         :root {
@@ -57,7 +56,6 @@
             border: 1px solid var(--border);
         }
 
-        /* Header */
         .header {
             display: flex;
             align-items: center;
@@ -68,16 +66,8 @@
             padding-bottom: 14px;
             border-bottom: 1px solid var(--border);
         }
-        .header-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 20px;
-            color: var(--primary);
-        }
+        .header-title { display: flex; align-items: center; gap: 10px; }
+        .header h1 { margin: 0; font-size: 20px; color: var(--primary); }
         .badge {
             font-size: 11px;
             padding: 3px 8px;
@@ -86,13 +76,8 @@
             color: var(--primary);
             font-weight: 700;
         }
-        .header-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-        /* Tabs chuyển chế độ */
         .mode-tabs {
             display: flex;
             gap: 8px;
@@ -111,15 +96,10 @@
             color: var(--text-muted);
             cursor: pointer;
         }
-        .tab-btn.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
+        .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
         .tab-panel { display: none; }
         .tab-panel.active { display: block; }
 
-        /* Dropzone */
         .upload-box {
             background: var(--primary-soft);
             border: 2px dashed var(--primary);
@@ -133,31 +113,17 @@
             gap: 12px;
             transition: all 0.2s;
         }
-        .upload-box.dragover {
-            transform: scale(1.01);
-            background: rgba(79, 70, 229, 0.15);
-        }
-        .file-meta {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
+        .upload-box.dragover { transform: scale(1.01); background: rgba(79, 70, 229, 0.15); }
+        .file-meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-        /* Toolbar & Filters */
         .toolbar {
             display: grid;
             grid-template-columns: 1fr auto auto auto;
             gap: 8px;
             margin-bottom: 12px;
         }
-        @media (max-width: 820px) {
-            .toolbar { grid-template-columns: 1fr; }
-        }
-        .search-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+        @media (max-width: 820px) { .toolbar { grid-template-columns: 1fr; } }
+        .search-wrapper { position: relative; display: flex; align-items: center; }
         .search-wrapper input {
             width: 100%;
             padding: 10px 36px 10px 14px;
@@ -197,26 +163,13 @@
             gap: 6px;
             white-space: nowrap;
         }
-        button.primary {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
+        button.primary { background: var(--primary); color: white; border-color: var(--primary); }
         button.primary:hover:not(:disabled) { background: var(--primary-hover); }
-        button.success {
-            background: var(--success);
-            color: white;
-            border-color: var(--success);
-        }
+        button.success { background: var(--success); color: white; border-color: var(--success); }
         button.success:hover:not(:disabled) { opacity: 0.9; }
-        button.danger-outline {
-            color: var(--danger);
-            border-color: rgba(239, 68, 68, 0.4);
-        }
+        button.danger-outline { color: var(--danger); border-color: rgba(239, 68, 68, 0.4); }
         button.danger-outline:hover:not(:disabled) { background: rgba(239, 68, 68, 0.1); }
-        button:hover:not(:disabled):not(.primary):not(.success):not(.danger-outline) {
-            background: var(--hover-row);
-        }
+        button:hover:not(:disabled):not(.primary):not(.success):not(.danger-outline) { background: var(--hover-row); }
         button:disabled { opacity: 0.45; cursor: not-allowed; }
 
         .checkbox-pill {
@@ -232,7 +185,6 @@
             height: 38px;
         }
 
-        /* Stats bar */
         .stats-bar {
             display: flex;
             justify-content: space-between;
@@ -246,14 +198,8 @@
             background: var(--bg);
             border-radius: 8px;
         }
-        .stats-left, .stats-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
+        .stats-left, .stats-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
-        /* Table */
         .table-wrap {
             width: 100%;
             overflow-x: auto;
@@ -261,12 +207,7 @@
             border-radius: 10px;
             margin-bottom: 16px;
         }
-        table {
-            width: 100%;
-            min-width: 650px;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
+        table { width: 100%; min-width: 650px; border-collapse: collapse; table-layout: fixed; }
         th, td {
             padding: 10px 12px;
             text-align: left;
@@ -292,12 +233,7 @@
         tr.edited-row { border-left: 3px solid var(--warning); }
 
         .col-idx { width: 55px; text-align: center; color: var(--text-muted); }
-        .col-id {
-            width: 185px;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-weight: 600;
-            font-size: 13px;
-        }
+        .col-id { width: 185px; font-family: 'Consolas', 'Courier New', monospace; font-weight: 600; font-size: 13px; }
         .col-text { width: auto; }
         .col-act { width: 155px; text-align: right; }
 
@@ -311,10 +247,7 @@
             border: 1px solid transparent;
             min-height: 28px;
         }
-        .localized-view:hover {
-            border-color: var(--border);
-            background: var(--card);
-        }
+        .localized-view:hover { border-color: var(--border); background: var(--card); }
         .localized-edit {
             width: 100%;
             min-height: 64px;
@@ -329,24 +262,48 @@
             outline: none;
         }
 
-        mark {
-            background: var(--highlight);
-            color: var(--highlight-text);
-            padding: 0 2px;
-            border-radius: 3px;
-        }
+        mark { background: var(--highlight); color: var(--highlight-text); padding: 0 2px; border-radius: 3px; }
+        .action-group { display: inline-flex; gap: 4px; }
+        .btn-xs { padding: 5px 8px; font-size: 12px; border-radius: 6px; }
 
-        .action-group {
-            display: inline-flex;
-            gap: 4px;
+        /* Bundle Preview & Grid */
+        .preview-box {
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            display: none;
         }
-        .btn-xs {
-            padding: 5px 8px;
-            font-size: 12px;
+        .preview-box.active { display: block; }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .preview-thumb-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .preview-thumb-card img {
+            width: 100%;
+            height: 96px;
+            object-fit: contain;
+            background: repeating-conic-gradient(#cbd5e1 0% 25%, transparent 0% 50%) 50% / 14px 14px;
             border-radius: 6px;
         }
+        .preview-thumb-card .thumb-name {
+            font-size: 11.5px;
+            margin-top: 6px;
+            word-break: break-all;
+            font-weight: 600;
+        }
 
-        /* Bundle Cards & Tree */
         .bundle-summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -361,22 +318,9 @@
             cursor: pointer;
             transition: all 0.15s;
         }
-        .summary-card:hover, .summary-card.active {
-            border-color: var(--primary);
-            background: var(--primary-soft);
-        }
-        .summary-card .cat-name {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-        .summary-card .cat-count {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-top: 4px;
-        }
+        .summary-card:hover, .summary-card.active { border-color: var(--primary); background: var(--primary-soft); }
+        .summary-card .cat-name { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .summary-card .cat-count { font-size: 20px; font-weight: 800; color: var(--primary); margin-top: 4px; }
         .cat-tag {
             display: inline-block;
             padding: 2px 8px;
@@ -387,7 +331,6 @@
             color: var(--primary);
         }
 
-        /* Pagination */
         .pagination {
             display: flex;
             justify-content: space-between;
@@ -395,11 +338,7 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        .page-controls {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .page-controls { display: flex; align-items: center; gap: 6px; }
         .page-jump {
             width: 65px;
             padding: 6px 8px;
@@ -411,11 +350,10 @@
             font-size: 13px;
         }
 
-        /* Modal */
         .modal-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.55);
+            background: rgba(15, 23, 42, 0.65);
             display: none;
             align-items: center;
             justify-content: center;
@@ -427,10 +365,10 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            max-width: 480px;
+            max-width: 520px;
             width: 100%;
             padding: 20px;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.25);
         }
         .modal h3 { margin-top: 0; font-size: 17px; }
         .form-group { margin-bottom: 14px; }
@@ -446,7 +384,6 @@
         }
         .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 24px;
@@ -576,7 +513,7 @@
             <div>
                 <strong>📦 Nạp tệp Bundle Unity (<code>.bundle</code>, <code>.unity3d</code>, <code>.bin</code>...):</strong>
                 <div class="file-meta" id="bundleFileStatus">
-                    Thay vì đọc chữ nhị phân loằng ngoằng, hệ thống quét cấu trúc bên trong bundle, phân loại thành phần và đóng gói ra file <strong>.zip</strong>.
+                    Dò ảnh nhúng thật (PNG/JPG/WEBP) để xem trước ngay, tách khối dữ liệu `.bin` chuẩn định dạng và đóng gói ra file <strong>.zip</strong>.
                 </div>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -597,6 +534,15 @@
             </div>
         </div>
 
+        <!-- Khung xem trước ảnh tìm thấy trong bundle -->
+        <div class="preview-box" id="imagePreviewBox">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <strong id="imagePreviewTitle">🖼️ Ảnh xem trước trích xuất được từ Bundle:</strong>
+                <span style="font-size:12px; color:var(--text-muted);">Bấm vào ảnh để phóng to (Khi xuất ZIP sẽ lưu đúng đuôi .png/.jpg/.webp)</span>
+            </div>
+            <div class="preview-grid" id="imagePreviewGrid"></div>
+        </div>
+
         <div class="bundle-summary-grid" id="bundleSummaryGrid"></div>
 
         <div class="table-wrap">
@@ -604,10 +550,10 @@
                 <thead>
                     <tr>
                         <th class="col-idx">#</th>
-                        <th style="width: 170px;">Nhóm phân loại</th>
+                        <th style="width: 175px;">Nhóm phân loại</th>
                         <th class="col-text">Tên / Chuỗi nhận diện được trong Bundle</th>
-                        <th style="width: 120px;">Kích thước</th>
-                        <th style="width: 150px;">Đường dẫn trong ZIP</th>
+                        <th style="width: 110px;">Kích thước</th>
+                        <th style="width: 210px;">Đường dẫn khi xuất ZIP</th>
                     </tr>
                 </thead>
                 <tbody id="bundleTableBody">
@@ -641,10 +587,20 @@
     </div>
 </div>
 
+<!-- Modal phóng to ảnh xem trước -->
+<div class="modal-backdrop" id="imgZoomModal">
+    <div class="modal" style="max-width: 680px; text-align: center;">
+        <h3 id="zoomImgTitle">Xem trước ảnh</h3>
+        <img id="zoomImgEl" src="" alt="Preview" style="max-width:100%; max-height:420px; object-fit:contain; border-radius:8px; background:#0f172a;">
+        <div class="modal-footer">
+            <button id="closeZoomBtn" class="primary">Đóng</button>
+        </div>
+    </div>
+</div>
+
 <div id="toast" class="toast">Thông báo</div>
 
 <script>
-    // ================= CHUYỂN TAB =================
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -654,7 +610,6 @@
         });
     });
 
-    // ================= STRINGTABLE DATA =================
     const DEFAULT_DATA = [
         {"m_Id": "103665461542989824", "m_Localized": "string(512)"},
         {"m_Id": "103665461576544256", "m_Localized": "C,S"},
@@ -696,7 +651,7 @@
         {"m_Id": "103665461635264524", "m_Localized": "Xu chân thú"},
         {"m_Id": "103665461635264525", "m_Localized": "Xu Choco"},
         {"m_Id": "103665461635264526", "m_Localized": "Điểm ếch"},
-        {"m_Id": "103665461635264527", "m_Id": "Xu 2 năm"},
+        {"m_Id": "103665461635264527", "m_Localized": "Xu 2 năm"},
         {"m_Id": "103665461635264528", "m_Localized": "Điểm hạt giống"},
         {"m_Id": "103665461635264529", "m_Localized": "Xu thời trang"},
         {"m_Id": "103665461635264530", "m_Localized": "Điểm đại dương"},
@@ -725,7 +680,6 @@
     const totalPagesText = document.getElementById('totalPagesText');
     const fileStatus = document.getElementById('fileStatus');
 
-    // IndexedDB
     const DB_NAME = "UnityStringTableDB";
     const STORE_NAME = "tableStore";
 
@@ -742,10 +696,7 @@
         try {
             const db = await openDB();
             const tx = db.transaction(STORE_NAME, "readwrite");
-            tx.objectStore(STORE_NAME).put({
-                rawData, originalRootObj, currentFileName,
-                savedAt: new Date().toLocaleString('vi-VN')
-            }, "currentSession");
+            tx.objectStore(STORE_NAME).put({ rawData, originalRootObj, currentFileName, savedAt: new Date().toLocaleString('vi-VN') }, "currentSession");
         } catch (e) {}
     }
 
@@ -782,13 +733,7 @@
                 alert("Tệp JSON không đúng định dạng m_TableData của Unity hoặc mảng đối tượng!");
                 return;
             }
-
-            rawData = extracted.map(item => ({
-                m_Id: String(item.m_Id ?? ""),
-                m_Localized: item.m_Localized ?? "",
-                _edited: false
-            }));
-
+            rawData = extracted.map(item => ({ m_Id: String(item.m_Id ?? ""), m_Localized: item.m_Localized ?? "", _edited: false }));
             currentFileName = fileName;
             fileStatus.innerHTML = `Đã nạp tệp: <strong>${escapeHtml(fileName)}</strong> (${rawData.length.toLocaleString()} mục) • Tự động lưu bộ nhớ đệm.`;
             currentPage = 1;
@@ -865,12 +810,10 @@
         const keyword = searchInput.value.trim();
         const scope = searchScope.value;
         const useRegex = regexToggle.checked;
-
         let regex = null;
         if (keyword && useRegex) {
             try { regex = new RegExp(keyword, 'i'); } catch { return; }
         }
-
         const lowerKey = keyword.toLowerCase();
         filteredData = rawData.filter(item => {
             if (scope === 'edited' && !item._edited) return false;
@@ -896,7 +839,6 @@
                 return asc ? a.m_Localized.localeCompare(b.m_Localized, 'vi') : b.m_Localized.localeCompare(a.m_Localized, 'vi');
             });
         }
-
         renderTable();
     }
 
@@ -924,14 +866,12 @@
         tableBody.innerHTML = '';
         const totalPages = Math.max(1, Math.ceil(filteredData.length / rowsPerPage));
         if (currentPage > totalPages) currentPage = totalPages;
-
         const start = (currentPage - 1) * rowsPerPage;
         const pageItems = filteredData.slice(start, start + rowsPerPage);
 
         const editedTotal = rawData.filter(x => x._edited).length;
         resultCount.textContent = `Hiển thị: ${filteredData.length.toLocaleString()} / ${rawData.length.toLocaleString()} mục`;
         editedCount.textContent = editedTotal > 0 ? `• Đã sửa: ${editedTotal} mục` : '';
-
         pageInfo.textContent = `Trang ${currentPage} / ${totalPages}`;
         pageJumpInput.value = currentPage;
         pageJumpInput.max = totalPages;
@@ -1030,7 +970,6 @@
             tr.append(tdIdx, tdId, tdText, tdAct);
             fragment.appendChild(tr);
         });
-
         tableBody.appendChild(fragment);
     }
 
@@ -1082,10 +1021,11 @@
         showToast(`Đã xuất ${filteredData.length.toLocaleString()} dòng ra CSV!`);
     });
 
-    // ================= PHÂN TÍCH & GIẢI NÉN BUNDLE THÀNH ZIP =================
+    // ================= PHÂN TÍCH BUNDLE, XEM ẢNH & XUẤT ZIP ĐÚNG ĐUÔI =================
     let currentBundleBuffer = null;
     let currentBundleName = "";
-    let bundleEntries = []; // { id, category, folder, name, size, offset, snippet }
+    let bundleEntries = []; // { id, category, folder, ext, name, size, offset, bytes, dataUrl }
+    let embeddedImages = [];
 
     const bundleFileInput = document.getElementById('bundleFileInput');
     const bundleDropZone = document.getElementById('bundleDropZone');
@@ -1096,6 +1036,9 @@
     const bundleSummaryGrid = document.getElementById('bundleSummaryGrid');
     const bundleTableBody = document.getElementById('bundleTableBody');
     const bundleCatFilter = document.getElementById('bundleCatFilter');
+    const imagePreviewBox = document.getElementById('imagePreviewBox');
+    const imagePreviewGrid = document.getElementById('imagePreviewGrid');
+    const imagePreviewTitle = document.getElementById('imagePreviewTitle');
 
     document.getElementById('pickBundleBtn').addEventListener('click', () => bundleFileInput.click());
     bundleFileInput.addEventListener('change', (e) => {
@@ -1115,33 +1058,56 @@
 
     function classifyString(str) {
         const s = str.toLowerCase();
-        if (/\.(png|jpg|jpeg|tga|psd|bmp|webp|exr|hdr)$/.test(s) || s.includes('texture') || s.includes('sprite') || s.includes('_tex') || s.includes('_diff') || s.includes('_albedo') || s.includes('_normal')) {
-            return { category: 'Textures & Sprites', folder: 'Textures' };
+        if (/\.(png|jpg|jpeg|tga|psd|bmp|webp|exr|hdr)$/.test(s) || s.includes('texture') || s.includes('sprite')) {
+            return { category: 'Textures & Sprites', folder: 'Textures_Bin', ext: 'bin' };
         }
         if (/\.mat$/.test(s) || s.includes('material') || s.includes('shader')) {
-            return { category: 'Materials & Shaders', folder: 'Materials_Shaders' };
+            return { category: 'Materials & Shaders', folder: 'Materials_Bin', ext: 'bin' };
         }
         if (/\.(fbx|obj|mesh)$/.test(s) || s.includes('mesh') || s.includes('model')) {
-            return { category: '3D Models & Mesh', folder: 'Models_Mesh' };
-        }
-        if (/\.(wav|ogg|mp3|anim)$/.test(s) || s.includes('audio') || s.includes('sound') || s.includes('anim')) {
-            return { category: 'Audio & Anim', folder: 'Audio_Anim' };
-        }
-        if (s.includes('monobehaviour') || s.includes('script') || s.includes('controller') || s.includes('manager') || s.includes('config')) {
-            return { category: 'Scripts / MonoBehaviour', folder: 'MonoBehaviour' };
+            return { category: '3D Models & Mesh', folder: 'Models_Bin', ext: 'bin' };
         }
         if (s.includes('cab-') || s.includes('unityfs') || s.includes('archive:/')) {
-            return { category: 'Bundle Containers', folder: 'Containers' };
+            return { category: 'Bundle Containers', folder: 'Containers_Bin', ext: 'bin' };
         }
-        return { category: 'Strings & Metadata', folder: 'Strings_Metadata' };
+        return { category: 'Strings & Metadata', folder: 'Strings_Metadata', ext: 'txt' };
     }
 
     function sanitizeFilename(name) {
-        return name.replace(/[\\/:*?"<>|]/g, '_').replace(/\s+/g, '_').slice(0, 60) || 'item';
+        return name.replace(/[\\/:*?"<>|]/g, '_').replace(/\s+/g, '_').slice(0, 50) || 'item';
+    }
+
+    // Dò các khối ảnh PNG / JPEG nhúng sẵn trong file bundle để xem trước thật
+    function scanEmbeddedImages(bytes) {
+        const imgs = [];
+        // PNG signature: 89 50 4E 47 0D 0A 1A 0A
+        for (let i = 0; i < bytes.length - 12; i++) {
+            if (bytes[i] === 0x89 && bytes[i + 1] === 0x50 && bytes[i + 2] === 0x4E && bytes[i + 3] === 0x47) {
+                // Tìm chunk IEND: 49 45 4E 44 AE 42 60 82
+                for (let j = i + 8; j < Math.min(bytes.length - 8, i + 4000000); j++) {
+                    if (bytes[j] === 0x49 && bytes[j + 1] === 0x45 && bytes[j + 2] === 0x4E && bytes[j + 3] === 0x44) {
+                        const endPos = j + 8;
+                        const slice = bytes.slice(i, endPos);
+                        const blob = new Blob([slice], { type: 'image/png' });
+                        imgs.push({
+                            name: `embedded_img_${imgs.length + 1}.png`,
+                            ext: 'png',
+                            offset: i,
+                            bytes: slice,
+                            url: URL.createObjectURL(blob)
+                        });
+                        i = endPos;
+                        break;
+                    }
+                }
+                if (imgs.length >= 24) break;
+            }
+        }
+        return imgs;
     }
 
     async function analyzeBundleFile(file) {
-        showToast("Đang quét cấu trúc file Bundle...");
+        showToast("Đang quét cấu trúc & ảnh trong Bundle...");
         const buffer = await file.arrayBuffer();
         currentBundleBuffer = buffer;
         currentBundleName = file.name;
@@ -1150,22 +1116,39 @@
         const decoder = new TextDecoder('utf-8', { fatal: false });
         const fullText = decoder.decode(bytes);
 
-        // Kiểm tra signature UnityFS
         const signature = fullText.slice(0, 16).replace(/[^\x20-\x7E]/g, '');
         const isUnityFS = signature.startsWith('UnityFS');
 
-        // Quét các chuỗi tên tài nguyên có nghĩa (dài >= 4 ký tự in được)
+        // 1. Dò ảnh nhúng thật
+        embeddedImages = scanEmbeddedImages(bytes);
+        renderImagePreview();
+
+        // 2. Quét chuỗi & tên tài nguyên
         const strRegex = /[\x20-\x7EÀ-ỹ]{4,120}/g;
         const foundEntries = [];
         const seenNames = new Set();
 
+        // Thêm các ảnh nhúng thật lên đầu danh sách
+        embeddedImages.forEach((img, index) => {
+            foundEntries.push({
+                id: index + 1,
+                category: 'Images (PNG Preview)',
+                folder: 'Images_PNG',
+                ext: img.ext,
+                name: img.name,
+                size: img.bytes.length,
+                offset: img.offset,
+                bytes: img.bytes,
+                url: img.url,
+                isTextNote: false
+            });
+        });
+
         let match;
-        let idx = 0;
+        let idx = foundEntries.length;
         while ((match = strRegex.exec(fullText)) !== null && foundEntries.length < 1500) {
             const rawStr = match[0].trim();
-            // Bỏ qua chuỗi toàn ký tự lặp lại hoặc quá nhiều ký tự rác
             if (/^(.)\1+$/.test(rawStr) || rawStr.length < 4) continue;
-            // Lọc bớt chuỗi thuần số hoặc quá ít chữ cái
             const letterCount = (rawStr.match(/[a-zA-ZÀ-ỹ]/g) || []).length;
             if (letterCount < 3) continue;
 
@@ -1175,7 +1158,6 @@
 
             const cls = classifyString(rawStr);
             const offset = match.index;
-            // Lấy một đoạn dữ liệu lân cận để đóng gói làm chunk tham khảo nếu cần
             const chunkEnd = Math.min(bytes.length, offset + 2048);
             const chunkBytes = bytes.slice(offset, chunkEnd);
 
@@ -1183,34 +1165,68 @@
                 id: ++idx,
                 category: cls.category,
                 folder: cls.folder,
+                ext: cls.ext,
                 name: rawStr,
-                size: chunkBytes.length,
+                size: cls.ext === 'txt' ? rawStr.length : chunkBytes.length,
                 offset: offset,
-                zipPath: `${cls.folder}/${String(idx).padStart(3, '0')}_${sanitizeFilename(rawStr)}.txt`
+                bytes: cls.ext === 'txt' ? new TextEncoder().encode(rawStr) : chunkBytes,
+                url: null,
+                isTextNote: cls.ext === 'txt'
             });
         }
 
         bundleEntries = foundEntries;
         downloadBundleZipBtn.disabled = false;
 
-        bundleFileStatus.innerHTML = `Đã phân tích: <strong>${escapeHtml(file.name)}</strong> (${(file.size / 1024).toFixed(1)} KB) • Tìm thấy <strong>${bundleEntries.length}</strong> thành phần/chuỗi có thể xuất ra ZIP.`;
+        bundleFileStatus.innerHTML = `Đã phân tích: <strong>${escapeHtml(file.name)}</strong> (${(file.size / 1024).toFixed(1)} KB) • Tìm thấy <strong>${embeddedImages.length}</strong> ảnh xem trước & <strong>${bundleEntries.length}</strong> mục.`;
 
         bundleInfoBanner.style.display = 'flex';
         bundleHeaderDetails.innerHTML = `
             <span><strong>Định dạng:</strong> ${isUnityFS ? 'UnityFS Archive' : 'Binary / Custom Bundle'}</span>
-            <span>• <strong>Dung lượng:</strong> ${(file.size / (1024 * 1024) >= 1 ? (file.size / (1024 * 1024)).toFixed(2) + ' MB' : (file.size / 1024).toFixed(1) + ' KB')}</span>
-            <span>• <strong>Mục đã tách:</strong> ${bundleEntries.length}</span>
+            <span>• <strong>Ảnh PNG nhận diện:</strong> ${embeddedImages.length}</span>
+            <span>• <strong>Tổng mục:</strong> ${bundleEntries.length}</span>
         `;
 
-        // Cập nhật dropdown lọc nhóm
         const categories = [...new Set(bundleEntries.map(e => e.category))];
         bundleCatFilter.innerHTML = `<option value="ALL">Tất cả nhóm (${bundleEntries.length})</option>` +
             categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
 
         renderBundleSummary(categories);
         renderBundleTable('ALL');
-        showToast(`Đã giải mã cấu trúc ${file.name}!`);
+        showToast(`Đã phân tích ${file.name}!`);
     }
+
+    function renderImagePreview() {
+        if (embeddedImages.length === 0) {
+            imagePreviewBox.classList.remove('active');
+            imagePreviewGrid.innerHTML = '';
+            return;
+        }
+        imagePreviewBox.classList.add('active');
+        imagePreviewTitle.textContent = `🖼️ Tìm thấy ${embeddedImages.length} ảnh nhúng sẵn trong Bundle (Xem trước trực tiếp):`;
+        imagePreviewGrid.innerHTML = '';
+
+        embeddedImages.forEach(img => {
+            const card = document.createElement('div');
+            card.className = 'preview-thumb-card';
+            card.innerHTML = `
+                <img src="${img.url}" alt="${escapeHtml(img.name)}">
+                <div class="thumb-name">${escapeHtml(img.name)}</div>
+                <div style="font-size:11px; color:var(--text-muted);">${(img.bytes.length / 1024).toFixed(1)} KB</div>
+            `;
+            card.addEventListener('click', () => openZoomImage(img.name, img.url));
+            imagePreviewGrid.appendChild(card);
+        });
+    }
+
+    function openZoomImage(title, url) {
+        document.getElementById('zoomImgTitle').textContent = title;
+        document.getElementById('zoomImgEl').src = url;
+        document.getElementById('imgZoomModal').classList.add('open');
+    }
+    document.getElementById('closeZoomBtn').addEventListener('click', () => {
+        document.getElementById('imgZoomModal').classList.remove('open');
+    });
 
     function renderBundleSummary(categories) {
         bundleSummaryGrid.innerHTML = '';
@@ -1229,9 +1245,11 @@
         });
     }
 
-    bundleCatFilter.addEventListener('change', () => {
-        renderBundleTable(bundleCatFilter.value);
-    });
+    bundleCatFilter.addEventListener('change', () => renderBundleTable(bundleCatFilter.value));
+
+    function getZipPath(item) {
+        return `${item.folder}/${String(item.id).padStart(3, '0')}_${sanitizeFilename(item.name)}.${item.ext}`;
+    }
 
     function renderBundleTable(selectedCat) {
         bundleTableBody.innerHTML = '';
@@ -1245,12 +1263,21 @@
         const fragment = document.createDocumentFragment();
         list.slice(0, 300).forEach((item, i) => {
             const tr = document.createElement('tr');
+            const previewAction = item.url
+                ? ` <button class="btn-xs primary" style="margin-left:6px;" onclick="openZoomImage('${escapeHtml(item.name)}', '${item.url}')">👁️ Xem ảnh</button>`
+                : '';
+
             tr.innerHTML = `
                 <td class="col-idx">${i + 1}</td>
                 <td><span class="cat-tag">${escapeHtml(item.category)}</span></td>
-                <td><div style="font-weight:600;">${escapeHtml(item.name)}</div><div style="font-size:11.5px; color:var(--text-muted);">Offset: 0x${item.offset.toString(16).toUpperCase()}</div></td>
+                <td>
+                    <div style="font-weight:600; display:flex; align-items:center; flex-wrap:wrap;">
+                        <span>${escapeHtml(item.name)}</span>${previewAction}
+                    </div>
+                    <div style="font-size:11.5px; color:var(--text-muted);">Offset: 0x${item.offset.toString(16).toUpperCase()} • Đuôi xuất: .${item.ext}</div>
+                </td>
                 <td style="font-family:monospace; font-size:12px;">${item.size} B</td>
-                <td style="font-family:monospace; font-size:12px; color:var(--text-muted);">${escapeHtml(item.zipPath)}</td>
+                <td style="font-family:monospace; font-size:12px; color:var(--text-muted);">${escapeHtml(getZipPath(item))}</td>
             `;
             fragment.appendChild(tr);
         });
@@ -1264,39 +1291,32 @@
             return;
         }
 
-        showToast("Đang đóng gói thư mục thành file .ZIP...");
+        showToast("Đang đóng gói file .ZIP...");
         const zip = new JSZip();
 
-        // File tổng hợp danh sách tài nguyên bên trong bundle
         const manifest = {
             sourceBundle: currentBundleName,
             totalBytes: currentBundleBuffer.byteLength,
+            embeddedImagesCount: embeddedImages.length,
             extractedAt: new Date().toISOString(),
-            summaryByCategory: {},
-            items: bundleEntries
+            summaryByCategory: {}
         };
 
         bundleEntries.forEach(item => {
             manifest.summaryByCategory[item.category] = (manifest.summaryByCategory[item.category] || 0) + 1;
-            const content = [
-                `Tên / Chuỗi nhận diện: ${item.name}`,
-                `Nhóm phân loại: ${item.category}`,
-                `Vị trí offset trong Bundle: ${item.offset} (0x${item.offset.toString(16).toUpperCase()})`,
-                `Kích thước trích xuất: ${item.size} bytes`
-            ].join('\n');
-            zip.file(item.zipPath, content);
+            zip.file(getZipPath(item), item.bytes);
         });
 
         zip.file("BAO_CAO_TONG_QUAN.json", JSON.stringify(manifest, null, 2));
 
-        // Tạo file tóm tắt dễ đọc bằng tiếng Việt
-        let readme = `BÁO CÁO NỘI DUNG FILE BUNDLE: ${currentBundleName}\n====================================\n\n`;
+        let readme = `BÁO CÁO NỘI DUNG FILE BUNDLE: ${currentBundleName}\n====================================\n`;
+        readme += `Số ảnh PNG xem trước tìm thấy: ${embeddedImages.length}\n\n`;
         Object.entries(manifest.summaryByCategory).forEach(([cat, count]) => {
             readme += `- ${cat}: ${count} mục\n`;
         });
         readme += `\nChi tiết danh sách:\n`;
         bundleEntries.forEach((e, idx) => {
-            readme += `${idx + 1}. [${e.category}] ${e.name} -> ${e.zipPath}\n`;
+            readme += `${idx + 1}. [${e.category}] ${e.name} -> ${getZipPath(e)}\n`;
         });
         zip.file("DANH_SACH_BEN_TRONG.txt", readme);
 
@@ -1306,7 +1326,6 @@
         showToast(`Đã tải xuống ${zipName}!`);
     });
 
-    // ================= TIỆN ÍCH CHUNG =================
     function downloadFile(content, filename, mimeType) {
         const blob = content instanceof Blob ? content : new Blob([content], { type: mimeType });
         const url = URL.createObjectURL(blob);
