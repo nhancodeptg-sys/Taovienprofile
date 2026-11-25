@@ -534,8 +534,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 
   function initBetaGate() {
     var gate = $("betaGate"), input = $("betaKeyInput"), btn = $("betaSubmit"), err = $("betaError");
-    // Yêu cầu nhập Beta Key ngay khi trang game vừa được mở.
-    gate.hidden = false;
+    // Chỉ yêu cầu Beta Key ở lần đầu; các lần tải lại dùng trạng thái đã lưu.
+    gate.hidden = betaPassed;
     function submit() {
       if (btn.disabled) return;
       btn.disabled = true; err.textContent = "Đang xác minh Beta Key...";
