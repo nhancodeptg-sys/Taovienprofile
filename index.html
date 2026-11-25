@@ -2,20 +2,21 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>PTG Preview - Xem Trước Vật Phẩm Play Together</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 50%, #fce7f3 100%);
-            --glass-bg: rgba(255, 255, 255, 0.82);
-            --glass-border: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.84);
+            --glass-border: rgba(255, 255, 255, 0.96);
             --primary: #3b82f6;
             --primary-dark: #2563eb;
             --text-main: #1e293b;
             --text-muted: #64748b;
             --shadow: 0 8px 32px rgba(31, 38, 135, 0.08);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         * {
@@ -31,8 +32,8 @@
             background: var(--bg-gradient);
             background-attachment: fixed;
             color: var(--text-main);
-            min-height: 100vh;
-            padding-bottom: 88px;
+            min-height: 100dvh;
+            padding-bottom: calc(88px + var(--safe-bottom));
         }
 
         header {
@@ -40,12 +41,13 @@
             top: 0;
             z-index: 100;
             background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 14px 18px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 13px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
             border-bottom: 1px solid var(--glass-border);
             box-shadow: 0 2px 15px rgba(0,0,0,0.03);
         }
@@ -55,8 +57,15 @@
             align-items: center;
             gap: 8px;
             font-weight: 700;
-            font-size: 1.15rem;
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
             color: var(--primary-dark);
+            min-width: 0;
+        }
+
+        .logo span.brand-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .logo-badge {
@@ -64,11 +73,12 @@
             color: white;
             padding: 3px 9px;
             border-radius: 10px;
-            font-size: 0.78rem;
+            font-size: 0.74rem;
+            flex-shrink: 0;
         }
 
         .server-status {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             background: #dcfce7;
             color: #166534;
             padding: 4px 10px;
@@ -77,6 +87,8 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .dot {
@@ -93,9 +105,13 @@
             100% { transform: scale(0.95); opacity: 0.8; }
         }
 
-        .container {
-            max-width: 600px;
+        .app-shell {
+            width: 100%;
+            max-width: 640px;
             margin: 0 auto;
+        }
+
+        .container {
             padding: 16px;
         }
 
@@ -116,19 +132,19 @@
         .hero-banner {
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
             border-radius: 22px;
-            padding: 20px;
+            padding: clamp(18px, 4vw, 24px);
             color: white;
             box-shadow: 0 10px 25px rgba(168, 85, 247, 0.25);
             margin-bottom: 20px;
         }
 
         .hero-banner h2 {
-            font-size: 1.3rem;
+            font-size: clamp(1.15rem, 4vw, 1.45rem);
             margin-bottom: 6px;
         }
 
         .hero-banner p {
-            font-size: 0.88rem;
+            font-size: clamp(0.84rem, 2.8vw, 0.95rem);
             opacity: 0.92;
             margin-bottom: 14px;
             line-height: 1.45;
@@ -144,6 +160,7 @@
             border-radius: 12px;
             font-weight: 700;
             font-size: 0.84rem;
+            max-width: 100%;
         }
 
         .section-header {
@@ -154,7 +171,7 @@
         }
 
         .section-title {
-            font-size: 1.05rem;
+            font-size: clamp(1rem, 3.2vw, 1.12rem);
             font-weight: 700;
             color: var(--text-main);
         }
@@ -190,8 +207,14 @@
 
         .item-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 14px;
+        }
+
+        @media (max-width: 350px) {
+            .item-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .item-card {
@@ -200,18 +223,24 @@
             border-radius: 18px;
             padding: 12px;
             box-shadow: var(--shadow);
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
+            min-width: 0;
+        }
+
+        .item-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(31, 38, 135, 0.12);
         }
 
         .item-card:active {
-            transform: scale(0.97);
+            transform: scale(0.96);
         }
 
         .item-img-wrap {
             position: relative;
             width: 100%;
-            height: 128px;
+            height: 130px;
             border-radius: 14px;
             background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
             display: flex;
@@ -230,8 +259,35 @@
         }
 
         .item-emoji {
-            font-size: 3.4rem;
+            font-size: 3.3rem;
             filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
+        }
+
+        .modal-box .item-img-wrap::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 65%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+            transform: skewX(-20deg);
+            animation: shimmerSweep 2.2s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes shimmerSweep {
+            0% { left: -120%; }
+            55%, 100% { left: 150%; }
+        }
+
+        .modal-visual-float {
+            animation: floatItem 2.6s ease-in-out infinite;
+        }
+
+        @keyframes floatItem {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.04); }
         }
 
         .watermark {
@@ -292,6 +348,33 @@
             margin-bottom: 16px;
         }
 
+        .maintenance-box {
+            text-align: center;
+            padding: 28px 18px;
+            border-radius: 18px;
+            background: #fffbeb;
+            border: 1.5px dashed #f59e0b;
+            color: #92400e;
+        }
+
+        .maintenance-box i {
+            font-size: 2.4rem;
+            color: #d97706;
+            margin-bottom: 10px;
+        }
+
+        .maintenance-box h3 {
+            font-size: 1.12rem;
+            margin-bottom: 6px;
+            color: #78350f;
+        }
+
+        .maintenance-box p {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #92400e;
+        }
+
         .input-group {
             margin-bottom: 12px;
         }
@@ -304,7 +387,7 @@
             color: var(--text-main);
         }
 
-        .input-field, .select-field {
+        .input-field, .select-field, .textarea-field {
             width: 100%;
             padding: 11px 14px;
             border-radius: 12px;
@@ -316,7 +399,12 @@
             user-select: text;
         }
 
-        .input-field:focus, .select-field:focus {
+        .textarea-field {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .input-field:focus, .select-field:focus, .textarea-field:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
@@ -344,7 +432,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 10px;
-            background: rgba(255, 255, 255, 0.78);
+            background: rgba(255, 255, 255, 0.82);
             padding: 12px 14px;
             border-radius: 14px;
             margin-bottom: 10px;
@@ -356,6 +444,7 @@
             color: var(--primary-dark);
             font-size: 0.98rem;
             letter-spacing: 0.5px;
+            word-break: break-all;
         }
 
         .code-reward {
@@ -374,30 +463,66 @@
             font-size: 0.78rem;
             cursor: pointer;
             white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .contact-msg-card {
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 13px 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 14px rgba(31, 38, 135, 0.05);
+            user-select: text;
+        }
+
+        .contact-sender {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+        }
+
+        .contact-body {
+            font-size: 0.88rem;
+            color: var(--text-main);
+            margin-top: 4px;
+            line-height: 1.45;
+            white-space: pre-wrap;
+        }
+
+        .contact-reply {
+            margin-top: 8px;
+            padding: 8px 11px;
+            border-radius: 10px;
+            background: #eff6ff;
+            border-left: 3px solid var(--primary);
+            font-size: 0.82rem;
+            color: #1e3a8a;
+            font-weight: 600;
         }
 
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
             padding: 28px 16px;
-            background: rgba(255, 255, 255, 0.65);
+            background: rgba(255, 255, 255, 0.72);
             border-radius: 18px;
             color: var(--text-muted);
             font-size: 0.9rem;
             font-weight: 600;
         }
 
-        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255, 255, 0.94);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0 14px;
+            padding: 8px 4px calc(10px + var(--safe-bottom));
             border-top: 1px solid var(--glass-border);
             z-index: 100;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
@@ -407,62 +532,189 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             color: var(--text-muted);
-            font-size: 0.74rem;
+            font-size: 0.7rem;
             font-weight: 700;
             cursor: pointer;
-            width: 25%;
+            padding: 6px 4px;
+            border-radius: 12px;
+            transition: all 0.2s;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .nav-item span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         .nav-item i {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
         }
 
         .nav-item.active {
             color: var(--primary);
+            background: rgba(59, 130, 246, 0.09);
         }
 
-        /* AI Box */
+        @media (min-width: 768px) {
+            body {
+                padding-bottom: 24px;
+            }
+
+            .app-shell {
+                max-width: 1040px;
+                display: grid;
+                grid-template-columns: 225px minmax(0, 1fr);
+                align-items: start;
+                gap: 20px;
+                padding: 20px 24px 40px;
+            }
+
+            .container {
+                padding: 0;
+            }
+
+            .bottom-nav {
+                position: sticky;
+                top: 80px;
+                bottom: auto;
+                left: auto;
+                right: auto;
+                flex-direction: column;
+                justify-content: flex-start;
+                gap: 6px;
+                padding: 12px;
+                border-radius: 20px;
+                border: 1px solid var(--glass-border);
+                box-shadow: var(--shadow);
+                background: var(--glass-bg);
+            }
+
+            .nav-item {
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 12px;
+                padding: 12px 14px;
+                font-size: 0.92rem;
+                flex: none;
+            }
+
+            .nav-item i {
+                font-size: 1.05rem;
+                width: 20px;
+                text-align: center;
+            }
+
+            .item-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 16px;
+            }
+
+            .item-img-wrap {
+                height: 150px;
+            }
+        }
+
+        /* Nút tròn Box AI + Hiệu ứng động & Kéo thả */
         .ai-fab {
             position: fixed;
-            bottom: 84px;
+            bottom: calc(82px + var(--safe-bottom));
             right: 18px;
-            width: 56px;
-            height: 56px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
             background: linear-gradient(135deg, #ec4899, #8b5cf6);
             color: white;
             border: 3px solid white;
-            box-shadow: 0 8px 24px rgba(236, 72, 153, 0.38);
+            box-shadow: 0 8px 24px rgba(236, 72, 153, 0.42);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.45rem;
-            cursor: pointer;
-            z-index: 200;
+            font-size: 1.5rem;
+            cursor: grab;
+            z-index: 210;
+            touch-action: none;
+            transition: box-shadow 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .ai-fab::before {
+            content: "";
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            border: 2px solid rgba(236, 72, 153, 0.45);
+            animation: aiRingPulse 2.2s infinite ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes aiRingPulse {
+            0% { transform: scale(0.95); opacity: 0.85; }
+            100% { transform: scale(1.35); opacity: 0; }
+        }
+
+        .ai-fab.clicked-anim {
+            animation: aiBounceClick 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes aiBounceClick {
+            0% { transform: scale(1) rotate(0deg); }
+            35% { transform: scale(0.84) rotate(-12deg); }
+            70% { transform: scale(1.14) rotate(8deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .ai-fab.dragging {
+            cursor: grabbing;
+            transform: scale(1.08);
+            box-shadow: 0 14px 32px rgba(139, 92, 246, 0.5);
+            transition: none;
+        }
+
+        @media (min-width: 768px) {
+            .ai-fab {
+                bottom: 24px;
+                right: 24px;
+            }
         }
 
         .ai-chat-window {
             position: fixed;
-            bottom: 150px;
+            bottom: calc(150px + var(--safe-bottom));
             right: 18px;
-            width: calc(100% - 36px);
-            max-width: 360px;
-            height: 420px;
+            width: min(360px, calc(100vw - 36px));
+            height: min(430px, 65dvh);
             background: rgba(255, 255, 255, 0.97);
             backdrop-filter: blur(16px);
             border: 1px solid white;
             border-radius: 22px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.16);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
             display: none;
             flex-direction: column;
             overflow: hidden;
-            z-index: 200;
+            z-index: 205;
+            transform-origin: bottom right;
+        }
+
+        @media (min-width: 768px) {
+            .ai-chat-window {
+                bottom: 94px;
+                right: 24px;
+                height: min(460px, 70dvh);
+            }
         }
 
         .ai-chat-window.open {
             display: flex;
+            animation: chatSpringIn 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes chatSpringIn {
+            0% { opacity: 0; transform: scale(0.72) translateY(18px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .ai-header {
@@ -474,6 +726,12 @@
             align-items: center;
             font-weight: 700;
             font-size: 0.95rem;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .ai-header.dragging {
+            cursor: grabbing;
         }
 
         .ai-messages {
@@ -493,6 +751,12 @@
             font-size: 0.86rem;
             line-height: 1.45;
             user-select: text;
+            animation: msgPop 0.22s ease;
+        }
+
+        @keyframes msgPop {
+            from { opacity: 0; transform: translateY(6px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .msg-bot {
@@ -559,30 +823,44 @@
             cursor: pointer;
         }
 
-        /* Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.52);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(5px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 300;
             padding: 20px;
+            opacity: 0;
+            transition: opacity 0.22s ease;
         }
 
         .modal-overlay.open {
             display: flex;
+            opacity: 1;
         }
 
         .modal-box {
             background: white;
             border-radius: 24px;
             width: 100%;
-            max-width: 360px;
+            max-width: 400px;
             padding: 20px;
             text-align: center;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+            transform: scale(0.78) translateY(20px);
+            opacity: 0;
+        }
+
+        .modal-overlay.open .modal-box {
+            animation: modalSpringPop 0.34s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes modalSpringPop {
+            0% { opacity: 0; transform: scale(0.78) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .toast {
@@ -600,6 +878,8 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s;
+            max-width: calc(100vw - 32px);
+            text-align: center;
         }
 
         .toast.show {
@@ -612,7 +892,7 @@
     <header>
         <div class="logo">
             <i class="fa-solid fa-gamepad"></i>
-            <span>PTG Preview</span>
+            <span class="brand-text">PTG Preview</span>
             <span class="logo-badge">FIREBASE</span>
         </div>
         <div class="server-status" id="db-status">
@@ -623,118 +903,183 @@
 
     <div id="toast" class="toast">Thông báo</div>
 
-    <div class="container">
+    <div class="app-shell">
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home', this)">
+                <i class="fa-solid fa-house"></i>
+                <span>Trang chủ</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('items', this)">
+                <i class="fa-solid fa-box-open"></i>
+                <span>Vật phẩm</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('code', this)">
+                <i class="fa-solid fa-ticket"></i>
+                <span>Nhập Code</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('contact', this)">
+                <i class="fa-solid fa-message"></i>
+                <span>Liên hệ</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('info', this)">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Thông tin</span>
+            </div>
+        </nav>
 
-        <!-- TAB 1: TRANG CHỦ -->
-        <section id="view-home" class="view-section active">
-            <div class="hero-banner">
-                <h2 id="banner-title">✨ Xem Trước Vật Phẩm Play Together</h2>
-                <p id="banner-desc">Dữ liệu vật phẩm sắp ra mắt và mã Giftcode được cập nhật trực tiếp từ hệ thống.</p>
-                <div class="countdown-box">
-                    <i class="fa-regular fa-clock"></i>
-                    <span id="countdown">Đang tải thông tin cập nhật...</span>
+        <main class="container">
+
+            <!-- TAB 1: TRANG CHỦ -->
+            <section id="view-home" class="view-section active">
+                <div class="hero-banner">
+                    <h2 id="banner-title">✨ Xem Trước Vật Phẩm Play Together</h2>
+                    <p id="banner-desc">Dữ liệu vật phẩm sắp ra mắt và mã Giftcode được cập nhật trực tiếp từ hệ thống.</p>
+                    <div class="countdown-box">
+                        <i class="fa-regular fa-clock"></i>
+                        <span id="countdown">Đang tải thông tin cập nhật...</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="section-header">
-                <span class="section-title">🔥 Vật phẩm nổi bật</span>
-                <span style="font-size: 0.84rem; color: var(--primary); font-weight: 700; cursor: pointer;" onclick="switchTab('items')">Xem tất cả &gt;</span>
-            </div>
-
-            <div class="item-grid" id="featured-grid">
-                <div class="empty-state">Đang tải vật phẩm từ Firebase...</div>
-            </div>
-
-            <div class="code-card" style="margin-top: 20px;">
                 <div class="section-header">
-                    <span class="section-title">🎁 Mã Giftcode mới nhất</span>
-                    <span style="font-size: 0.84rem; color: var(--primary); font-weight: 700; cursor: pointer;" onclick="switchTab('code')">Nhập ngay &gt;</span>
-                </div>
-                <div id="home-code-preview">
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">Đang tải mã code...</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 2: VẬT PHẨM -->
-        <section id="view-items" class="view-section">
-            <div class="section-header">
-                <span class="section-title">🎒 Kho vật phẩm sắp ra mắt</span>
-            </div>
-
-            <div class="filter-scroll">
-                <div class="chip active" onclick="filterItems('all', this)">Tất cả</div>
-                <div class="chip" onclick="filterItems('outfit', this)">Trang phục</div>
-                <div class="chip" onclick="filterItems('vehicle', this)">Phương tiện</div>
-                <div class="chip" onclick="filterItems('pet', this)">Thú cưng</div>
-                <div class="chip" onclick="filterItems('furniture', this)">Nội thất</div>
-            </div>
-
-            <div class="item-grid" id="all-items-grid">
-                <div class="empty-state">Đang tải danh sách vật phẩm...</div>
-            </div>
-        </section>
-
-        <!-- TAB 3: NHẬP CODE -->
-        <section id="view-code" class="view-section">
-            <div class="code-card">
-                <h3 style="margin-bottom: 6px; color: var(--primary-dark);">🎟️ Kiểm Tra &amp; Gửi Giftcode</h3>
-                <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 14px;">Chọn máy chủ, nhập ID nhân vật và mã quà tặng để kiểm tra trạng thái mã trên hệ thống.</p>
-
-                <div class="input-group">
-                    <label>Máy chủ (Server)</label>
-                    <select id="server-select" class="select-field">
-                        <option value="vng">Play Together VNG (Việt Nam)</option>
-                        <option value="global">Play Together Global (Quốc tế)</option>
-                    </select>
+                    <span class="section-title">🔥 Vật phẩm nổi bật</span>
+                    <span style="font-size: 0.84rem; color: var(--primary); font-weight: 700; cursor: pointer;" onclick="switchTab('items')">Xem tất cả &gt;</span>
                 </div>
 
-                <div class="input-group">
-                    <label>ID Nhân vật / Tên trong game</label>
-                    <input type="text" id="player-id" class="input-field" placeholder="Nhập ID hoặc tên nhân vật của bạn">
+                <div class="item-grid" id="featured-grid">
+                    <div class="empty-state">Đang tải vật phẩm từ Firebase...</div>
                 </div>
 
-                <div class="input-group">
-                    <label>Mã Giftcode</label>
-                    <input type="text" id="giftcode-input" class="input-field" placeholder="Nhập mã code tại đây..." style="text-transform: uppercase;">
+                <div class="code-card" style="margin-top: 20px;">
+                    <div class="section-header">
+                        <span class="section-title">🎁 Mã Giftcode mới nhất</span>
+                        <span style="font-size: 0.84rem; color: var(--primary); font-weight: 700; cursor: pointer;" onclick="switchTab('code')">Xem ngay &gt;</span>
+                    </div>
+                    <div id="home-code-preview">
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Đang tải trạng thái Giftcode...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: VẬT PHẨM -->
+            <section id="view-items" class="view-section">
+                <div class="section-header">
+                    <span class="section-title">🎒 Kho vật phẩm sắp ra mắt</span>
                 </div>
 
-                <button class="btn-primary" onclick="redeemCode()">
-                    <i class="fa-solid fa-gift"></i> Kiểm Tra &amp; Nhận Quà
-                </button>
-            </div>
-
-            <div class="section-header">
-                <span class="section-title">📋 Danh sách Code trên hệ thống</span>
-            </div>
-
-            <div id="code-list">
-                <div class="empty-state">Đang tải danh sách mã Giftcode...</div>
-            </div>
-        </section>
-
-        <!-- TAB 4: THÔNG TIN -->
-        <section id="view-info" class="view-section">
-            <div class="code-card">
-                <h3 style="margin-bottom: 10px;">ℹ️ Thông Tin Ứng Dụng</h3>
-                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
-                    Ứng dụng xem trước vật phẩm Play Together và tra cứu/nhập mã Giftcode đồng bộ trực tiếp với Firebase Realtime Database.
-                </p>
-                <div style="background: #f1f5f9; padding: 12px; border-radius: 12px; font-size: 0.82rem; color: #475569;">
-                    <strong>Lưu ý:</strong> Hình ảnh và thông tin vật phẩm hiển thị theo dữ liệu do quản trị viên cập nhật. Vui lòng không sao chép hoặc xóa watermark trái phép.
+                <div class="filter-scroll">
+                    <div class="chip active" onclick="filterItems('all', this)">Tất cả</div>
+                    <div class="chip" onclick="filterItems('outfit', this)">Trang phục</div>
+                    <div class="chip" onclick="filterItems('vehicle', this)">Phương tiện</div>
+                    <div class="chip" onclick="filterItems('pet', this)">Thú cưng</div>
+                    <div class="chip" onclick="filterItems('furniture', this)">Nội thất</div>
                 </div>
-            </div>
-        </section>
 
+                <div class="item-grid" id="all-items-grid">
+                    <div class="empty-state">Đang tải danh sách vật phẩm...</div>
+                </div>
+            </section>
+
+            <!-- TAB 3: NHẬP CODE -->
+            <section id="view-code" class="view-section">
+                <div id="code-maintenance-view" class="code-card" style="display:none;">
+                    <div class="maintenance-box">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                        <h3>Hệ thống đang bảo trì</h3>
+                        <p id="maintenance-msg-text">Chức năng nhập code hiện đang được bảo trì để nâng cấp. Vui lòng quay lại sau nhé!</p>
+                    </div>
+                </div>
+
+                <div id="code-active-view">
+                    <div class="code-card">
+                        <h3 style="margin-bottom: 6px; color: var(--primary-dark);">🎟️ Kiểm Tra &amp; Gửi Giftcode</h3>
+                        <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 14px;">Chọn máy chủ, nhập ID nhân vật và mã quà tặng để kiểm tra trạng thái mã trên hệ thống.</p>
+
+                        <div class="input-group">
+                            <label>Máy chủ (Server)</label>
+                            <select id="server-select" class="select-field">
+                                <option value="vng">Play Together VNG (Việt Nam)</option>
+                                <option value="global">Play Together Global (Quốc tế)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>ID Nhân vật / Tên trong game</label>
+                            <input type="text" id="player-id" class="input-field" placeholder="Nhập ID hoặc tên nhân vật của bạn">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Mã Giftcode</label>
+                            <input type="text" id="giftcode-input" class="input-field" placeholder="Nhập mã code tại đây..." style="text-transform: uppercase;">
+                        </div>
+
+                        <button class="btn-primary" onclick="redeemCode()">
+                            <i class="fa-solid fa-gift"></i> Kiểm Tra &amp; Nhận Quà
+                        </button>
+                    </div>
+
+                    <div class="section-header">
+                        <span class="section-title">📋 Danh sách Code trên hệ thống</span>
+                    </div>
+
+                    <div id="code-list">
+                        <div class="empty-state">Đang tải danh sách mã Giftcode...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: LIÊN HỆ ANH PTG -->
+            <section id="view-contact" class="view-section">
+                <div class="code-card">
+                    <h3 style="margin-bottom: 6px; color: var(--primary-dark);">💌 Liên Hệ Anh PTG</h3>
+                    <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 14px;">Gửi góp ý, báo lỗi hoặc tin nhắn trực tiếp cho Anh PTG. Tin nhắn sẽ được gửi thẳng về hệ thống quản trị.</p>
+
+                    <div class="input-group">
+                        <label>Tên của bạn / ID trong game</label>
+                        <input type="text" id="contact-name" class="input-field" placeholder="Ví dụ: Minh - ID 123456">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nội dung tin nhắn *</label>
+                        <textarea id="contact-content" class="textarea-field" placeholder="Nhập tin nhắn bạn muốn gửi cho Anh PTG..."></textarea>
+                    </div>
+
+                    <button class="btn-primary" onclick="sendContactMessage()">
+                        <i class="fa-solid fa-paper-plane"></i> Gửi Tin Nhắn Cho Anh PTG
+                    </button>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-title">📨 Hộp tin nhắn gần đây</span>
+                </div>
+                <div id="contact-messages-list">
+                    <div class="empty-state">Đang tải tin nhắn...</div>
+                </div>
+            </section>
+
+            <!-- TAB 5: THÔNG TIN -->
+            <section id="view-info" class="view-section">
+                <div class="code-card">
+                    <h3 style="margin-bottom: 10px;">ℹ️ Thông Tin Ứng Dụng</h3>
+                    <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+                        Ứng dụng xem trước vật phẩm Play Together và tra cứu/nhập mã Giftcode đồng bộ trực tiếp với Firebase Realtime Database, tự tối ưu giao diện cho từng thiết bị truy cập.
+                    </p>
+                    <div style="background: #f1f5f9; padding: 12px; border-radius: 12px; font-size: 0.82rem; color: #475569;">
+                        <strong>Lưu ý:</strong> Hình ảnh và thông tin vật phẩm hiển thị theo dữ liệu do quản trị viên cập nhật. Vui lòng không sao chép hoặc xóa watermark trái phép.
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
 
-    <!-- Box AI -->
-    <button class="ai-fab" onclick="toggleAI()" title="Trợ lý AI hỗ trợ">
+    <!-- Nút tròn Box AI (Kéo thả được + Hiệu ứng động) -->
+    <button id="ai-fab" class="ai-fab" title="Trợ lý AI hỗ trợ (Kéo để di chuyển)">
         <i class="fa-solid fa-robot"></i>
     </button>
 
+    <!-- Khung chat (Tab) Box AI (Kéo thanh tiêu đề để di chuyển + Hiệu ứng động) -->
     <div id="ai-window" class="ai-chat-window">
-        <div class="ai-header">
+        <div id="ai-drag-header" class="ai-header" title="Kéo để di chuyển khung chat">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <i class="fa-solid fa-robot"></i>
                 <span>Trợ Lý AI Hỗ Trợ</span>
@@ -742,17 +1087,9 @@
             <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 1.1rem;" onclick="toggleAI()"></i>
         </div>
 
-        <div id="ai-messages" class="ai-messages">
-            <div class="msg msg-bot">
-                Chào bạn! 👋 Mình là trợ lý AI của app. Mình có thể giúp bạn tìm <b>vật phẩm đang có trên app</b>, xem <b>mã Giftcode mới</b> hoặc hướng dẫn <b>nhập code</b>.
-            </div>
-        </div>
+        <div id="ai-messages" class="ai-messages"></div>
 
-        <div class="quick-questions">
-            <button class="quick-btn" onclick="askQuick('Danh sách code hiện có')">Code hiện có</button>
-            <button class="quick-btn" onclick="askQuick('Có vật phẩm nào mới?')">Vật phẩm mới</button>
-            <button class="quick-btn" onclick="askQuick('Cách nhập code')">Cách nhập code</button>
-        </div>
+        <div id="ai-quick-commands" class="quick-questions"></div>
 
         <div class="ai-input-area">
             <input type="text" id="ai-input" class="ai-input" placeholder="Nhập câu hỏi..." onkeypress="if(event.key==='Enter') sendAIMessage()">
@@ -764,7 +1101,7 @@
     <div id="item-modal" class="modal-overlay" onclick="closeModal(event)">
         <div class="modal-box" onclick="event.stopPropagation()">
             <div id="modal-badge" class="rarity-badge rarity-normal" style="position: static; display: inline-block; margin-bottom: 10px;">THƯỜNG</div>
-            <div class="item-img-wrap" id="modal-visual" style="height: 165px;"></div>
+            <div class="item-img-wrap" id="modal-visual" style="height: 175px;"></div>
             <h3 id="modal-title" style="margin-bottom: 6px;">Tên vật phẩm</h3>
             <p id="modal-source" style="font-size: 0.84rem; color: var(--primary); font-weight: 700; margin-bottom: 10px;"></p>
             <p id="modal-desc" style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;"></p>
@@ -772,32 +1109,19 @@
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home', this)">
-            <i class="fa-solid fa-house"></i>
-            <span>Trang chủ</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('items', this)">
-            <i class="fa-solid fa-box-open"></i>
-            <span>Vật phẩm</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('code', this)">
-            <i class="fa-solid fa-ticket"></i>
-            <span>Nhập Code</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('info', this)">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>Thông tin</span>
-        </div>
-    </nav>
-
     <script>
         const FIREBASE_URL = "https://anhptg-7e8e8-default-rtdb.firebaseio.com";
 
         let allItems = [];
         let allCodes = [];
+        let allCommands = [];
+        let allMessages = [];
         let currentCategory = "all";
         let countdownTimer = null;
+        let isCodeMaintenance = false;
+        let maintenanceMessage = "Chức năng nhập code hiện đang được bảo trì để nâng cấp. Vui lòng quay lại sau nhé!";
+        let aiGreetingText = "Chào bạn! 👋 Mình là trợ lý AI của app. Bạn có thể bấm các lệnh bên dưới hoặc nhắn câu hỏi cho mình nhé!";
+        let greetingShown = false;
 
         function getRarityInfo(rarity) {
             const r = (rarity || "THƯỜNG").toUpperCase();
@@ -806,11 +1130,12 @@
             return { label: r, cls: "rarity-normal" };
         }
 
-        function renderVisualHtml(item) {
+        function renderVisualHtml(item, extraClass = "") {
+            const clsAttr = extraClass ? ` class="${extraClass}"` : "";
             if (item.image && item.image.trim() !== "") {
-                return `<img src="${item.image.trim()}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span class="item-emoji" style="display:none;">${item.emoji || "🎁"}</span>`;
+                return `<img${clsAttr} src="${item.image.trim()}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span class="item-emoji${extraClass ? ' ' + extraClass : ''}" style="display:none;">${item.emoji || "🎁"}</span>`;
             }
-            return `<span class="item-emoji">${item.emoji || "🎁"}</span>`;
+            return `<span class="item-emoji${extraClass ? ' ' + extraClass : ''}">${item.emoji || "🎁"}</span>`;
         }
 
         function renderItemCards(list, containerId, emptyText) {
@@ -835,9 +1160,36 @@
             }).join('');
         }
 
+        function applyCodeMaintenanceState() {
+            const maintView = document.getElementById("code-maintenance-view");
+            const activeView = document.getElementById("code-active-view");
+            const msgEl = document.getElementById("maintenance-msg-text");
+
+            msgEl.textContent = maintenanceMessage;
+
+            if (isCodeMaintenance) {
+                maintView.style.display = "block";
+                activeView.style.display = "none";
+            } else {
+                maintView.style.display = "none";
+                activeView.style.display = "block";
+            }
+        }
+
         function renderCodes() {
+            applyCodeMaintenanceState();
+
             const listEl = document.getElementById("code-list");
             const homeEl = document.getElementById("home-code-preview");
+
+            if (isCodeMaintenance) {
+                homeEl.innerHTML = `
+                    <div style="font-size: 0.85rem; color: #b45309; font-weight: 700;">
+                        <i class="fa-solid fa-screwdriver-wrench"></i> Hệ thống đang bảo trì phần nhập code.
+                    </div>
+                `;
+                return;
+            }
 
             const activeCodes = allCodes.filter(c => c.active !== false);
 
@@ -867,6 +1219,77 @@
                     <button class="btn-copy" onclick="copyCode('${topCode.code}')">Sao chép</button>
                 </div>
             `;
+        }
+
+        function renderAICommands() {
+            const box = document.getElementById("ai-quick-commands");
+            if (!allCommands || allCommands.length === 0) {
+                box.innerHTML = `<span style="font-size:0.74rem; color:#94a3b8; padding:4px 2px;">Chưa có lệnh nhanh</span>`;
+                return;
+            }
+            box.innerHTML = allCommands.map(cmd => {
+                const safeCmd = (cmd.command || "").replace(/'/g, "\\'");
+                return `<button class="quick-btn" onclick="askQuick('${safeCmd}')">${cmd.command}</button>`;
+            }).join("");
+        }
+
+        function ensureAIGreeting() {
+            const msgBox = document.getElementById("ai-messages");
+            if (!greetingShown || msgBox.children.length === 0) {
+                msgBox.innerHTML = `<div class="msg msg-bot">${aiGreetingText}</div>`;
+                greetingShown = true;
+            }
+        }
+
+        function renderContactMessages() {
+            const el = document.getElementById("contact-messages-list");
+            const visibleMsgs = allMessages.filter(m => m.hidden !== true);
+            if (!visibleMsgs.length) {
+                el.innerHTML = `<div class="empty-state">Chưa có tin nhắn nào. Hãy gửi lời nhắn cho Anh PTG ở trên nhé!</div>`;
+                return;
+            }
+            el.innerHTML = visibleMsgs.slice().reverse().map(m => `
+                <div class="contact-msg-card">
+                    <div class="contact-sender"><i class="fa-solid fa-user"></i> ${m.sender || "Người chơi"}</div>
+                    <div class="contact-body">${m.content || ""}</div>
+                    ${m.reply ? `<div class="contact-reply"><i class="fa-solid fa-reply"></i> Anh PTG: ${m.reply}</div>` : ""}
+                </div>
+            `).join("");
+        }
+
+        async function sendContactMessage() {
+            const sender = document.getElementById("contact-name").value.trim() || "Người chơi";
+            const content = document.getElementById("contact-content").value.trim();
+
+            if (!content) {
+                showToast("⚠️ Vui lòng nhập nội dung tin nhắn!");
+                return;
+            }
+
+            try {
+                await fetch(`${FIREBASE_URL}/messages.json`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        sender,
+                        content,
+                        reply: "",
+                        hidden: false,
+                        createdAt: new Date().toISOString()
+                    })
+                });
+                document.getElementById("contact-content").value = "";
+                showToast("✅ Đã gửi tin nhắn cho Anh PTG!");
+                await loadMessagesOnly();
+            } catch (e) {
+                showToast("❌ Gửi tin nhắn thất bại!");
+            }
+        }
+
+        async function loadMessagesOnly() {
+            const res = await fetch(`${FIREBASE_URL}/messages.json`);
+            const data = await res.json();
+            allMessages = data ? Object.entries(data).map(([id, v]) => ({ id, ...v })) : [];
+            renderContactMessages();
         }
 
         function startCountdown(targetIso) {
@@ -900,15 +1323,19 @@
         async function loadFirebaseData() {
             const statusEl = document.getElementById("db-status");
             try {
-                const [itemsRes, codesRes, configRes] = await Promise.all([
+                const [itemsRes, codesRes, configRes, cmdsRes, msgsRes] = await Promise.all([
                     fetch(`${FIREBASE_URL}/items.json`),
                     fetch(`${FIREBASE_URL}/codes.json`),
-                    fetch(`${FIREBASE_URL}/config.json`)
+                    fetch(`${FIREBASE_URL}/config.json`),
+                    fetch(`${FIREBASE_URL}/aiCommands.json`),
+                    fetch(`${FIREBASE_URL}/messages.json`)
                 ]);
 
                 const itemsObj = await itemsRes.json();
                 const codesObj = await codesRes.json();
                 const configObj = await configRes.json();
+                const cmdsObj = await cmdsRes.json();
+                const msgsObj = await msgsRes.json();
 
                 allItems = itemsObj
                     ? Object.entries(itemsObj).map(([id, val]) => ({ id, ...val }))
@@ -918,14 +1345,32 @@
                     ? Object.entries(codesObj).map(([id, val]) => ({ id, ...val }))
                     : [];
 
+                allCommands = cmdsObj
+                    ? Object.entries(cmdsObj).map(([id, val]) => ({ id, ...val }))
+                    : [];
+
+                allMessages = msgsObj
+                    ? Object.entries(msgsObj).map(([id, val]) => ({ id, ...val }))
+                    : [];
+
                 if (configObj) {
                     if (configObj.bannerTitle) document.getElementById("banner-title").textContent = configObj.bannerTitle;
                     if (configObj.bannerDesc) document.getElementById("banner-desc").textContent = configObj.bannerDesc;
                     startCountdown(configObj.updateDate);
+                    isCodeMaintenance = Boolean(configObj.codeMaintenance);
+                    if (configObj.maintenanceMsg && configObj.maintenanceMsg.trim() !== "") {
+                        maintenanceMessage = configObj.maintenanceMsg.trim();
+                    }
+                    if (configObj.aiGreeting && configObj.aiGreeting.trim() !== "") {
+                        aiGreetingText = configObj.aiGreeting.trim();
+                    }
                 } else {
                     startCountdown(null);
+                    isCodeMaintenance = false;
                 }
 
+                ensureAIGreeting();
+                renderAICommands();
                 renderItemCards(
                     allItems.filter(i => i.featured === true),
                     "featured-grid",
@@ -934,6 +1379,7 @@
 
                 applyCategoryFilter();
                 renderCodes();
+                renderContactMessages();
 
                 statusEl.innerHTML = `<span class="dot"></span><span>Đã kết nối</span>`;
             } catch (err) {
@@ -941,9 +1387,8 @@
                 statusEl.style.background = "#fee2e2";
                 statusEl.style.color = "#991b1b";
                 statusEl.innerHTML = `<span>Lỗi kết nối</span>`;
-                document.getElementById("featured-grid").innerHTML = `<div class="empty-state">Không thể tải dữ liệu từ Firebase. Kiểm tra lại đường dẫn hoặc Rules.</div>`;
-                document.getElementById("all-items-grid").innerHTML = `<div class="empty-state">Không thể tải dữ liệu từ Firebase.</div>`;
-                document.getElementById("code-list").innerHTML = `<div class="empty-state">Không thể tải danh sách Giftcode.</div>`;
+                ensureAIGreeting();
+                renderAICommands();
             }
         }
 
@@ -965,13 +1410,14 @@
             document.querySelectorAll(".view-section").forEach(s => s.classList.remove("active"));
             document.getElementById("view-" + tabName).classList.add("active");
 
+            const idxMap = { home: 0, items: 1, code: 2, contact: 3, info: 4 };
             document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
             if (navEl) {
                 navEl.classList.add("active");
-            } else {
-                const idxMap = { home: 0, items: 1, code: 2, info: 3 };
+            } else if (idxMap[tabName] !== undefined) {
                 document.querySelectorAll(".nav-item")[idxMap[tabName]].classList.add("active");
             }
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
         function openItemModal(id) {
@@ -981,11 +1427,15 @@
             const badge = document.getElementById("modal-badge");
             badge.textContent = rar.label;
             badge.className = "rarity-badge " + rar.cls;
-            document.getElementById("modal-visual").innerHTML = `${renderVisualHtml(item)}<span class="watermark">Anh PTG</span>`;
+            document.getElementById("modal-visual").innerHTML = `${renderVisualHtml(item, "modal-visual-float")}<span class="watermark">Anh PTG</span>`;
             document.getElementById("modal-title").textContent = item.name || "Chưa đặt tên";
             document.getElementById("modal-source").textContent = "Nguồn: " + (item.source || "Đang cập nhật");
             document.getElementById("modal-desc").textContent = item.desc || "Chưa có mô tả chi tiết cho vật phẩm này.";
-            document.getElementById("item-modal").classList.add("open");
+
+            const modal = document.getElementById("item-modal");
+            modal.classList.remove("open");
+            void modal.offsetWidth;
+            modal.classList.add("open");
         }
 
         function closeModal(e) {
@@ -1002,16 +1452,28 @@
         }
 
         function copyCode(code) {
+            if (isCodeMaintenance) {
+                showToast("⚠️ Hệ thống đang bảo trì!");
+                return;
+            }
             navigator.clipboard?.writeText(code);
             showToast("Đã sao chép mã: " + code);
         }
 
         function fillAndCopy(code) {
+            if (isCodeMaintenance) {
+                showToast("⚠️ Hệ thống đang bảo trì!");
+                return;
+            }
             document.getElementById("giftcode-input").value = code;
             copyCode(code);
         }
 
         function redeemCode() {
+            if (isCodeMaintenance) {
+                alert("⚠️ Hệ thống đang bảo trì!\n\n" + maintenanceMessage);
+                return;
+            }
             const pid = document.getElementById("player-id").value.trim();
             const code = document.getElementById("giftcode-input").value.trim().toUpperCase();
             const server = document.getElementById("server-select").value;
@@ -1034,10 +1496,114 @@
             }
         }
 
-        // AI Box
-        function toggleAI() {
-            document.getElementById("ai-window").classList.toggle("open");
+        // --- AI BOX ANIMATION & DRAG ---
+        const aiFab = document.getElementById("ai-fab");
+        const aiWindow = document.getElementById("ai-window");
+        const aiDragHeader = document.getElementById("ai-drag-header");
+
+        function triggerFabAnim() {
+            aiFab.classList.remove("clicked-anim");
+            void aiFab.offsetWidth;
+            aiFab.classList.add("clicked-anim");
         }
+
+        function toggleAI() {
+            triggerFabAnim();
+            const isOpening = !aiWindow.classList.contains("open");
+            if (isOpening) {
+                ensureAIGreeting();
+                aiWindow.classList.remove("open");
+                void aiWindow.offsetWidth;
+                aiWindow.classList.add("open");
+            } else {
+                aiWindow.classList.remove("open");
+            }
+        }
+
+        function makeDraggable(targetEl, handleEl, onTapCallback) {
+            let isPointerDown = false;
+            let hasMoved = false;
+            let startX = 0, startY = 0;
+            let originLeft = 0, originTop = 0;
+
+            function getPoint(e) {
+                if (e.touches && e.touches.length > 0) {
+                    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }
+                if (e.changedTouches && e.changedTouches.length > 0) {
+                    return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+                }
+                return { x: e.clientX, y: e.clientY };
+            }
+
+            function onDown(e) {
+                if (e.target.closest(".fa-xmark")) return;
+                if (e.type === "mousedown" && e.button !== 0) return;
+
+                const pt = getPoint(e);
+                const rect = targetEl.getBoundingClientRect();
+
+                isPointerDown = true;
+                hasMoved = false;
+                startX = pt.x;
+                startY = pt.y;
+
+                targetEl.style.left = rect.left + "px";
+                targetEl.style.top = rect.top + "px";
+                targetEl.style.right = "auto";
+                targetEl.style.bottom = "auto";
+
+                originLeft = rect.left;
+                originTop = rect.top;
+
+                handleEl.classList.add("dragging");
+            }
+
+            function onMove(e) {
+                if (!isPointerDown) return;
+                const pt = getPoint(e);
+                const dx = pt.x - startX;
+                const dy = pt.y - startY;
+
+                if (Math.hypot(dx, dy) > 6) {
+                    hasMoved = true;
+                }
+                if (!hasMoved) return;
+
+                if (e.cancelable) e.preventDefault();
+
+                const rect = targetEl.getBoundingClientRect();
+                const maxX = Math.max(8, window.innerWidth - rect.width - 8);
+                const maxY = Math.max(64, window.innerHeight - rect.height - 8);
+
+                const nextX = Math.min(maxX, Math.max(8, originLeft + dx));
+                const nextY = Math.min(maxY, Math.max(64, originTop + dy));
+
+                targetEl.style.left = nextX + "px";
+                targetEl.style.top = nextY + "px";
+            }
+
+            function onUp() {
+                if (!isPointerDown) return;
+                isPointerDown = false;
+                handleEl.classList.remove("dragging");
+
+                if (!hasMoved && typeof onTapCallback === "function") {
+                    onTapCallback();
+                }
+            }
+
+            handleEl.addEventListener("mousedown", onDown);
+            window.addEventListener("mousemove", onMove, { passive: false });
+            window.addEventListener("mouseup", onUp);
+
+            handleEl.addEventListener("touchstart", onDown, { passive: true });
+            window.addEventListener("touchmove", onMove, { passive: false });
+            window.addEventListener("touchend", onUp);
+        }
+
+        makeDraggable(aiFab, aiFab, toggleAI);
+        makeDraggable(aiWindow, aiDragHeader, null);
 
         function askQuick(q) {
             document.getElementById("ai-input").value = q;
@@ -1054,7 +1620,7 @@
 
             setTimeout(() => {
                 appendMessage(generateAIReply(text.toLowerCase()), "bot");
-            }, 350);
+            }, 300);
         }
 
         function appendMessage(text, sender) {
@@ -1067,21 +1633,31 @@
         }
 
         function generateAIReply(q) {
-            if (q.includes("code") || q.includes("mã") || q.includes("quà")) {
+            const matchedCmd = allCommands.find(c => {
+                const key = (c.command || "").toLowerCase().trim();
+                return key && (q === key || q.includes(key) || key.includes(q));
+            });
+            if (matchedCmd && matchedCmd.reply) {
+                return matchedCmd.reply;
+            }
+
+            if (q.includes("code") || q.includes("mã") || q.includes("quà") || q.includes("nhập")) {
+                if (isCodeMaintenance) {
+                    return `<b>Hệ thống đang bảo trì</b> phần nhập code. ${maintenanceMessage}`;
+                }
                 const active = allCodes.filter(c => c.active !== false);
                 if (active.length === 0) return "Hiện tại trên hệ thống chưa có mã Giftcode nào đang hoạt động.";
                 const listStr = active.map(c => `<b>${c.code}</b> (${c.reward || "Quà"})`).join("<br>• ");
-                return `Danh sách mã Giftcode hiện có trên app:<br>• ${listStr}<br><br>Bạn qua tab <b>Nhập Code</b> để dùng nhanh nhé!`;
+                return `Danh sách mã Giftcode hiện có trên app:<br>• ${listStr}`;
             }
+
             if (q.includes("vật phẩm") || q.includes("đồ") || q.includes("mới") || q.includes("leak")) {
-                if (allItems.length === 0) return "Hiện tại kho vật phẩm trên Firebase đang trống. Bạn có thể thêm vật phẩm mới ở trang Admin.";
+                if (allItems.length === 0) return "Hiện tại kho vật phẩm trên Firebase đang trống.";
                 const names = allItems.slice(0, 5).map(i => `<b>${i.name}</b>`).join(", ");
-                return `Hiện có <b>${allItems.length}</b> vật phẩm trên app, tiêu biểu như: ${names}. Bạn sang tab <b>Vật phẩm</b> để xem chi tiết từng món nhé!`;
+                return `Hiện có <b>${allItems.length}</b> vật phẩm trên app, tiêu biểu như: ${names}.`;
             }
-            if (q.includes("nhập") || q.includes("cách") || q.includes("dùng")) {
-                return "Bạn vào tab <b>Nhập Code</b>, chọn máy chủ (VNG hoặc Global), nhập ID/tên nhân vật, chọn mã từ danh sách rồi bấm <b>Kiểm Tra &amp; Nhận Quà</b>.";
-            }
-            return "Mình có thể hỗ trợ tra cứu <b>vật phẩm đang có trên app</b>, <b>mã Giftcode hiện hành</b> và <b>cách sử dụng</b>. Bạn cần hỏi mục nào?";
+
+            return "Mình đã ghi nhận câu hỏi của bạn! Bạn có thể chọn các lệnh nhanh phía dưới hoặc hỏi về vật phẩm, giftcode nhé.";
         }
 
         loadFirebaseData();
