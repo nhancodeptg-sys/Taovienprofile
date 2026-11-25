@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Làng Vui Vẻ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -203,6 +203,95 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 #betaSubmit { width:100%; border:0; border-radius:13px; padding:13px; background:var(--coral); color:#fff; font:800 1.05rem var(--display); cursor:pointer; }
 #betaSubmit:disabled { opacity:.6; cursor:wait; }
 
+
+/* Mobile playability and safe-area support */
+:root { --safe-top: env(safe-area-inset-top, 0px); --safe-right: env(safe-area-inset-right, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); --safe-left: env(safe-area-inset-left, 0px); }
+button, input { touch-action: manipulation; }
+#app { min-height: 100%; }
+.hud.top-left { top: calc(10px + var(--safe-top)); left: calc(10px + var(--safe-left)); }
+.hud.top-right { top: calc(10px + var(--safe-top)); right: calc(10px + var(--safe-right)); }
+.chat-dock { bottom: calc(10px + var(--safe-bottom)); }
+.act { right: calc(14px + var(--safe-right)); bottom: calc(82px + var(--safe-bottom)); touch-action: manipulation; }
+.emotes { left: calc(10px + var(--safe-left)); bottom: calc(82px + var(--safe-bottom)); }
+.modal { padding-bottom: var(--safe-bottom); }
+.sheet { max-height: min(86dvh, 760px); }
+.phone { height: min(660px, 88dvh); max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 20px); }
+.pscreen, .body, .chat-feed { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+#betaGate { padding: max(16px, var(--safe-top)) max(16px, var(--safe-right)) max(16px, var(--safe-bottom)) max(16px, var(--safe-left)); }
+#ptg-intro-screen { padding-top: max(30px, calc(30px + var(--safe-top))); padding-bottom: max(24px, calc(24px + var(--safe-bottom))); }
+#ic, #c { touch-action: none; }
+@media (max-width: 700px) {
+  .title { font-size: .98rem; }
+  .coins, .pill { padding: 6px 10px; font-size: .95rem; gap: 6px; }
+  .pill.soft { font-size: .75rem; }
+  .phonebtn { font-size: .85rem; }
+  .emotes { flex-direction: row; gap: 5px; bottom: calc(72px + var(--safe-bottom)); }
+  .emotes button { padding: 7px 11px; font-size: .82rem; }
+  .act { width: 76px; height: 76px; font-size: 1rem; border-width: 3px; bottom: calc(78px + var(--safe-bottom)); }
+  .act small { font-size: .58rem; }
+  .chat-dock { width: calc(100vw - 16px - var(--safe-left) - var(--safe-right)); bottom: calc(8px + var(--safe-bottom)); gap: 4px; }
+  .chat-feed { max-height: 22dvh; font-size: .76rem; }
+  .chat-bar { padding: 4px 5px 4px 9px; gap: 5px; }
+  .chat-inp { font-size: 16px; min-height: 34px; }
+  .chat-send { padding: 8px 12px; }
+  .chat-toggle { width: 34px; height: 34px; }
+  .sheet { width: 100%; max-height: 88dvh; border-radius: 20px 20px 0 0; }
+  .sheet header { padding: 12px 14px 7px; }
+  .sheet h2 { font-size: 1.3rem; }
+  .body { padding: 4px 12px calc(14px + var(--safe-bottom)); }
+  .tabs { padding: 0 12px 8px; }
+  .tab { font-size: .84rem; padding: 9px 4px; }
+  .item { padding: 9px; gap: 7px; }
+  .btn { padding: 9px 10px; }
+  .phone { width: min(390px, calc(100vw - 20px)); height: min(700px, calc(100dvh - var(--safe-top) - var(--safe-bottom) - 20px)); border-radius: 30px; padding: 9px; }
+  .pscreen { padding: 11px; border-radius: 22px; }
+  .pnav { padding-bottom: 4px; }
+  .pnav button { min-height: 40px; font-size: .74rem; }
+  .app i { width: 56px; height: 56px; }
+  .beta-card { padding: 22px 18px; }
+  .beta-card input, #betaSubmit { min-height: 48px; font-size: 16px; }
+  .ptg-logo-wrapper { margin-top: 3vh; }
+  .ptg-tip { font-size: 12px; padding: 8px 12px; }
+  .ptg-bottom { padding-bottom: 2px; }
+}
+@media (max-width: 380px) {
+  .top-left { max-width: 58vw; }
+  .top-right { max-width: 38vw; }
+  .row { gap: 5px; }
+  .coins, .pill { padding: 5px 8px; font-size: .84rem; }
+  .phonebtn { padding: 6px 8px; }
+  .emotes button { padding: 6px 9px; font-size: .76rem; }
+  .act { width: 68px; height: 68px; right: calc(10px + var(--safe-right)); }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .hud.top-left, .hud.top-right { top: calc(6px + var(--safe-top)); }
+  .emotes { bottom: calc(58px + var(--safe-bottom)); }
+  .act { bottom: calc(58px + var(--safe-bottom)); width: 64px; height: 64px; }
+  .chat-dock { width: min(460px, 54vw); bottom: calc(6px + var(--safe-bottom)); }
+  .chat-feed { max-height: 18dvh; }
+  .ptg-intro-screen { padding-top: 12px; padding-bottom: 12px; }
+  .ptg-logo-wrapper { margin-top: 0; }
+  .ptg-title { font-size: 38px; }
+  .ptg-title span { font-size: 30px; }
+  .phone { height: calc(100dvh - 12px); width: min(430px, 70vw); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}
+
+
+#touchPad { display:none; position:absolute; z-index:3; left:calc(16px + var(--safe-left)); bottom:calc(94px + var(--safe-bottom)); width:112px; height:112px; border-radius:50%; background:rgba(255,255,255,.28); border:2px solid rgba(255,255,255,.65); box-shadow:0 4px 18px rgba(35,50,74,.18); touch-action:none; user-select:none; -webkit-user-select:none; }
+#touchKnob { position:absolute; width:46px; height:46px; left:31px; top:31px; border-radius:50%; background:rgba(255,255,255,.82); border:2px solid rgba(35,50,74,.22); box-shadow:0 3px 8px rgba(35,50,74,.2); pointer-events:none; }
+@media (pointer:coarse) and (max-width:900px) {
+  #touchPad { display:block; }
+  .emotes { bottom:calc(82px + var(--safe-bottom)); left:calc(140px + var(--safe-left)); }
+}
+@media (orientation:landscape) and (max-height:520px) and (pointer:coarse) {
+  #touchPad { width:92px; height:92px; bottom:calc(68px + var(--safe-bottom)); }
+  #touchKnob { left:24px; top:24px; width:40px; height:40px; }
+  .emotes { left:calc(116px + var(--safe-left)); bottom:calc(64px + var(--safe-bottom)); }
+}
+
 </style>
 </head>
 <body>
@@ -234,7 +323,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     <button type="button" data-say="Tuyệt vời!">Tuyệt</button>
   </div>
 
-  <button class="act" id="act" type="button" tabindex="-1"><span id="actLabel">Vợt</span><small id="actKey">Space</small></button>
+  <div id="touchPad" aria-label="Cần điều khiển di chuyển" role="group"><div id="touchKnob"></div></div>
+  <button class="act" id="act" type="button" tabindex="-1"><span id="actLabel">Vợt</span><small id="actKey">Chạm</small></button>
 
   <!-- THANH CHAT Ở DƯỚI MÀN HÌNH CHÍNH -->
   <div class="chat-dock" id="chatDock">
@@ -971,16 +1061,18 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   var P = { x: 900, y: 640, face: 1, walk: 0, moving: false, swingT: 0, swingHit: true, bubble: null, fish: null };
   var pet = { x: 860, y: 650, face: 1, walk: 0, moving: false };
   var target = null, stuck = 0, tapFx = 0, tapPos = { x: 0, y: 0 };
-  var keys = {}, bugs = [], parts = [], pops = [], clock = 0, dark = 0, hourF = 6;
+  var keys = {}, touchMoveX = 0, touchMoveY = 0, bugs = [], parts = [], pops = [], clock = 0, dark = 0, hourF = 6;
   var modalOpen = false, phoneOpen = false, introOpen = false, ptgIntroOpen = true, atShop = false, tab = "bag", travelLock = false;
   var npcs = NPC_DEFS.map(function (d) { return { id: d.id, name: d.name, zone: d.zone, x: d.x, y: d.y, shirt: d.shirt, hair: d.hair, lines: d.lines, t: null, wait: 0, bubble: null, bT: 0, cool: 0, face: 1, walk: 0, moving: false }; });
 
   function resize() {
-    W = window.innerWidth; H = window.innerHeight; dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight; dpr = Math.min(window.devicePixelRatio || 1, /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ? 1.5 : 2);
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); S = clamp(Math.min(W, H) / 560, 0.85, 1.5);
     var ic = document.getElementById("ic"); ic.width = Math.round(W * dpr); ic.height = Math.round(H * dpr);
   }
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", resize, { passive: true });
+  window.addEventListener("orientationchange", function () { setTimeout(resize, 120); }, { passive: true });
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", resize, { passive: true });
 
   // ---------- ui helpers ----------
   function $(id) { return document.getElementById(id); }
@@ -1115,6 +1207,31 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     target = { x: clamp(wx, 30, Z.w - 30), y: clamp(wy, 70, Z.h - 20) }; tapPos = target; tapFx = 0.6; stuck = 0;
   });
   elAct.addEventListener("pointerdown", function (e) { e.preventDefault(); act(); });
+  // Virtual joystick: supports simultaneous touch movement and action button presses.
+  (function initTouchPad() {
+    var pad = $("touchPad"), knob = $("touchKnob"), activeId = null;
+    if (!pad || !knob) return;
+    var radius = 34;
+    function reset() { touchMoveX = 0; touchMoveY = 0; activeId = null; knob.style.transform = "translate(0,0)"; }
+    function move(e) {
+      if (activeId !== e.pointerId) return;
+      var r = pad.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var dx = e.clientX - cx, dy = e.clientY - cy, len = Math.hypot(dx, dy);
+      if (len > radius) { dx = dx / len * radius; dy = dy / len * radius; }
+      touchMoveX = dx / radius; touchMoveY = dy / radius;
+      knob.style.transform = "translate(" + dx + "px," + dy + "px)";
+      if (Math.hypot(touchMoveX, touchMoveY) > .16) target = null;
+    }
+    pad.addEventListener("pointerdown", function (e) {
+      e.preventDefault(); activeId = e.pointerId;
+      try { pad.setPointerCapture(e.pointerId); } catch (_) {}
+      move(e);
+    });
+    pad.addEventListener("pointermove", move);
+    pad.addEventListener("pointerup", function (e) { if (activeId === e.pointerId) reset(); });
+    pad.addEventListener("pointercancel", reset);
+    pad.addEventListener("lostpointercapture", reset);
+  })();
   document.querySelectorAll(".emotes button").forEach(function (b) { b.addEventListener("click", function () { sendChatMessage(b.getAttribute("data-say")); b.blur(); }); });
   $("bagBtn").addEventListener("click", function () { this.blur(); openModal(false); });
   $("phoneBtn").addEventListener("click", function () { this.blur(); openPhone(); });
@@ -1945,6 +2062,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     if (!uiOpen() && !travelLock) {
       if (keys.a || keys.arrowleft) ix -= 1; if (keys.d || keys.arrowright) ix += 1;
       if (keys.w || keys.arrowup) iy -= 1; if (keys.s || keys.arrowdown) iy += 1;
+      ix += touchMoveX; iy += touchMoveY;
     }
     if (ix || iy) { target = null; var l = Math.hypot(ix, iy); ix /= l; iy /= l; }
     else if (target && !travelLock) { var dx = target.x - P.x, dy = target.y - P.y, d = Math.hypot(dx, dy); if (d < 8) target = null; else { ix = dx / d; iy = dy / d; } }
@@ -2208,7 +2326,9 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 
   // ---------- boot ----------
   var last = performance.now();
+  document.addEventListener("visibilitychange", function () { last = performance.now(); if (document.hidden) { touchMoveX = 0; touchMoveY = 0; target = null; } });
   function frame(now) {
+    if (document.hidden) { last = now; requestAnimationFrame(frame); return; }
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
     update(dt); draw(now); requestAnimationFrame(frame);
   }
