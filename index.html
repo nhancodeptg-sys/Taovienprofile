@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: full-screen village canvas, floating rounded HUD cards, one big action button, a shop sheet and a phone with apps. */
 :root {
   --ink: #23324a;
   --muted: #5d6b82;
@@ -52,7 +51,6 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 .act.reel { background: var(--coral); color: #fff; box-shadow: 0 5px 0 #c9483a; animation: pulse .35s ease-in-out infinite alternate; }
 @keyframes pulse { to { transform: scale(1.08); } }
 
-/* Bottom Main Screen Chat Bar */
 .chat-dock { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); width: min(520px, calc(100vw - 24px)); z-index: 4; display: flex; flex-direction: column; gap: 6px; }
 .chat-feed { max-height: 112px; overflow-y: auto; padding: 8px 12px; border-radius: 16px; background: rgba(25, 36, 54, .76); backdrop-filter: blur(6px); color: #fff; font-size: .82rem; line-height: 1.4; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 4px 16px rgba(0, 0, 0, .18); }
 .chat-feed[hidden] { display: none; }
@@ -91,7 +89,6 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 .empty { margin: 8px 0; color: var(--muted); line-height: 1.5; font-size: .9rem; }
 .sell { width: 100%; padding: 12px; font-size: 1.1rem; }
 
-/* phone */
 .phone { width: min(370px, 94vw); height: min(660px, 92%); display: flex; flex-direction: column; background: #1c2638; border-radius: 38px; padding: 12px; box-shadow: 0 20px 60px rgba(0, 0, 0, .45); align-self: center; }
 .pbar { display: flex; justify-content: space-between; padding: 4px 18px 8px; color: #cfe0f5; font-size: .78rem; font-weight: 600; }
 .pscreen { flex: 1; min-height: 0; overflow-y: auto; background: linear-gradient(180deg, #d9f0ff 0%, #f7fbff 55%); border-radius: 26px; padding: 14px; }
@@ -120,7 +117,6 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 .ptab.on { background: var(--sky); border-color: var(--sky); color: #fff; }
 .search-row { display: flex; gap: 6px; margin-bottom: 10px; }
 
-/* Play Together style splash & loading intro */
 #ptg-intro-wrap { position: fixed; inset: 0; z-index: 200; font-family: "Be Vietnam Pro", var(--body); }
 #ptg-intro-wrap[hidden] { display: none; }
 #ptg-splash-studio { position: fixed; inset: 0; background: #ffffff; z-index: 202; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.55s ease, visibility 0.55s ease; }
@@ -155,7 +151,6 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 @keyframes ptgMoveStripes { 0% { background-position: 0 0; } 100% { background-position: 24px 0; } }
 @keyframes ptgPulseText { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.08); opacity: 0.82; } }
 
-/* intro, fade, banner */
 .intro { position: absolute; inset: 0; z-index: 9; background: #bfe6ff; transition: opacity .6s ease; }
 .intro[hidden] { display: none; }
 .intro.out { opacity: 0; pointer-events: none; }
@@ -180,7 +175,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 @keyframes ban { 0% { opacity: 0; transform: translate(-50%, 10px); } 15%, 75% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
 @media (max-width: 480px) { .act { width: 84px; height: 84px; font-size: 1.1rem; } .icard h1 { font-size: 1.8rem; } }
 @media (prefers-reduced-motion: reduce) { .toast, #banner.show { animation-duration: 3s; } .act.reel, .icard, .ptg-logo-wrapper, .ptg-tap-start { animation: none; } }
-/* firebase live features */
+
 #srvBanner { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 6; max-width: min(520px, calc(100vw - 290px)); padding: 6px 16px; border-radius: 99px; background: linear-gradient(90deg, #ff7a6b, #ff9f43); color: #fff; font-family: var(--display); font-weight: 800; font-size: .9rem; box-shadow: 0 4px 14px rgba(255,122,107,.35); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
 #srvBanner[hidden] { display: none; }
 #maintOverlay { position: fixed; inset: 0; z-index: 300; background: rgba(28, 38, 56, .92); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -188,10 +183,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 .maint-card { max-width: 420px; width: 100%; background: #fff; border-radius: 24px; padding: 26px 22px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
 .maint-card h2 { margin: 0 0 8px; font-family: var(--display); font-weight: 800; font-size: 1.7rem; color: var(--coral); }
 .maint-card p { margin: 0; color: var(--muted); line-height: 1.55; }
-.mail-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ff4757; margin-left: 4px; vertical-align: middle; }
 @media (max-width: 680px) { #srvBanner { top: 58px; max-width: 92vw; } }
 
-/* Beta key gate */
 #betaGate { position:fixed; inset:0; z-index:400; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(20,30,48,.88); backdrop-filter:blur(8px); }
 #betaGate[hidden] { display:none; }
 .beta-card { width:min(420px,100%); background:#fff; border-radius:24px; padding:26px 22px; box-shadow:0 22px 70px rgba(0,0,0,.35); text-align:center; }
@@ -203,8 +196,6 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 #betaSubmit { width:100%; border:0; border-radius:13px; padding:13px; background:var(--coral); color:#fff; font:800 1.05rem var(--display); cursor:pointer; }
 #betaSubmit:disabled { opacity:.6; cursor:wait; }
 
-
-/* Mobile playability and safe-area support */
 :root { --safe-top: env(safe-area-inset-top, 0px); --safe-right: env(safe-area-inset-right, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); --safe-left: env(safe-area-inset-left, 0px); }
 button, input { touch-action: manipulation; }
 #app { min-height: 100%; }
@@ -279,7 +270,6 @@ button, input { touch-action: manipulation; }
   *, *::before, *::after { scroll-behavior: auto !important; }
 }
 
-
 #touchPad { display:none; position:absolute; z-index:3; left:calc(16px + var(--safe-left)); bottom:calc(94px + var(--safe-bottom)); width:112px; height:112px; border-radius:50%; background:rgba(255,255,255,.28); border:2px solid rgba(255,255,255,.65); box-shadow:0 4px 18px rgba(35,50,74,.18); touch-action:none; user-select:none; -webkit-user-select:none; }
 #touchKnob { position:absolute; width:46px; height:46px; left:31px; top:31px; border-radius:50%; background:rgba(255,255,255,.82); border:2px solid rgba(35,50,74,.22); box-shadow:0 3px 8px rgba(35,50,74,.2); pointer-events:none; }
 @media (pointer:coarse) and (max-width:900px) {
@@ -291,7 +281,6 @@ button, input { touch-action: manipulation; }
   #touchKnob { left:24px; top:24px; width:40px; height:40px; }
   .emotes { left:calc(116px + var(--safe-left)); bottom:calc(64px + var(--safe-bottom)); }
 }
-
 </style>
 </head>
 <body>
@@ -326,7 +315,6 @@ button, input { touch-action: manipulation; }
   <div id="touchPad" aria-label="Cần điều khiển di chuyển" role="group"><div id="touchKnob"></div></div>
   <button class="act" id="act" type="button" tabindex="-1"><span id="actLabel">Vợt</span><small id="actKey">Chạm</small></button>
 
-  <!-- THANH CHAT Ở DƯỚI MÀN HÌNH CHÍNH -->
   <div class="chat-dock" id="chatDock">
     <div class="chat-feed" id="chatFeed" hidden></div>
     <div class="chat-bar">
@@ -360,7 +348,6 @@ button, input { touch-action: manipulation; }
     <div class="istage"><div class="icard" id="iCard"></div></div>
   </div>
 
-  <!-- MÀN HÌNH INTRO MỞ ĐẦU KIỂU PLAY TOGETHER -->
   <div id="ptg-intro-wrap">
     <div id="ptg-splash-studio">
       <div class="ptg-studio-logo">ANH PTG</div>
@@ -417,7 +404,6 @@ button, input { touch-action: manipulation; }
   "use strict";
   var cv = document.getElementById("c"), ctx = cv.getContext("2d");
 
-  // ---------- data ----------
   var HATS = [
     { id: "hat_bow", name: "Nơ hồng", price: 100, color: "#ff7eb6" },
     { id: "hat_beanie", name: "Mũ len đỏ", price: 120, color: "#e63946" },
@@ -510,7 +496,6 @@ button, input { touch-action: manipulation; }
   function withCtx(c, fn) { var o = ctx; ctx = c; try { fn(); } finally { ctx = o; } }
   function inRect(x, y, r) { return x >= r[0] && x <= r[0] + r[2] && y >= r[1] && y <= r[1] + r[3]; }
 
-  // ---------- save & firebase social ----------
   var FB_URL = "https://admin-9c62a-default-rtdb.firebaseio.com";
   var fbConfig = {
     announcement: { text: "", active: false, id: 0 },
@@ -531,7 +516,7 @@ button, input { touch-action: manipulation; }
   function defaults() {
     var code = "LV-"; for (var i = 0; i < 5; i++) code += "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".charAt(Math.floor(Math.random() * 32));
     var pid = "P-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
-    return { pid: pid, name: "Bạn", intro: false, coins: 50, inv: {}, owned: { sh_coral: true }, eq: { hat: null, shirt: "sh_coral", pet: null }, xp: 0, eco: 0, stats: { bugs: 0, fish: 0, picks: 0, recycled: 0, earned: 0 }, friends: {}, playerFriends: {}, codes: {}, visited: { village: true }, fcode: code, joined: Date.now() };
+    return { pid: pid, name: "Bạn", intro: false, coins: 50, inv: {}, owned: { sh_coral: true }, eq: { hat: null, shirt: "sh_coral", pet: null }, xp: 0, eco: 0, stats: { bugs: 0, fish: 0, picks: 0, recycled: 0, earned: 0 }, friends: {}, playerFriends: {}, codes: {}, visited: { village: true }, fcode: code, joined: Date.now(), _lastCmdTs: 0 };
   }
   var save = defaults();
   try {
@@ -561,7 +546,6 @@ button, input { touch-action: manipulation; }
     return fetch(FB_URL + path + ".json", opts).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
   }
 
-  // ---------- Beta key access ----------
   var betaPassed = false;
   var betaDeviceId = "";
   try {
@@ -577,7 +561,6 @@ button, input { touch-action: manipulation; }
     var key = String(rawKey || "").trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
     if (!key) return Promise.reject(new Error("Vui lòng nhập Beta Key."));
     var path = "/betaKeys/" + encodeURIComponent(key);
-    // ETag + If-Match makes quota updates atomic in Firebase RTDB.
     function attempt(tries) {
       return fetch(FB_URL + path + ".json", { headers: { "X-Firebase-ETag": "true" } }).then(function (res) {
         if (!res.ok) throw new Error("Không thể kiểm tra Beta Key. Thử lại sau.");
@@ -611,8 +594,6 @@ button, input { touch-action: manipulation; }
     gate.hidden = true;
     betaPassed = true;
     try { localStorage.setItem("lang-vui-beta-authorized", "1"); } catch (e) {}
-    // Nếu đang ở màn hình mở đầu, chỉ đóng cổng Beta Key và để intro chạy tiếp.
-    // Nếu người chơi vừa bấm nút bắt đầu, tiếp tục vào game như luồng cũ.
     var ptgWrap = $("ptg-intro-wrap");
     if (ptgWrap && !ptgWrap.hidden) return;
     if (!save.intro) startIntro(false);
@@ -623,9 +604,7 @@ button, input { touch-action: manipulation; }
   }
 
   function initBetaGate() {
-    var gate = $("betaGate"), input = $("betaKeyInput"), btn = $("betaSubmit"), err = $("betaError");
-    // Chỉ yêu cầu Beta Key ở lần đầu; các lần tải lại dùng trạng thái đã lưu.
-    gate.hidden = betaPassed;
+    var input = $("betaKeyInput"), btn = $("betaSubmit"), err = $("betaError");
     function submit() {
       if (btn.disabled) return;
       btn.disabled = true; err.textContent = "Đang xác minh Beta Key...";
@@ -639,6 +618,7 @@ button, input { touch-action: manipulation; }
     btn.addEventListener("click", submit);
     input.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(); });
   }
+
   function syncPlayerToFb() {
     if (!save.pid) return;
     var sh = byId(SHIRTS, save.eq.shirt);
@@ -715,6 +695,7 @@ button, input { touch-action: manipulation; }
       sb.hidden = true;
     }
     checkLockScreen();
+    if (modalOpen && tab === "bag") renderModal();
   }
   var adminBanState = { banned: false, reason: "" };
   function checkLockScreen() {
@@ -748,7 +729,6 @@ button, input { touch-action: manipulation; }
     adminBanState.reason = pdata.banReason || "";
     checkLockScreen();
 
-    // Sync friend requests & accepted friends
     friendRequests = (pdata.friendRequests && typeof pdata.friendRequests === "object") ? pdata.friendRequests : {};
     if (pdata.playerFriends && typeof pdata.playerFriends === "object") {
       var changed = false;
@@ -765,8 +745,8 @@ button, input { touch-action: manipulation; }
     updateBadges();
     if (phoneOpen && (app === "friends" || app === "home")) renderPhone();
 
-    if (pdata.adminCmd && pdata.adminCmd.ts && pdata.adminCmd.ts !== save._lastCmdTs) {
-      save._lastCmdTs = pdata.adminCmd.ts;
+    if (pdata.adminCmd && pdata.adminCmd.ts && Number(pdata.adminCmd.ts) !== Number(save._lastCmdTs || 0)) {
+      save._lastCmdTs = Number(pdata.adminCmd.ts);
       var cmd = pdata.adminCmd;
       if (typeof cmd.setCoins === "number") save.coins = Math.max(0, Math.round(cmd.setCoins));
       if (typeof cmd.addCoins === "number") save.coins = Math.max(0, save.coins + Math.round(cmd.addCoins));
@@ -777,14 +757,18 @@ button, input { touch-action: manipulation; }
       if (cmd.giveBagItem) save.inv[cmd.giveBagItem] = (save.inv[cmd.giveBagItem] || 0) + (cmd.giveBagQty || 1);
       if (cmd.resetSave) {
         var keepPid = save.pid;
+        var keepCmdTs = save._lastCmdTs;
         save = defaults();
         save.pid = keepPid;
+        save._lastCmdTs = keepCmdTs;
         save.intro = true;
+        enterZone("village", 900, 640);
       }
       if (cmd.note) toast("Admin: " + cmd.note);
       try { localStorage.setItem("lang-vui-save", JSON.stringify(save)); } catch (e) {}
       hud();
       syncPlayerToFb();
+      fbReq("/players/" + encodeURIComponent(save.pid) + "/adminCmd", "DELETE");
     }
     if (pdata.mail && typeof pdata.mail === "object") {
       playerMail = pdata.mail;
@@ -803,7 +787,11 @@ button, input { touch-action: manipulation; }
   }
   function fetchChatHistory() {
     fbReq("/chat").then(function (data) {
-      if (!data || typeof data !== "object") return;
+      if (!data || typeof data !== "object") {
+        chatMessages = [];
+        renderChatFeed();
+        return;
+      }
       var list = Object.keys(data).map(function (k) { return data[k]; }).filter(Boolean);
       list.sort(function (a, b) { return (a.ts || 0) - (b.ts || 0); });
       chatMessages = list.slice(-25);
@@ -887,7 +875,6 @@ button, input { touch-action: manipulation; }
     });
   }
 
-  // ---------- zones ----------
   var Z = null, ZONES = {};
   function waterD(x, y, k) { if (!Z.water) return 99; k = k || 1; var w = Z.water; return Math.pow((x - w.cx) / (w.rx * k), 2) + Math.pow((y - w.cy) / (w.ry * k), 2); }
   function nearPath(x, y, m) {
@@ -934,7 +921,7 @@ button, input { touch-action: manipulation; }
       if (Math.hypot(x - z.plaza.x, y - z.plaza.y) < 210) return false;
       if (inBox(x, y, [z.shop.x, z.shop.y, z.shop.w, z.shop.h], 60) || inBox(x, y, [z.house.x, z.house.y, z.house.w, z.house.h], 60)) return false;
       return !nearPath(x, y, 60);
-    }, 0.6, 0.3, function (h) { return "round"; });
+    }, 0.6, 0.3, function () { return "round"; });
     z.tp = [["#3fa66b", "#55c27f"], ["#4cb872", "#6ad08a"]];
     z.bgBuild = function (g) {
       var r = mulberry(7), i;
@@ -1056,7 +1043,6 @@ button, input { touch-action: manipulation; }
     z.pickState = [];
   });
 
-  // ---------- state ----------
   var W = 0, H = 0, dpr = 1, S = 1, camX = 0, camY = 0, offX = 0, offY = 0;
   var P = { x: 900, y: 640, face: 1, walk: 0, moving: false, swingT: 0, swingHit: true, bubble: null, fish: null };
   var pet = { x: 860, y: 650, face: 1, walk: 0, moving: false };
@@ -1074,7 +1060,6 @@ button, input { touch-action: manipulation; }
   window.addEventListener("orientationchange", function () { setTimeout(resize, 120); }, { passive: true });
   if (window.visualViewport) window.visualViewport.addEventListener("resize", resize, { passive: true });
 
-  // ---------- ui helpers ----------
   function $(id) { return document.getElementById(id); }
   var elCoins = $("coins"), elBagN = $("bagN"), elAct = $("act"), elActLabel = $("actLabel"), elActKey = $("actKey"), elClock = $("clock"), toasts = $("toasts");
   function toast(t) {
@@ -1102,10 +1087,9 @@ button, input { touch-action: manipulation; }
   function sparkle(x, y, color, n) { for (var i = 0; i < n; i++) { var a = rand(0, 6.28), s = rand(40, 130); parts.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 30, life: rand(0.4, 0.8), max: 0.8, color: color }); } }
   function popText(x, y, t, c) { pops.push({ x: x, y: y, t: t, c: c, life: 1.2 }); }
   function isChatFocused() { return document.activeElement === $("chatInp"); }
-  function uiOpen() { return modalOpen || phoneOpen || introOpen || ptgIntroOpen || isChatFocused(); }
+  function uiOpen() { return modalOpen || phoneOpen || introOpen || ptgIntroOpen || !($("betaGate").hidden) || isChatFocused(); }
   function itemInfo(id) { return byId(HATS, id) || byId(SHIRTS, id) || byId(PETS, id); }
 
-  // ---------- zones: enter / travel ----------
   function spawnBug() {
     var t = wpick(Z.bugsT), x, y, n = 0;
     do { x = rand(60, Z.w - 60); y = rand(100, Z.h - 60); n++; } while ((waterD(x, y, 1.1) < 1 || Math.hypot(x - P.x, y - P.y) < 200) && n < 25);
@@ -1133,7 +1117,6 @@ button, input { touch-action: manipulation; }
     }, 400);
   }
 
-  // ---------- actions ----------
   function doCatch() {
     var cx = P.x + P.face * 18, cy = P.y, best = -1, bd = 80, i;
     for (i = 0; i < bugs.length; i++) { var d = Math.hypot(bugs[i].x - cx, bugs[i].y - cy); if (d < bd) { bd = d; best = i; } }
@@ -1179,7 +1162,6 @@ button, input { touch-action: manipulation; }
     else if (P.swingT <= 0) { P.swingT = 0.4; P.swingHit = false; }
   }
 
-  // ---------- input ----------
   window.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
       if (isChatFocused()) { $("chatInp").blur(); return; }
@@ -1207,7 +1189,6 @@ button, input { touch-action: manipulation; }
     target = { x: clamp(wx, 30, Z.w - 30), y: clamp(wy, 70, Z.h - 20) }; tapPos = target; tapFx = 0.6; stuck = 0;
   });
   elAct.addEventListener("pointerdown", function (e) { e.preventDefault(); act(); });
-  // Virtual joystick: supports simultaneous touch movement and action button presses.
   (function initTouchPad() {
     var pad = $("touchPad"), knob = $("touchKnob"), activeId = null;
     if (!pad || !knob) return;
@@ -1236,7 +1217,6 @@ button, input { touch-action: manipulation; }
   $("bagBtn").addEventListener("click", function () { this.blur(); openModal(false); });
   $("phoneBtn").addEventListener("click", function () { this.blur(); openPhone(); });
 
-  // Chat bar events
   $("chatToggle").addEventListener("click", function () {
     chatExpanded = !chatExpanded;
     renderChatFeed();
@@ -1264,7 +1244,6 @@ button, input { touch-action: manipulation; }
     }
   });
 
-  // ---------- shop / bag modal ----------
   var modal = $("modal"), mBody = $("mBody"), tabsEl = $("tabs"), mTitle = $("mTitle");
   function openModal(shop) { if (modalOpen || phoneOpen || introOpen || ptgIntroOpen) return; atShop = shop; modalOpen = true; keys = {}; tab = "bag"; target = null; mTitle.textContent = shop ? "Tiệm làng" : "Balo"; modal.hidden = false; renderModal(); }
   function closeModal() { modalOpen = false; modal.hidden = true; }
@@ -1307,7 +1286,6 @@ button, input { touch-action: manipulation; }
     }
   }
 
-  // ---------- phone ----------
   var phoneModal = $("phoneModal"), pScreen = $("pScreen"), app = "home", friendSubTab = "list", friendSearchQuery = "";
   var ICONS = {
     friends: '<svg viewBox="0 0 24 24" fill="#fff"><circle cx="9" cy="8" r="3.4"/><circle cx="17" cy="9.5" r="2.7"/><path d="M2.5 19c0-3.6 2.9-5.8 6.5-5.8s6.5 2.2 6.5 5.8z"/><path d="M15.5 14c3 .1 6 1.5 6 5h-4.6c0-2-.6-3.6-1.4-5z"/></svg>',
@@ -1513,7 +1491,6 @@ button, input { touch-action: manipulation; }
       var q = friendSearchQuery.toLowerCase();
       var candidates = [];
       var seenPids = {};
-      // Combine directory (includes offline players) + live online players
       Object.keys(allDirectory || {}).forEach(function (pid) {
         if (pid === save.pid) return;
         var p = allDirectory[pid];
@@ -1589,7 +1566,6 @@ button, input { touch-action: manipulation; }
       return;
     }
 
-    // Default tab: list (Player friends + Villager NPCs)
     var pfIds = Object.keys(save.playerFriends || {});
     if (pfIds.length) {
       pScreen.appendChild(el("span", "lbl", "Bạn bè người chơi (" + pfIds.length + ")"));
@@ -1807,8 +1783,6 @@ button, input { touch-action: manipulation; }
         var rw = el("div", null, "Đính kèm: " + rewards.join(", "));
         rw.style.cssText = "font-size:.85rem;font-weight:600;color:#2f9b5d;margin-bottom:8px";
         card.appendChild(rw);
-      }
-      if (rewards.length) {
         var b = el("button", m.claimed ? "btn ghost" : "btn sun", m.claimed ? "Đã nhận" : "Nhận quà");
         b.type = "button"; b.disabled = !!m.claimed;
         b.addEventListener("click", function () {
@@ -1840,7 +1814,6 @@ button, input { touch-action: manipulation; }
     pScreen.appendChild(g);
   }
 
-  // ---------- drawing: props ----------
   function drawTree(t) {
     var s = t.s, p = Z.tp[t.hue < 0.5 ? 0 : Math.min(1, Z.tp.length - 1)]; ctx.save(); ctx.translate(t.x, t.y);
     ctx.fillStyle = "rgba(0,0,0,.16)"; ell(ctx, 0, 2, 34 * s, 11 * s); ctx.fill();
@@ -2048,7 +2021,6 @@ button, input { touch-action: manipulation; }
     ctx.fillStyle = friend ? "rgba(214,58,110,.8)" : "rgba(35,50,74,.62)"; rr(ctx, x - w / 2, y - 13, w, 16, 8); ctx.fill(); ctx.fillStyle = "#fff"; ctx.fillText(label, x, y - 1);
   }
 
-  // ---------- update ----------
   function update(dt) {
     clock += dt;
     var ph = 0.5 + clock / 360; ph -= Math.floor(ph);
@@ -2065,7 +2037,7 @@ button, input { touch-action: manipulation; }
       ix += touchMoveX; iy += touchMoveY;
     }
     if (ix || iy) { target = null; var l = Math.hypot(ix, iy); ix /= l; iy /= l; }
-    else if (target && !travelLock) { var dx = target.x - P.x, dy = target.y - P.y, d = Math.hypot(dx, dy); if (d < 8) target = null; else { ix = dx / d; iy = dy / d; } }
+    else if (target && !travelLock) { var dx = target.x - P.x, dy = target.y - P.y, d = Math.hypot(dx, dy); if (d < 😎 target = null; else { ix = dx / d; iy = dy / d; } }
     P.moving = false;
     if (ix || iy) {
       if (P.fish) { P.fish = null; toast("Bạn đã thu cần câu."); }
@@ -2123,7 +2095,6 @@ button, input { touch-action: manipulation; }
     elActLabel.textContent = LABEL[c]; elAct.classList.toggle("reel", c === "reel"); elActKey.textContent = c === "reel" ? "Nhanh lên!" : "Space";
   }
 
-  // ---------- draw ----------
   function draw(now) {
     var t = now / 1000, vw = W / S, vh = H / S;
     camX = clamp(P.x - vw / 2, 0, Math.max(0, Z.w - vw)); camY = clamp(P.y - 20 - vh / 2, 0, Math.max(0, Z.h - vh));
@@ -2201,7 +2172,6 @@ button, input { touch-action: manipulation; }
     }
   }
 
-  // ---------- Play Together style intro ----------
   function initPtgIntro() {
     var wrap = $("ptg-intro-wrap");
     var splash = $("ptg-splash-studio");
@@ -2213,7 +2183,7 @@ button, input { touch-action: manipulation; }
     var tipText = $("ptgTipText");
 
     var ptgTips = [
-      "💡 Mẹo: Hãy kết bạn với dân làng và khám phá 3 khu vực nhé!",
+      "💡 Mẹo: Hãy kết bạn và khám phá 3 khu vực nhé!",
       "🎣 Mẹo: Kéo cần câu ngay khi thấy dấu chấm than (!) trên đầu!",
       "🦋 Mẹo: Bướm xanh và bọ cánh vàng bán được rất nhiều xu!",
       "♻️ Mẹo: Dùng app Tái chế trong điện thoại để đổi điểm xanh lấy quà!"
@@ -2256,7 +2226,6 @@ button, input { touch-action: manipulation; }
     });
   }
 
-  // ---------- intro ----------
   var STEPS = [
     ["Làng Vui Vẻ", "Một ngày mới bắt đầu ở ngôi làng nhỏ bên mặt hồ."],
     ["Chào mừng người mới!", "Bướm bay khắp vườn, cá cắn câu ngoài ao, và dân làng đang chờ làm bạn với bạn."],
@@ -2311,34 +2280,24 @@ button, input { touch-action: manipulation; }
     var layers = [["#9fd8a8", 0.58, 12, 0.004, 0.3], ["#7cc48c", 0.68, 16, 0.006, 0.6], ["#5fb176", 0.8, 22, 0.008, 1.0]];
     layers.forEach(function (L, li) {
       c.fillStyle = L[0]; c.beginPath(); c.moveTo(0, h);
-      var shift = t * 14 * L[4] + istep * 90 * L[4];
-      for (var x = 0; x <= w; x += 10) c.lineTo(x, h * L[1] + Math.sin((x + shift) * L[3] * 3) * L[2] + Math.sin((x + shift) * L[3] * 7) * L[2] * 0.3);
+      var shift = t * 14 * L[4] + istep * 90 * (li + 1);
+      for (var x = 0; x <= w + 20; x += 20) { var y = h * L[1] + Math.sin((x + shift) * L[3]) * L[2] + Math.cos((x + shift) * L[3] * 1.7) * L[2] * 0.4; c.lineTo(x, y); }
       c.lineTo(w, h); c.closePath(); c.fill();
-      if (li === 1) { for (var k = 0; k < 7; k++) { var hx = ((k * 220 - shift * 1.1) % (w + 260) + w + 260) % (w + 260) - 60, hy = h * L[1] + Math.sin((hx + shift) * L[3] * 3) * L[2] + 6; c.fillStyle = "#fff6e0"; c.fillRect(hx, hy - 26, 34, 26); c.fillStyle = k % 2 ? "#ff7a6b" : "#5a8fd6"; c.beginPath(); c.moveTo(hx - 5, hy - 26); c.lineTo(hx + 17, hy - 46); c.lineTo(hx + 39, hy - 26); c.closePath(); c.fill(); c.fillStyle = "#8d5a3b"; c.fillRect(hx + 13, hy - 14, 9, 14); } }
     });
-    c.strokeStyle = "#4a4e69"; c.lineWidth = 2; c.lineCap = "round";
-    for (var b = 0; b < 4; b++) { var bx = ((t * 40 + b * 180) % (w + 200)) - 100, by = h * 0.3 + Math.sin(t * 1.5 + b) * 18 + b * 14, fl = Math.sin(t * 9 + b) * 6; c.beginPath(); c.moveTo(bx - 10, by + fl); c.quadraticCurveTo(bx - 4, by - 6, bx, by); c.quadraticCurveTo(bx + 4, by - 6, bx + 10, by + fl); c.stroke(); }
-    var s = byId(SHIRTS, iColor);
-    c.save(); c.translate(w / 2, h * 0.5 + Math.sin(t * 2) * 4); var sc = Math.min(w, h) / 160; c.scale(sc, sc);
-    withCtx(c, function () { drawAvatar({ x: 0, y: 0, face: 1, walk: t * 8, moving: istep < 3, shirt: s ? s.color : "#ff7a6b", hair: "#5b3a29", hat: null, swingT: 0 }); }); c.restore();
+    if (istep === 3) {
+      var sh = byId(SHIRTS, iColor);
+      withCtx(c, function () { c.save(); c.translate(w / 2, h * 0.56); c.scale(2.4, 2.4); drawAvatar({ x: 0, y: 0, face: 1, walk: t * 6, moving: true, shirt: sh ? sh.color : "#ff7a6b", hair: "#5b3a29", hat: save.eq.hat, swingT: 0 }); c.restore(); });
+    }
     iRaf = requestAnimationFrame(introFrame);
   }
 
-  // ---------- boot ----------
-  var last = performance.now();
-  document.addEventListener("visibilitychange", function () { last = performance.now(); if (document.hidden) { touchMoveX = 0; touchMoveY = 0; target = null; } });
-  function frame(now) {
-    if (document.hidden) { last = now; requestAnimationFrame(frame); return; }
-    var dt = Math.min(0.05, (now - last) / 1000); last = now;
-    update(dt); draw(now); requestAnimationFrame(frame);
-  }
-  resize();
-  enterZone("village", 900, 640);
-  hud();
+  resize(); enterZone("village", ZONES.village.spawn[0], ZONES.village.spawn[1]);
   initFirebase();
   initBetaGate();
   initPtgIntro();
-  requestAnimationFrame(frame);
+  var last = performance.now();
+  function loop(now) { var dt = Math.min(0.05, (now - last) / 1000); last = now; update(dt); draw(now); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
 })();
 </script>
 </body>
