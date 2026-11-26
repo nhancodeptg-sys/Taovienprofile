@@ -276,6 +276,47 @@ button, input { touch-action: manipulation; }
   .emotes { left:calc(116px + var(--safe-left)); bottom:calc(64px + var(--safe-bottom)); }
 }
 
+
+/* Server & Follow Intro & Summon Popup */
+.server-pill { cursor: pointer; background: linear-gradient(135deg, #fff, #eef6ff); border: 1.5px solid #5ab0ff; }
+.server-dot { width: 9px; height: 9px; border-radius: 50%; background: #2ed573; box-shadow: 0 0 0 2px rgba(46, 213, 115, 0.25); flex: none; }
+.srv-grid { display: grid; gap: 10px; }
+.srv-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 16px; background: #f5f8fb; border: 2px solid var(--line); transition: transform .15s ease, border-color .15s ease; }
+.srv-card.active { background: #eaf5ff; border-color: var(--sky); }
+.srv-info { flex: 1; min-width: 0; }
+.srv-title { font-family: var(--display); font-weight: 800; font-size: 1.08rem; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+.srv-desc { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+.srv-pop { display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; font-weight: 700; padding: 3px 9px; border-radius: 99px; background: #fff; border: 1px solid var(--line); color: var(--ink); margin-top: 5px; }
+.srv-pop i { width: 7px; height: 7px; border-radius: 50%; background: #2ed573; display: inline-block; }
+.srv-pop.busy i { background: #ffa502; }
+.srv-pop.full i { background: #ff4757; }
+
+/* Intro Đang Theo Dõi (Follow Transition Overlay) */
+#followOverlay { position: fixed; inset: 0; z-index: 260; background: linear-gradient(180deg, #38a3ff 0%, #70d6ff 60%, #7bed9f 60.5%, #2ed573 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; }
+#followOverlay[hidden] { display: none; }
+.follow-card { width: min(380px, 92vw); background: rgba(255,255,255,0.96); border-radius: 28px; padding: 26px 22px; box-shadow: 0 18px 50px rgba(25, 42, 70, 0.32); border: 4px solid #fff; animation: ptgPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.follow-av-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 14px; }
+.follow-av { width: 58px; height: 58px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.16); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 1.4rem; color: #fff; }
+.follow-arrow { font-size: 1.6rem; animation: followPulse 0.7s ease-in-out infinite alternate; }
+@keyframes followPulse { from { transform: translateX(-4px) scale(0.95); } to { transform: translateX(4px) scale(1.12); } }
+.follow-title { font-family: var(--display); font-weight: 800; font-size: 1.55rem; color: var(--ink); margin: 0 0 6px; }
+.follow-sub { font-size: .9rem; color: var(--muted); margin: 0 0 16px; line-height: 1.45; }
+.follow-bar { width: 100%; height: 14px; background: #e3e9f1; border-radius: 99px; overflow: hidden; padding: 2px; }
+.follow-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #5ab0ff, #ff7a6b); border-radius: 99px; transition: width 0.15s linear; }
+
+/* Popup Gọi Đến (Summon Request Card) */
+#summonModal { position: fixed; inset: 0; z-index: 250; background: rgba(28, 38, 56, 0.55); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 18px; }
+#summonModal[hidden] { display: none; }
+.summon-card { width: min(380px, 92vw); background: #fff; border-radius: 26px; padding: 22px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.35); border: 3px solid #ffd23f; animation: ptgPopIn 0.35s ease forwards; }
+.summon-badge { display: inline-block; background: #ff7a6b; color: #fff; font-family: var(--display); font-weight: 800; font-size: .82rem; padding: 4px 12px; border-radius: 99px; margin-bottom: 8px; }
+.summon-card h3 { margin: 0 0 6px; font-family: var(--display); font-weight: 800; font-size: 1.45rem; color: var(--ink); }
+.summon-card p { margin: 0 0 16px; color: var(--muted); font-size: .92rem; line-height: 1.45; }
+.summon-actions { display: flex; gap: 10px; }
+.summon-actions button { flex: 1; padding: 11px; font-size: 1rem; }
+.friend-acts { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+.btn.sm { padding: 6px 9px; font-size: .78rem; border-radius: 10px; }
+.btn.purple { background: #9b5de5; color: #fff; }
+
 </style>
 </head>
 <body>
@@ -290,7 +331,10 @@ button, input { touch-action: manipulation; }
     </div>
   </div>
   <div class="hud top-right">
-    <span class="pill soft" id="clock">Ban ngày</span>
+    <div class="row">
+      <button class="pill soft server-pill" id="serverBtn" type="button" title="Đổi server người chơi"><i class="server-dot"></i><span id="serverLabel">Plaza 1</span></button>
+      <span class="pill soft" id="clock">Ban ngày</span>
+    </div>
     <button class="pill phonebtn" id="phoneBtn" type="button" aria-label="Mở điện thoại">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>Điện thoại
       <span class="notif-badge" id="phoneBadge" hidden>0</span>
@@ -373,6 +417,33 @@ button, input { touch-action: manipulation; }
           </div>
         </div>
         <div class="ptg-tap-start" id="ptgStartBtn">▶ CHẠM ĐỂ BẮT ĐẦU ◀</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO ĐANG THEO DÕI BẠN BÈ -->
+  <div id="followOverlay" hidden>
+    <div class="follow-card">
+      <div class="follow-av-row">
+        <div class="follow-av" id="followMeAv" style="background:#ff7a6b;">B</div>
+        <div class="follow-arrow">✈️</div>
+        <div class="follow-av" id="followTargetAv" style="background:#5ab0ff;">?</div>
+      </div>
+      <h2 class="follow-title" id="followTitle">Đang theo dõi...</h2>
+      <p class="follow-sub" id="followSub">Đang chuyển server và dịch chuyển đến vị trí của bạn bè...</p>
+      <div class="follow-bar"><div class="follow-bar-fill" id="followBarFill"></div></div>
+    </div>
+  </div>
+
+  <!-- POPUP NHẬN LỜI GỌI ĐẾN TỪ BẠN BÈ -->
+  <div id="summonModal" hidden>
+    <div class="summon-card">
+      <div class="summon-badge">📣 Lời gọi từ bạn bè</div>
+      <h3 id="summonTitle">Bạn bè đang gọi bạn!</h3>
+      <p id="summonDesc">Bạn có muốn dịch chuyển ngay đến chỗ người ấy không?</p>
+      <div class="summon-actions">
+        <button type="button" class="btn ghost" id="summonDecline">Để sau</button>
+        <button type="button" class="btn green" id="summonAccept">Đến ngay!</button>
       </div>
     </div>
   </div>
@@ -470,6 +541,26 @@ button, input { touch-action: manipulation; }
     { id: "nam", name: "Bé Nấm", zone: "forest", x: 950, y: 620, shirt: "#e8604f", hair: "#3a2e39", lines: ["Nấm đỏ ngon lắm, nhưng bán cho tiệm nhé.", "Tối ở đây đẹp như cổ tích.", "Mình ước có thú cưng thỏ."] }
   ];
   var ZONE_NAMES = { village: "Làng Vui Vẻ", beach: "Bãi biển Vỏ Sò", forest: "Rừng Thì Thầm" };
+  var SERVERS = [
+    { id: "plaza_1", name: "Server Plaza 1", short: "Plaza 1", desc: "Quảng trường trung tâm nhộn nhịp, đông vui nhất", cap: 30 },
+    { id: "plaza_2", name: "Server Plaza 2", short: "Plaza 2", desc: "Khu giao lưu kết bạn, trò chuyện tự do", cap: 30 },
+    { id: "sunny_3", name: "Server Nắng Mai", short: "Nắng Mai", desc: "Không khí thư giãn, thích hợp câu cá & dạo chơi", cap: 25 },
+    { id: "breeze_4", name: "Server Gió Biển", short: "Gió Biển", desc: "Tụ điểm của các cần thủ và thợ săn vỏ sò", cap: 25 },
+    { id: "firefly_5", name: "Server Đom Đóm", short: "Đom Đóm", desc: "Yên bình, ấm cúng cho các nhóm bạn thân", cap: 20 },
+    { id: "star_6", name: "Server Ngôi Sao", short: "Ngôi Sao", desc: "Kênh tổ chức tiệc tùng và sự kiện cộng đồng", cap: 20 }
+  ];
+  function getServerInfo(sid) {
+    for (var i = 0; i < SERVERS.length; i++) if (SERVERS[i].id === sid) return SERVERS[i];
+    return SERVERS[0];
+  }
+  var currentServer = "plaza_1";
+  try {
+    var savedSrv = localStorage.getItem("lang-vui-server");
+    if (savedSrv && getServerInfo(savedSrv).id === savedSrv) currentServer = savedSrv;
+  } catch (e) {}
+  var incomingSummon = null;
+  var lastSummonTs = 0;
+  var followingLock = false;
 
   function rand(a, b) { return a + Math.random() * (b - a); }
   function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
@@ -553,6 +644,7 @@ button, input { touch-action: manipulation; }
       eco: save.eco,
       xp: save.xp,
       level: level(),
+      server: currentServer,
       zone: Z ? Z.id : "village",
       shirt: sh ? sh.color : "#ff7a6b",
       eq: save.eq,
@@ -572,6 +664,7 @@ button, input { touch-action: manipulation; }
       pid: save.pid,
       name: save.name,
       fcode: save.fcode,
+      server: currentServer,
       zone: Z.id,
       x: Math.round(P.x),
       y: Math.round(P.y),
@@ -695,6 +788,163 @@ button, input { touch-action: manipulation; }
     } else {
       playerMail = {};
     }
+
+    if (pdata.summonReq && pdata.summonReq.ts && pdata.summonReq.ts !== lastSummonTs) {
+      lastSummonTs = pdata.summonReq.ts;
+      if ((Date.now() - pdata.summonReq.ts) < 45000 && pdata.summonReq.fromPid !== save.pid) {
+        showSummonPrompt(pdata.summonReq);
+      }
+    }
+  }
+
+  function setServer(srvId, silent) {
+    var info = getServerInfo(srvId);
+    currentServer = info.id;
+    try { localStorage.setItem("lang-vui-server", currentServer); } catch (e) {}
+    var lbl = $("serverLabel");
+    if (lbl) lbl.textContent = info.short;
+    syncOnlinePresence();
+    syncPlayerToFb();
+    if (!silent) {
+      toast("Đã chuyển sang " + info.name + "!");
+      banner(info.name);
+    }
+  }
+
+  function getServerPlayerCount(srvId) {
+    var count = 0, nowMs = Date.now();
+    Object.keys(remotePlayers || {}).forEach(function (pid) {
+      var rp = remotePlayers[pid];
+      if (!rp || (nowMs - (rp.updatedAt || 0)) > 16000) return;
+      var s = rp.server || "plaza_1";
+      if (s === srvId) count++;
+    });
+    if (currentServer === srvId && (!remotePlayers[save.pid] || (nowMs - (remotePlayers[save.pid].updatedAt || 0)) > 16000)) {
+      count++;
+    }
+    return count;
+  }
+
+  function getPlayerLiveInfo(pid) {
+    var nowMs = Date.now();
+    var rp = remotePlayers[pid];
+    var dir = allDirectory[pid] || {};
+    var online = false;
+    if (rp && (nowMs - (rp.updatedAt || 0)) < 16000) online = true;
+    else if (dir && (nowMs - (dir.lastSeen || 0)) < 20000) online = true;
+
+    var srvId = (rp && rp.server) || dir.server || "plaza_1";
+    var zoneId = (rp && rp.zone) || dir.zone || "village";
+    var px = (rp && typeof rp.x === "number") ? rp.x : (ZONES[zoneId] ? ZONES[zoneId].spawn[0] : 900);
+    var py = (rp && typeof rp.y === "number") ? rp.y : (ZONES[zoneId] ? ZONES[zoneId].spawn[1] : 640);
+    var name = (rp && rp.name) || dir.name || (save.playerFriends[pid] && save.playerFriends[pid].name) || "Người chơi";
+    var shirt = (rp && rp.shirt) || dir.shirt || (save.playerFriends[pid] && save.playerFriends[pid].shirt) || "#5ab0ff";
+
+    return {
+      pid: pid,
+      name: name,
+      shirt: shirt,
+      online: online,
+      server: srvId,
+      serverInfo: getServerInfo(srvId),
+      zone: zoneId,
+      x: px,
+      y: py
+    };
+  }
+
+  function followPlayer(targetPid) {
+    if (followingLock) return;
+    var info = getPlayerLiveInfo(targetPid);
+    if (!info.online) {
+      toast(info.name + " hiện đã offline mất rồi!");
+      return;
+    }
+    followingLock = true;
+    if (phoneOpen) closePhone();
+    if (modalOpen) closeModal();
+
+    var ov = $("followOverlay");
+    var meAv = $("followMeAv");
+    var tgAv = $("followTargetAv");
+    var title = $("followTitle");
+    var sub = $("followSub");
+    var fill = $("followBarFill");
+
+    var myShirt = (byId(SHIRTS, save.eq.shirt) || { color: "#ff7a6b" }).color;
+    meAv.style.background = myShirt;
+    meAv.textContent = (save.name || "B").charAt(0).toUpperCase();
+    tgAv.style.background = info.shirt;
+    tgAv.textContent = (info.name || "?").charAt(0).toUpperCase();
+
+    title.textContent = "Đang theo dõi " + info.name + "...";
+    sub.textContent = "Đang kết nối tới " + info.serverInfo.name + " (" + (ZONE_NAMES[info.zone] || "Làng") + ")";
+    fill.style.width = "0%";
+    ov.hidden = false;
+
+    var prog = 0;
+    var timer = setInterval(function () {
+      prog += 16;
+      if (prog > 100) prog = 100;
+      fill.style.width = prog + "%";
+      if (prog >= 100) {
+        clearInterval(timer);
+        fbReq("/online/" + encodeURIComponent(targetPid)).then(function (latest) {
+          var finalSrv = (latest && latest.server) || info.server;
+          var finalZone = (latest && latest.zone) || info.zone;
+          var fx = (latest && typeof latest.x === "number") ? latest.x : info.x;
+          var fy = (latest && typeof latest.y === "number") ? latest.y : info.y;
+
+          var destX = clamp(fx + 38, 40, (ZONES[finalZone] ? ZONES[finalZone].w - 40 : 1700));
+          var destY = clamp(fy + 8, 80, (ZONES[finalZone] ? ZONES[finalZone].h - 30 : 1100));
+
+          setServer(finalSrv, true);
+          enterZone(finalZone, destX, destY);
+          syncOnlinePresence();
+
+          setTimeout(function () {
+            ov.hidden = true;
+            followingLock = false;
+            banner(getServerInfo(finalSrv).name + " · " + ZONE_NAMES[finalZone]);
+            toast("Đã đến chỗ của " + info.name + " tại " + getServerInfo(finalSrv).name + "!");
+            sparkle(P.x, P.y - 20, "#ffd23f", 18);
+            say("Chào " + info.name + ", mình tới chơi nè!");
+          }, 260);
+        });
+      }
+    }, 180);
+  }
+
+  function summonFriend(targetPid) {
+    var info = getPlayerLiveInfo(targetPid);
+    if (!info.online) {
+      toast(info.name + " đang offline nên không thể gọi đến!");
+      return;
+    }
+    var mySrv = getServerInfo(currentServer);
+    var reqPayload = {
+      fromPid: save.pid,
+      fromName: save.name,
+      server: currentServer,
+      serverName: mySrv.name,
+      zone: Z.id,
+      zoneName: ZONE_NAMES[Z.id] || "Làng Vui Vẻ",
+      x: Math.round(P.x),
+      y: Math.round(P.y),
+      ts: Date.now()
+    };
+    fbReq("/players/" + encodeURIComponent(targetPid) + "/summonReq", "PUT", reqPayload).then(function () {
+      toast("Đã gửi lời gọi đến cho " + info.name + "!");
+      say("Ê " + info.name + " ơi, qua " + mySrv.short + " chơi với mình đi!");
+    });
+  }
+
+  function showSummonPrompt(req) {
+    incomingSummon = req;
+    var modalEl = $("summonModal");
+    $("summonTitle").textContent = (req.fromName || "Bạn bè") + " đang gọi bạn đến!";
+    $("summonDesc").textContent = (req.fromName || "Bạn của bạn") + " đang ở " + (req.serverName || "Server Plaza 1") + " (" + (req.zoneName || "Làng Vui Vẻ") + ") và muốn rủ bạn qua chơi cùng!";
+    modalEl.hidden = false;
   }
   function refreshDirectory() {
     return fbReq("/players").then(function (all) {
@@ -720,6 +970,7 @@ button, input { touch-action: manipulation; }
     if (feed.hidden) return;
     feed.innerHTML = "";
     chatMessages.forEach(function (m) {
+      if (m.server && m.server !== currentServer) return;
       var line = el("div", "chat-line");
       var zn = ZONE_NAMES[m.zone] ? "[" + ZONE_NAMES[m.zone] + "]" : "";
       if (zn) line.appendChild(el("span", "chat-zone", zn));
@@ -736,6 +987,7 @@ button, input { touch-action: manipulation; }
     var msgObj = {
       pid: save.pid,
       name: save.name,
+      server: currentServer,
       zone: Z ? Z.id : "village",
       text: txt,
       ts: Date.now()
@@ -777,7 +1029,7 @@ button, input { touch-action: manipulation; }
       syncOnlinePresence();
       fbReq("/online").then(function (all) {
         remotePlayers = all || {};
-        if (phoneOpen && app === "friends") renderPhone();
+        if (phoneOpen && (app === "friends" || app === "servers")) renderPhone();
       });
     }, 2500);
     setInterval(function () {
@@ -1138,6 +1390,26 @@ button, input { touch-action: manipulation; }
   document.querySelectorAll(".emotes button").forEach(function (b) { b.addEventListener("click", function () { sendChatMessage(b.getAttribute("data-say")); b.blur(); }); });
   $("bagBtn").addEventListener("click", function () { this.blur(); openModal(false); });
   $("phoneBtn").addEventListener("click", function () { this.blur(); openPhone(); });
+  $("serverBtn").addEventListener("click", function () {
+    this.blur();
+    if (modalOpen || phoneOpen || introOpen || ptgIntroOpen) return;
+    phoneOpen = true; keys = {}; target = null; app = "servers"; phoneModal.hidden = false;
+    renderPhone();
+  });
+  $("summonDecline").addEventListener("click", function () {
+    $("summonModal").hidden = true;
+    fbReq("/players/" + encodeURIComponent(save.pid) + "/summonReq", "DELETE");
+    incomingSummon = null;
+  });
+  $("summonAccept").addEventListener("click", function () {
+    var req = incomingSummon;
+    $("summonModal").hidden = true;
+    fbReq("/players/" + encodeURIComponent(save.pid) + "/summonReq", "DELETE");
+    incomingSummon = null;
+    if (req && req.fromPid) {
+      followPlayer(req.fromPid);
+    }
+  });
 
   // Chat bar events
   $("chatToggle").addEventListener("click", function () {
@@ -1217,6 +1489,7 @@ button, input { touch-action: manipulation; }
     profile: '<svg viewBox="0 0 24 24" fill="#fff"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2.4" fill="#5b8def"/><path d="M5.5 16.5c.4-2 1.8-2.8 3.5-2.8s3.1.8 3.5 2.8z" fill="#5b8def"/><rect x="14" y="9.5" width="5" height="1.8" rx=".9" fill="#5b8def"/><rect x="14" y="13" width="4" height="1.8" rx=".9" fill="#5b8def"/></svg>',
     code: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M12 9v11M3.5 13h17M12 9c-3-.5-5-2-4-3.6 1.2-1.7 3.6-.4 4 3.6zM12 9c3-.5 5-2 4-3.6-1.2-1.7-3.6-.4-4 3.6z"/></svg>',
     recycle: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14l-3 5h6M5.5 16.5C4.5 14 5.6 10.5 8.5 9M17 14l3 5h-6M18.5 16.5"/><path d="M10 4l3.5 2-2 3.4M14 5.2c3 .4 5.2 2.8 5.2 5.3M8.5 9L6 8.2"/><path d="M4 19h6M14 19h6"/></svg>',
+    servers: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><circle cx="7" cy="7" r="1" fill="#fff"/><circle cx="7" cy="17" r="1" fill="#fff"/></svg>',
     map: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.5a6.5 6.5 0 0 0-6.5 6.5c0 4.7 6.5 12.5 6.5 12.5s6.5-7.8 6.5-12.5A6.5 6.5 0 0 0 12 2.5z"/><circle cx="12" cy="9" r="2.5" fill="#f08a3c"/></svg>',
     bag: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M8 7V6a4 4 0 0 1 8 0v1h2.5a1 1 0 0 1 1 1.1l-1 11.2a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7l-1-11.2a1 1 0 0 1 1-1.1zm2 0h4V6a2 2 0 0 0-4 0z"/></svg>',
     mail: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg>'
@@ -1255,6 +1528,7 @@ button, input { touch-action: manipulation; }
     else if (app === "profile") renderProfile();
     else if (app === "code") renderCode();
     else if (app === "recycle") renderRecycle();
+    else if (app === "servers") renderServers();
     else if (app === "map") renderMap();
     else if (app === "mail") renderMail();
     else if (app === "bag") { closePhone(); openModal(false); }
@@ -1263,7 +1537,7 @@ button, input { touch-action: manipulation; }
     pScreen.appendChild(el("h2", "ph1", "Xin chào, " + save.name));
     var reqN = pendingReqCount();
     var grid = el("div", "apps");
-    [["friends", "Bạn bè", "#ff6b9a"], ["profile", "Hồ sơ", "#5b8def"], ["code", "Nhập code", "#9b5de5"], ["recycle", "Tái chế", "#3fae6a"], ["map", "Bản đồ", "#f08a3c"], ["mail", "Hộp thư", "#ff7a6b"], ["bag", "Balo", "#3bb8c9"]].forEach(function (a) {
+    [["servers", "Server", "#38a3ff"], ["friends", "Bạn bè", "#ff6b9a"], ["profile", "Hồ sơ", "#5b8def"], ["code", "Nhập code", "#9b5de5"], ["recycle", "Tái chế", "#3fae6a"], ["map", "Bản đồ", "#f08a3c"], ["mail", "Hộp thư", "#ff7a6b"], ["bag", "Balo", "#3bb8c9"]].forEach(function (a) {
       var b = el("button", "app"); b.type = "button"; var i = el("i"); i.style.background = a[2]; i.innerHTML = ICONS[a[0]];
       if (a[0] === "friends" && reqN > 0) {
         var bd = el("span", "notif-badge", String(reqN));
@@ -1499,28 +1773,48 @@ button, input { touch-action: manipulation; }
       var pg = el("div", "pgrid");
       pfIds.forEach(function (fpid) {
         var pf = save.playerFriends[fpid];
-        var dir = allDirectory[fpid] || {};
-        var on = isPlayerOnline(fpid);
-        var curZone = (remotePlayers[fpid] && remotePlayers[fpid].zone) || dir.zone || "village";
+        var live = getPlayerLiveInfo(fpid);
+        var on = live.online;
+        var sameSrv = (live.server === currentServer);
+
         var row = el("div", "item");
         var chip = el("div", "chip");
-        chip.style.background = (remotePlayers[fpid] && remotePlayers[fpid].shirt) || pf.shirt || "#5ab0ff";
+        chip.style.background = live.shirt || pf.shirt || "#5ab0ff";
         chip.appendChild(el("span", "status-dot" + (on ? " on" : "")));
 
-        var nm = el("div", "name", dir.name || pf.name || "Người chơi");
-        nm.appendChild(el("small", null, on ? ("Đang online ở " + (ZONE_NAMES[curZone] || "Làng")) : "Đang offline"));
+        var nm = el("div", "name", live.name || pf.name || "Người chơi");
+        var subText = "Đang offline";
+        if (on) {
+          if (sameSrv) {
+            subText = "🟢 Cùng server (" + live.serverInfo.short + ") · " + (ZONE_NAMES[live.zone] || "Làng");
+          } else {
+            subText = "🌐 Khác server: " + live.serverInfo.name + " · " + (ZONE_NAMES[live.zone] || "Làng");
+          }
+        }
+        nm.appendChild(el("small", null, subText));
 
         row.appendChild(chip);
         row.appendChild(nm);
-        if (on && curZone !== Z.id) {
-          var goBtn = el("button", "btn", "Đến cùng");
-          goBtn.type = "button";
-          goBtn.addEventListener("click", function () {
-            closePhone();
-            var sp = ZONES[curZone] ? ZONES[curZone].spawn : ZONES.village.spawn;
-            travel(curZone, sp[0], sp[1]);
+
+        if (on) {
+          var acts = el("div", "friend-acts");
+          var followBtn = el("button", "btn sm", "Theo dõi");
+          followBtn.type = "button";
+          followBtn.title = "Chuyển sang server và đến ngay chỗ của " + live.name;
+          followBtn.addEventListener("click", function () {
+            followPlayer(fpid);
           });
-          row.appendChild(goBtn);
+
+          var callBtn = el("button", "btn sm purple", "Gọi đến");
+          callBtn.type = "button";
+          callBtn.title = "Mời " + live.name + " dịch chuyển đến chỗ bạn";
+          callBtn.addEventListener("click", function () {
+            summonFriend(fpid);
+          });
+
+          acts.appendChild(followBtn);
+          acts.appendChild(callBtn);
+          row.appendChild(acts);
         }
         pg.appendChild(row);
       });
@@ -1725,6 +2019,40 @@ button, input { touch-action: manipulation; }
         });
         card.appendChild(b);
       }
+      g.appendChild(card);
+    });
+    pScreen.appendChild(g);
+  }
+
+  function renderServers() {
+    pScreen.appendChild(el("h2", "ph1", "Danh sách Server"));
+    pScreen.appendChild(el("p", "empty", "Chọn kênh server để tham gia. Bạn chỉ nhìn thấy và trò chuyện trực tiếp với người chơi cùng server (bạn bè khác server vẫn hiện online trong danh bạ)."));
+    var g = el("div", "srv-grid");
+    SERVERS.forEach(function (s) {
+      var isCur = (s.id === currentServer);
+      var pop = getServerPlayerCount(s.id);
+      var card = el("div", "srv-card" + (isCur ? " active" : ""));
+      var info = el("div", "srv-info");
+      var title = el("div", "srv-title", s.name);
+      info.appendChild(title);
+      info.appendChild(el("div", "srv-desc", s.desc));
+
+      var popBadge = el("div", "srv-pop" + (pop >= s.cap ? " full" : pop >= Math.floor(s.cap * 0.7) ? " busy" : ""));
+      popBadge.appendChild(el("i"));
+      popBadge.appendChild(document.createTextNode(" " + pop + "/" + s.cap + " người chơi"));
+      info.appendChild(popBadge);
+
+      var btn = el("button", isCur ? "btn ghost" : "btn sun", isCur ? "Đang ở đây" : "Vào kênh");
+      btn.type = "button";
+      btn.disabled = isCur;
+      btn.addEventListener("click", function () {
+        closePhone();
+        setServer(s.id, false);
+        renderChatFeed();
+      });
+
+      card.appendChild(info);
+      card.appendChild(btn);
       g.appendChild(card);
     });
     pScreen.appendChild(g);
@@ -2054,7 +2382,8 @@ button, input { touch-action: manipulation; }
     Object.keys(remotePlayers).forEach(function (rpid) {
       if (rpid === save.pid) return;
       var rp = remotePlayers[rpid];
-      if (!rp || rp.zone !== Z.id || (nowMs - (rp.updatedAt || 0)) > 15000) return;
+      var rpSrv = rp && rp.server ? rp.server : "plaza_1";
+      if (!rp || rpSrv !== currentServer || rp.zone !== Z.id || (nowMs - (rp.updatedAt || 0)) > 15000) return;
       list.push({ y: rp.y, f: function () { drawAvatar({ x: rp.x, y: rp.y, face: rp.face || 1, walk: 0, moving: false, shirt: rp.shirt || "#5ab0ff", hair: "#3a2e39", hat: rp.hat || null, swingT: 0 }); } });
     });
     if (save.eq.pet) list.push({ y: pet.y, f: drawPet });
@@ -2078,7 +2407,8 @@ button, input { touch-action: manipulation; }
     Object.keys(remotePlayers).forEach(function (rpid) {
       if (rpid === save.pid) return;
       var rp = remotePlayers[rpid];
-      if (!rp || rp.zone !== Z.id || (nowMs - (rp.updatedAt || 0)) > 15000) return;
+      var rpSrv = rp && rp.server ? rp.server : "plaza_1";
+      if (!rp || rpSrv !== currentServer || rp.zone !== Z.id || (nowMs - (rp.updatedAt || 0)) > 15000) return;
       var isPf = !!(save.playerFriends && save.playerFriends[rpid]);
       nameTag(rp.x, rp.y - 62, rp.name || "Người chơi", isPf);
       if (rp.bubble) bubbleAt(rp.x, rp.y - 72, rp.bubble);
@@ -2115,47 +2445,91 @@ button, input { touch-action: manipulation; }
     var startBtn = $("ptgStartBtn");
     var tipText = $("ptgTipText");
 
+    function dismissIntroNow() {
+      if (!ptgIntroOpen) return;
+      ptgIntroOpen = false;
+      if (wrap) wrap.hidden = true;
+      if (splash) splash.style.display = "none";
+      if (screen) screen.classList.add("hide");
+      startGameAfterIntro();
+    }
+
+    if (!wrap) {
+      ptgIntroOpen = false;
+      startGameAfterIntro();
+      return;
+    }
+
     var ptgTips = [
       "💡 Mẹo: Hãy kết bạn với dân làng và khám phá 3 khu vực nhé!",
       "🎣 Mẹo: Kéo cần câu ngay khi thấy dấu chấm than (!) trên đầu!",
       "🦋 Mẹo: Bướm xanh và bọ cánh vàng bán được rất nhiều xu!",
       "♻️ Mẹo: Dùng app Tái chế trong điện thoại để đổi điểm xanh lấy quà!"
     ];
-    tipText.textContent = ptgTips[Math.floor(Math.random() * ptgTips.length)];
+    if (tipText) tipText.textContent = ptgTips[Math.floor(Math.random() * ptgTips.length)];
 
+    var startedLoading = false;
     function startPtgLoading() {
+      if (startedLoading) return;
+      startedLoading = true;
       var progress = 0;
       var interval = setInterval(function () {
-        progress += Math.floor(Math.random() * 13) + 5;
+        progress += Math.floor(Math.random() * 16) + 8;
         if (progress >= 100) {
           progress = 100;
           clearInterval(interval);
           setTimeout(function () {
-            loadingBox.style.display = "none";
-            tipText.style.display = "none";
-            startBtn.style.display = "block";
-          }, 260);
+            if (!ptgIntroOpen) return;
+            if (loadingBox) loadingBox.style.display = "none";
+            if (tipText) tipText.style.display = "none";
+            if (startBtn) startBtn.style.display = "block";
+          }, 180);
         }
-        loadingFill.style.width = progress + "%";
-        loadingPercent.textContent = "Đang tải dữ liệu... " + progress + "%";
-      }, 130);
+        if (loadingFill) loadingFill.style.width = progress + "%";
+        if (loadingPercent) loadingPercent.textContent = "Đang tải dữ liệu... " + progress + "%";
+      }, 110);
     }
 
-    setTimeout(function () {
+    function hideSplashAndLoad() {
+      if (!splash) { startPtgLoading(); return; }
       splash.style.opacity = "0";
       splash.style.visibility = "hidden";
-      startPtgLoading();
-    }, 1500);
-
-    screen.addEventListener("click", function () {
-      if (startBtn.style.display !== "block" || !ptgIntroOpen) return;
-      screen.classList.add("hide");
       setTimeout(function () {
-        wrap.hidden = true;
-        ptgIntroOpen = false;
-        startGameAfterIntro();
-      }, 520);
-    });
+        if (splash) splash.style.display = "none";
+        startPtgLoading();
+      }, 250);
+    }
+
+    // Allow tapping splash screen to skip immediately if user wants
+    if (splash) {
+      splash.addEventListener("click", hideSplashAndLoad);
+    }
+
+    setTimeout(hideSplashAndLoad, 950);
+
+    // Hard watchdog: never stay stuck on intro past 3.6s even if timer/webview throttles
+    setTimeout(function () {
+      if (ptgIntroOpen) {
+        if (splash) splash.style.display = "none";
+        if (loadingBox) loadingBox.style.display = "none";
+        if (tipText) tipText.style.display = "none";
+        if (startBtn) startBtn.style.display = "block";
+      }
+    }, 3200);
+
+    if (screen) {
+      screen.addEventListener("click", function () {
+        if (startBtn && startBtn.style.display === "block") {
+          dismissIntroNow();
+        }
+      });
+    }
+    if (startBtn) {
+      startBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dismissIntroNow();
+      });
+    }
   }
 
   // ---------- intro ----------
@@ -2234,10 +2608,15 @@ button, input { touch-action: manipulation; }
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
     update(dt); draw(now); requestAnimationFrame(frame);
   }
-  resize();
-  enterZone("village", 900, 640);
-  hud();
-  initFirebase();
+  try {
+    resize();
+    if ($("serverLabel")) $("serverLabel").textContent = getServerInfo(currentServer).short;
+    enterZone("village", 900, 640);
+    hud();
+    initFirebase();
+  } catch (bootErr) {
+    console.error("Boot error:", bootErr);
+  }
   initPtgIntro();
   requestAnimationFrame(frame);
 })();
