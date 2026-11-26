@@ -185,6 +185,10 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 #srvBanner[hidden] { display: none; }
 #maintOverlay { position: fixed; inset: 0; z-index: 300; background: rgba(28, 38, 56, .92); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; }
 #maintOverlay[hidden] { display: none; }
+  #airportBtn { background:linear-gradient(135deg,#fff,#fff4d7); border:1px solid #f2c45b; }
+  #playerModal .sell, #airportModal .sell { width:100%; margin:3px 0; }
+  #playerModal .row { display:flex; gap:8px; }
+  #playerModal .row .sell { flex:1; }
 .maint-card { max-width: 420px; width: 100%; background: #fff; border-radius: 24px; padding: 26px 22px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
 .maint-card h2 { margin: 0 0 8px; font-family: var(--display); font-weight: 800; font-size: 1.7rem; color: var(--coral); }
 .maint-card p { margin: 0; color: var(--muted); line-height: 1.55; }
@@ -277,8 +281,8 @@ button, input { touch-action: manipulation; }
 }
 
 
-/* Server & Follow Intro & Summon Popup & Airport & Player Card */
-.server-pill { cursor: default; background: linear-gradient(135deg, #fff, #eef6ff); border: 1.5px solid #5ab0ff; }
+/* Server & Follow Intro & Summon Popup */
+.server-pill { cursor: pointer; background: linear-gradient(135deg, #fff, #eef6ff); border: 1.5px solid #5ab0ff; }
 .server-dot { width: 9px; height: 9px; border-radius: 50%; background: #2ed573; box-shadow: 0 0 0 2px rgba(46, 213, 115, 0.25); flex: none; }
 .srv-grid { display: grid; gap: 10px; }
 .srv-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 16px; background: #f5f8fb; border: 2px solid var(--line); transition: transform .15s ease, border-color .15s ease; }
@@ -317,26 +321,6 @@ button, input { touch-action: manipulation; }
 .btn.sm { padding: 6px 9px; font-size: .78rem; border-radius: 10px; }
 .btn.purple { background: #9b5de5; color: #fff; }
 
-/* Airport Terminal Modal & Player Action Card */
-.air-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 16px; background: #f5f8fb; border: 2px solid var(--line); }
-.air-card.active { background: #eaf5ff; border-color: var(--sky); }
-.air-tag { display: inline-block; font-size: .72rem; font-weight: 800; padding: 2px 8px; border-radius: 99px; background: #e3e9f1; color: var(--ink); margin-left: 6px; }
-.air-tag.night { background: #23324a; color: #ffd23f; }
-.air-tag.day { background: #fff3c4; color: #7a5200; }
-
-#playerCardModal { position: fixed; inset: 0; z-index: 255; background: rgba(28, 38, 56, 0.52); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 18px; }
-#playerCardModal[hidden] { display: none; }
-.pcard-box { width: min(350px, 92vw); background: #fff; border-radius: 26px; padding: 22px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.35); border: 3px solid var(--sky); animation: ptgPopIn 0.3s ease forwards; }
-.pcard-av { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 10px; border: 4px solid #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 1.6rem; color: #fff; }
-.pcard-name { margin: 0; font-family: var(--display); font-weight: 800; font-size: 1.4rem; color: var(--ink); }
-.pcard-meta { font-size: .82rem; color: var(--muted); margin: 4px 0 14px; }
-.pcard-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-.pcard-btns button { flex: 1; min-width: 110px; padding: 10px 12px; font-size: .95rem; }
-
-/* Restart Required Overlay */
-#restartOverlay { position: fixed; inset: 0; z-index: 320; background: rgba(20, 28, 42, .96); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px; }
-#restartOverlay[hidden] { display: none; }
-
 </style>
 </head>
 <body>
@@ -352,7 +336,7 @@ button, input { touch-action: manipulation; }
   </div>
   <div class="hud top-right">
     <div class="row">
-      <span class="pill soft server-pill" id="serverBadge"><i class="server-dot"></i><span id="serverLabel">Phòng ngẫu nhiên</span></span>
+      <button class="pill soft server-pill" id="serverBtn" type="button" title="Server được ghép ngẫu nhiên"><i class="server-dot"></i><span id="serverLabel">Đang ghép...</span></button>
       <span class="pill soft" id="clock">Ban ngày</span>
     </div>
     <button class="pill phonebtn" id="phoneBtn" type="button" aria-label="Mở điện thoại">
@@ -379,7 +363,7 @@ button, input { touch-action: manipulation; }
     <div class="chat-feed" id="chatFeed" hidden></div>
     <div class="chat-bar">
       <button class="chat-toggle" id="chatToggle" type="button" title="Mở/thu gọn lịch sử chat">💬</button>
-      <input class="chat-inp" id="chatInp" type="text" maxlength="80" placeholder="Nhắn tin cho mọi người trong phòng..." autocomplete="off">
+      <input class="chat-inp" id="chatInp" type="text" maxlength="80" placeholder="Nhắn tin cho mọi người trong làng..." autocomplete="off">
       <button class="chat-send" id="chatSend" type="button">Gửi</button>
     </div>
   </div>
@@ -389,25 +373,6 @@ button, input { touch-action: manipulation; }
       <header><h2 id="mTitle">Balo</h2><button class="close" id="mClose" type="button" aria-label="Đóng">×</button></header>
       <div class="tabs" role="tablist" id="tabs"></div>
       <div class="body" id="mBody"></div>
-    </div>
-  </div>
-
-  <!-- SÂN BAY CHUYỂN KHU VỰC (PHỐ ÂU / PHỐ Á / CHÂU Á / CHÂU ÂU / LÀNG) -->
-  <div class="modal" id="airportModal" hidden>
-    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="airTitle">
-      <header><h2 id="airTitle">✈️ Sân Bay Làng Vui Vẻ</h2><button class="close" id="airClose" type="button" aria-label="Đóng">×</button></header>
-      <div class="body" id="airBody"></div>
-    </div>
-  </div>
-
-  <!-- THẺ TƯƠNG TÁC NHÂN VẬT TRONG MAP -->
-  <div id="playerCardModal" hidden>
-    <div class="pcard-box">
-      <div class="pcard-av" id="pcardAv" style="background:#5ab0ff;">A</div>
-      <h3 class="pcard-name" id="pcardName">Người chơi</h3>
-      <div class="pcard-meta" id="pcardMeta">Đang ở khu vực này</div>
-      <div class="pcard-btns" id="pcardBtns"></div>
-      <button type="button" class="btn ghost" id="pcardClose" style="width:100%;margin-top:8px;">Đóng</button>
     </div>
   </div>
 
@@ -469,7 +434,7 @@ button, input { touch-action: manipulation; }
         <div class="follow-av" id="followTargetAv" style="background:#5ab0ff;">?</div>
       </div>
       <h2 class="follow-title" id="followTitle">Đang theo dõi...</h2>
-      <p class="follow-sub" id="followSub">Đang chuyển phòng và dịch chuyển đến vị trí của bạn bè...</p>
+      <p class="follow-sub" id="followSub">Đang chuyển server và dịch chuyển đến vị trí của bạn bè...</p>
       <div class="follow-bar"><div class="follow-bar-fill" id="followBarFill"></div></div>
     </div>
   </div>
@@ -487,19 +452,26 @@ button, input { touch-action: manipulation; }
     </div>
   </div>
 
+  <div class="modal" id="airportModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="airportTitle">
+      <header><h2 id="airportTitle">✈️ Sân bay quốc tế</h2><button class="close" id="airportClose" type="button">×</button></header>
+      <div class="body">
+        <p class="empty">Chọn khu vực muốn đến. Bạn sẽ được ghép vào một server ngẫu nhiên trong khu vực đó. Muốn theo dõi bạn bè, hãy dùng nút Theo dõi trong hồ sơ người chơi.</p>
+        <button class="btn sell" id="goEurope">🇪🇺 Phố Âu</button>
+        <button class="btn sell" id="goAsia">🌏 Phố Á</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="playerModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="playerModalTitle">
+      <header><h2 id="playerModalTitle">Người chơi</h2><button class="close" id="playerModalClose" type="button">×</button></header>
+      <div class="body" id="playerModalBody"></div>
+    </div>
+  </div>
   <div id="maintOverlay" hidden>
     <div class="maint-card">
       <h2 id="maintTitle">Thông báo hệ thống</h2>
       <p id="maintMsg">Server đang bảo trì, vui lòng quay lại sau!</p>
-    </div>
-  </div>
-
-  <!-- MÀN HÌNH YÊU CẦU KHỞI ĐỘNG LẠI KHI THOÁT QUÁ LÂU -->
-  <div id="restartOverlay" hidden>
-    <div class="maint-card">
-      <h2 id="restartTitle">Phiên chơi đã tự tắt</h2>
-      <p id="restartMsg" style="margin-bottom:16px;">Vui lòng khởi động lại để sử dụng</p>
-      <button type="button" class="btn sun" id="restartBtn" style="width:100%;padding:12px;font-size:1.05rem;">Khởi động lại ngay</button>
     </div>
   </div>
 </div>
@@ -508,6 +480,20 @@ button, input { touch-action: manipulation; }
 (function () {
   "use strict";
   var cv = document.getElementById("c"), ctx = cv.getContext("2d");
+  try {
+    var lastExitAt = Number(localStorage.getItem("lang-vui-last-exit") || 0);
+    if (lastExitAt && Date.now() - lastExitAt > 30 * 60 * 1000) {
+      window.addEventListener("load", function () {
+        var ov = document.getElementById("maintOverlay");
+        document.getElementById("maintTitle").textContent = "Phiên chơi đã kết thúc";
+        document.getElementById("maintMsg").textContent = "Bạn đã rời trò chơi quá lâu. Vui lòng khởi động lại trang để tiếp tục.";
+        ov.hidden = false;
+      });
+    }
+    window.addEventListener("pagehide", function () { try { localStorage.setItem("lang-vui-last-exit", String(Date.now())); } catch (e) {} });
+    window.addEventListener("pageshow", function () { try { localStorage.removeItem("lang-vui-last-exit"); } catch (e) {} });
+  } catch (e) {}
+
 
   // ---------- data ----------
   var HATS = [
@@ -588,48 +574,33 @@ button, input { touch-action: manipulation; }
     { id: "soi", name: "Bác Sồi", zone: "forest", x: 700, y: 420, shirt: "#8d6e63", hair: "#c9c9c9", lines: ["Rừng này có nấm xanh phát sáng.", "Đêm đến đom đóm nhiều lắm.", "Cẩn thận bọ sừng nhé, nó khỏe lắm."] },
     { id: "nam", name: "Bé Nấm", zone: "forest", x: 950, y: 620, shirt: "#e8604f", hair: "#3a2e39", lines: ["Nấm đỏ ngon lắm, nhưng bán cho tiệm nhé.", "Tối ở đây đẹp như cổ tích.", "Mình ước có thú cưng thỏ."] }
   ];
-
-  // Khu vực & Sân bay (Làng, Phố Âu, Phố Á, Châu Âu, Châu Á, Bãi biển, Rừng)
-  var ZONE_NAMES = {
-    village: "Làng Vui Vẻ",
-    beach: "Bãi biển Vỏ Sò",
-    forest: "Rừng Thì Thầm",
-    euro_st: "Phố Âu",
-    asia_st: "Phố Á",
-    europe: "Châu Âu",
-    asia: "Châu Á"
-  };
-  var DESTINATIONS = [
-    { id: "village", name: "Làng Vui Vẻ", desc: "Quảng trường làng, tiệm làng & sân bay", night: false },
-    { id: "euro_st", name: "Phố Âu", desc: "Đại lộ lát đá kiểu Âu lãng mạn", night: true },
-    { id: "asia_st", name: "Phố Á", desc: "Phố đèn lồng rực rỡ phong cách Á Đông", night: true },
-    { id: "europe", name: "Châu Âu", desc: "Vùng đồng cỏ & lâu đài cổ tích Châu Âu", night: true },
-    { id: "asia", name: "Châu Á", desc: "Đồi tre & tháp cổ thanh bình Châu Á", night: true },
-    { id: "beach", name: "Bãi biển Vỏ Sò", desc: "Bờ cát trắng & cầu tàu câu cá biển", night: false },
-    { id: "forest", name: "Rừng Thì Thầm", desc: "Khu rừng nấm xanh & đom đóm đêm", night: false }
+  var ZONE_NAMES = { village: "Làng Vui Vẻ", beach: "Bãi biển Vỏ Sò", forest: "Rừng Thì Thầm" };
+  var SERVERS = [
+    { id: "plaza_1", name: "Server Plaza 1", short: "Plaza 1", desc: "Quảng trường trung tâm nhộn nhịp, đông vui nhất", cap: 30 },
+    { id: "plaza_2", name: "Server Plaza 2", short: "Plaza 2", desc: "Khu giao lưu kết bạn, trò chuyện tự do", cap: 30 },
+    { id: "sunny_3", name: "Server Nắng Mai", short: "Nắng Mai", desc: "Không khí thư giãn, thích hợp câu cá & dạo chơi", cap: 25 },
+    { id: "breeze_4", name: "Server Gió Biển", short: "Gió Biển", desc: "Tụ điểm của các cần thủ và thợ săn vỏ sò", cap: 25 },
+    { id: "firefly_5", name: "Server Đom Đóm", short: "Đom Đóm", desc: "Yên bình, ấm cúng cho các nhóm bạn thân", cap: 20 },
+    { id: "star_6", name: "Server Ngôi Sao", short: "Ngôi Sao", desc: "Kênh tổ chức tiệc tùng và sự kiện cộng đồng", cap: 20 }
   ];
-  var ZONE_ENFORCED_NIGHT = {
-    euro_st: true,
-    asia_st: true,
-    europe: true,
-    asia: true
-  };
-  var globalForceNight = false;
-
-  // Server ngẫu nhiên (không cho phép người chơi tự chuyển server thủ công)
-  var ROOM_POOL = ["room_a1", "room_b2", "room_c3", "room_d4", "room_e5", "room_f6"];
-  var currentServer = ROOM_POOL[Math.floor(Math.random() * ROOM_POOL.length)];
   function getServerInfo(sid) {
-    var idx = ROOM_POOL.indexOf(sid);
-    var label = idx >= 0 ? ("Phòng #" + (idx + 1)) : "Phòng ngẫu nhiên";
-    return { id: sid || "room_a1", name: label, short: label, desc: "Phòng ghép ngẫu nhiên (không chuyển thủ công)", cap: 30 };
+    for (var i = 0; i < SERVERS.length; i++) if (SERVERS[i].id === sid) return SERVERS[i];
+    return SERVERS[0];
   }
+  var REGION_SERVERS = {
+    asia: ["plaza_1", "plaza_2", "sunny_3"],
+    europe: ["breeze_4", "firefly_5", "star_6"]
+  };
+  var currentRegion = "asia";
+  var currentServer = "plaza_1";
+  function randomServerForRegion(region) {
+    var choices = REGION_SERVERS[region] || REGION_SERVERS.asia;
+    return choices[Math.floor(Math.random() * choices.length)];
+  }
+  currentServer = randomServerForRegion(currentRegion);
   var incomingSummon = null;
   var lastSummonTs = 0;
   var followingLock = false;
-  var sessionTerminated = false;
-  var hiddenSinceTs = 0;
-  var AWAY_LIMIT_MS = 25000; // Thoát/ẩn quá 25 giây khi quay lại sẽ tự tắt & yêu cầu khởi động lại
 
   function rand(a, b) { return a + Math.random() * (b - a); }
   function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
@@ -685,26 +656,25 @@ button, input { touch-action: manipulation; }
     scheduleFbSync();
   }
   function scheduleFbSync() {
-    if (sessionTerminated) return;
     clearTimeout(fbSyncTimer);
     fbSyncTimer = setTimeout(syncPlayerToFb, 650);
   }
   function fbReq(path, method, data) {
-    if (sessionTerminated && method && method !== "GET") return Promise.resolve(null);
     var opts = { method: method || "GET", headers: { "Content-Type": "application/json" } };
     if (data !== undefined) opts.body = JSON.stringify(data);
     return fetch(FB_URL + path + ".json", opts).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
   }
 
+  // ---------- Start game without Beta Key ----------
   function startGameAfterIntro() {
     if (!save.intro) startIntro(false);
     else {
       banner(ZONE_NAMES[Z.id]);
-      toast("Chào mừng trở lại " + ZONE_NAMES[Z.id] + " (" + getServerInfo(currentServer).short + ")!");
+      toast("Chào mừng trở lại " + ZONE_NAMES[Z.id] + "!");
     }
   }
   function syncPlayerToFb() {
-    if (!save.pid || sessionTerminated) return;
+    if (!save.pid) return;
     var sh = byId(SHIRTS, save.eq.shirt);
     var payload = {
       pid: save.pid,
@@ -715,6 +685,7 @@ button, input { touch-action: manipulation; }
       xp: save.xp,
       level: level(),
       server: currentServer,
+      region: currentRegion,
       zone: Z ? Z.id : "village",
       shirt: sh ? sh.color : "#ff7a6b",
       eq: save.eq,
@@ -728,13 +699,14 @@ button, input { touch-action: manipulation; }
     fbReq("/players/" + encodeURIComponent(save.pid), "PATCH", payload);
   }
   function syncOnlinePresence() {
-    if (!save.pid || !Z || sessionTerminated) return;
+    if (!save.pid || !Z) return;
     var sh = byId(SHIRTS, save.eq.shirt);
     fbReq("/online/" + encodeURIComponent(save.pid), "PUT", {
       pid: save.pid,
       name: save.name,
       fcode: save.fcode,
       server: currentServer,
+      region: currentRegion,
       zone: Z.id,
       x: Math.round(P.x),
       y: Math.round(P.y),
@@ -768,7 +740,6 @@ button, input { touch-action: manipulation; }
     if (cfg.multipliers) fbConfig.multipliers = cfg.multipliers;
     if (cfg.codes) fbConfig.codes = cfg.codes;
     if (cfg.shopOverrides) fbConfig.shopOverrides = cfg.shopOverrides;
-    globalForceNight = !!(cfg.forceNight || (cfg.timeMode === "night"));
 
     var sb = $("srvBanner");
     if (fbConfig.announcement && fbConfig.announcement.active && fbConfig.announcement.text) {
@@ -785,7 +756,6 @@ button, input { touch-action: manipulation; }
   }
   var adminBanState = { banned: false, reason: "" };
   function checkLockScreen() {
-    if (sessionTerminated) return;
     var ov = $("maintOverlay"), mt = $("maintTitle"), mm = $("maintMsg");
     if (adminBanState.banned) {
       mt.textContent = "Tài khoản bị tạm khóa";
@@ -811,11 +781,12 @@ button, input { touch-action: manipulation; }
     }
   }
   function handleAdminPlayerPatch(pdata) {
-    if (!pdata || typeof pdata !== "object" || sessionTerminated) return;
+    if (!pdata || typeof pdata !== "object") return;
     adminBanState.banned = !!pdata.banned;
     adminBanState.reason = pdata.banReason || "";
     checkLockScreen();
 
+    // Sync friend requests & accepted friends
     friendRequests = (pdata.friendRequests && typeof pdata.friendRequests === "object") ? pdata.friendRequests : {};
     if (pdata.playerFriends && typeof pdata.playerFriends === "object") {
       var changed = false;
@@ -868,24 +839,36 @@ button, input { touch-action: manipulation; }
     }
   }
 
-  // Gán phòng ngẫu nhiên (không cho tự chọn phòng khác)
-  function assignRandomServer(silent) {
-    var pickSrv = ROOM_POOL[Math.floor(Math.random() * ROOM_POOL.length)];
-    currentServer = pickSrv;
+  function setServer(srvId, silent, force) {
+    var info = getServerInfo(srvId);
+    if (!force && info.id !== currentServer) {
+      toast("Server được ghép ngẫu nhiên. Hãy dùng Sân bay để đổi khu vực hoặc Theo dõi bạn bè.");
+      return;
+    }
+    currentServer = info.id;
+    try { localStorage.setItem("lang-vui-server", currentServer); } catch (e) {}
     var lbl = $("serverLabel");
-    if (lbl) lbl.textContent = getServerInfo(currentServer).short;
+    if (lbl) lbl.textContent = info.short;
     syncOnlinePresence();
     syncPlayerToFb();
-    if (!silent) toast("Đã vào " + getServerInfo(currentServer).name + " ngẫu nhiên!");
+    if (!silent) {
+      toast("Đã chuyển sang " + info.name + "!");
+      banner(info.name);
+    }
   }
 
-  // Dịch chuyển vào đúng phòng/server của người chơi mục tiêu (dùng khi Theo dõi / Tele)
-  function joinTargetServer(srvId) {
-    currentServer = srvId || ROOM_POOL[0];
-    var lbl = $("serverLabel");
-    if (lbl) lbl.textContent = getServerInfo(currentServer).short;
-    syncOnlinePresence();
-    syncPlayerToFb();
+  function getServerPlayerCount(srvId) {
+    var count = 0, nowMs = Date.now();
+    Object.keys(remotePlayers || {}).forEach(function (pid) {
+      var rp = remotePlayers[pid];
+      if (!rp || (nowMs - (rp.updatedAt || 0)) > 120000) return;
+      var s = rp.server || "plaza_1";
+      if (s === srvId) count++;
+    });
+    if (currentServer === srvId && (!remotePlayers[save.pid] || (nowMs - (remotePlayers[save.pid].updatedAt || 0)) > 16000)) {
+      count++;
+    }
+    return count;
   }
 
   function getPlayerLiveInfo(pid) {
@@ -893,10 +876,10 @@ button, input { touch-action: manipulation; }
     var rp = remotePlayers[pid];
     var dir = allDirectory[pid] || {};
     var online = false;
-    if (rp && (nowMs - (rp.updatedAt || 0)) < 16000) online = true;
-    else if (dir && (nowMs - (dir.lastSeen || 0)) < 20000) online = true;
+    if (rp && (nowMs - (rp.updatedAt || 0)) < 1120000) online = true;
+    else if (dir && (nowMs - (dir.lastSeen || 0)) < 120000) online = true;
 
-    var srvId = (rp && rp.server) || dir.server || "room_a1";
+    var srvId = (rp && rp.server) || dir.server || "plaza_1";
     var zoneId = (rp && rp.zone) || dir.zone || "village";
     var px = (rp && typeof rp.x === "number") ? rp.x : (ZONES[zoneId] ? ZONES[zoneId].spawn[0] : 900);
     var py = (rp && typeof rp.y === "number") ? rp.y : (ZONES[zoneId] ? ZONES[zoneId].spawn[1] : 640);
@@ -909,6 +892,7 @@ button, input { touch-action: manipulation; }
       shirt: shirt,
       online: online,
       server: srvId,
+      region: (rp && rp.region) || dir.region || "asia",
       serverInfo: getServerInfo(srvId),
       zone: zoneId,
       x: px,
@@ -916,8 +900,52 @@ button, input { touch-action: manipulation; }
     };
   }
 
+  function enterRegion(region) {
+    if (region !== "asia" && region !== "europe") return;
+    currentRegion = region;
+    var nextServer = randomServerForRegion(region);
+    setServer(nextServer, true, true);
+    try { localStorage.setItem("lang-vui-region", region); } catch (e) {}
+    $("airportModal").hidden = true;
+    var spawn = ZONES.village.spawn;
+    enterZone("village", spawn[0], spawn[1]);
+    syncOnlinePresence();
+    syncPlayerToFb();
+    banner(region === "europe" ? "🇪🇺 Phố Âu" : "🌏 Phố Á");
+    toast("Đã đến " + (region === "europe" ? "Phố Âu" : "Phố Á") + " · " + getServerInfo(currentServer).short);
+  }
+
+  function openPlayerCard(pid) {
+    var info = getPlayerLiveInfo(pid);
+    var body = $("playerModalBody");
+    $("playerModalTitle").textContent = info.name;
+    body.innerHTML = "";
+    var status = el("p", "empty", info.online ? "🟢 Đang online · " + (info.region === "europe" ? "Phố Âu" : "Phố Á") : "⚪ Đang offline");
+    body.appendChild(status);
+    var isFriend = !!(save.playerFriends && save.playerFriends[pid]);
+    var add = el("button", isFriend ? "btn ghost sell" : "btn green sell", isFriend ? "Đã là bạn bè" : "Kết bạn");
+    add.disabled = isFriend || !info.online;
+    add.addEventListener("click", function () {
+      sendPlayerFriendReq(pid, info.name);
+      add.textContent = "Đã gửi lời mời";
+      add.disabled = true;
+    });
+    body.appendChild(add);
+    if (isFriend) {
+      var actions = el("div", "row");
+      var follow = el("button", "btn sell", "Theo dõi");
+      follow.addEventListener("click", function () { $("playerModal").hidden = true; followPlayer(pid); });
+      var call = el("button", "btn purple sell", "Gọi đến");
+      call.addEventListener("click", function () { $("playerModal").hidden = true; summonFriend(pid); });
+      actions.appendChild(follow); actions.appendChild(call); body.appendChild(actions);
+    } else {
+      body.appendChild(el("p", "empty", "Sau khi kết bạn, hai nút Theo dõi và Gọi đến sẽ xuất hiện."));
+    }
+    $("playerModal").hidden = false;
+  }
+
   function followPlayer(targetPid) {
-    if (followingLock || sessionTerminated) return;
+    if (followingLock) return;
     var info = getPlayerLiveInfo(targetPid);
     if (!info.online) {
       toast(info.name + " hiện đã offline mất rồi!");
@@ -926,8 +954,6 @@ button, input { touch-action: manipulation; }
     followingLock = true;
     if (phoneOpen) closePhone();
     if (modalOpen) closeModal();
-    closeAirport();
-    closePlayerCard();
 
     var ov = $("followOverlay");
     var meAv = $("followMeAv");
@@ -943,7 +969,7 @@ button, input { touch-action: manipulation; }
     tgAv.textContent = (info.name || "?").charAt(0).toUpperCase();
 
     title.textContent = "Đang theo dõi " + info.name + "...";
-    sub.textContent = "Đang vào " + info.serverInfo.name + " · " + (ZONE_NAMES[info.zone] || "Làng Vui Vẻ");
+    sub.textContent = "Đang kết nối tới " + info.serverInfo.name + " (" + (ZONE_NAMES[info.zone] || "Làng") + ")";
     fill.style.width = "0%";
     ov.hidden = false;
 
@@ -956,15 +982,15 @@ button, input { touch-action: manipulation; }
         clearInterval(timer);
         fbReq("/online/" + encodeURIComponent(targetPid)).then(function (latest) {
           var finalSrv = (latest && latest.server) || info.server;
+          currentRegion = (latest && latest.region) || info.region || "asia";
           var finalZone = (latest && latest.zone) || info.zone;
-          if (!ZONES[finalZone]) finalZone = "village";
           var fx = (latest && typeof latest.x === "number") ? latest.x : info.x;
           var fy = (latest && typeof latest.y === "number") ? latest.y : info.y;
 
-          var destX = clamp(fx + 38, 40, ZONES[finalZone].w - 40);
-          var destY = clamp(fy + 8, 80, ZONES[finalZone].h - 30);
+          var destX = clamp(fx + 38, 40, (ZONES[finalZone] ? ZONES[finalZone].w - 40 : 1700));
+          var destY = clamp(fy + 8, 80, (ZONES[finalZone] ? ZONES[finalZone].h - 30 : 1100));
 
-          joinTargetServer(finalSrv);
+          setServer(finalSrv, true, true);
           enterZone(finalZone, destX, destY);
           syncOnlinePresence();
 
@@ -972,7 +998,7 @@ button, input { touch-action: manipulation; }
             ov.hidden = true;
             followingLock = false;
             banner(getServerInfo(finalSrv).name + " · " + ZONE_NAMES[finalZone]);
-            toast("Đã theo dõi đến chỗ " + info.name + " tại " + (ZONE_NAMES[finalZone] || "Làng") + "!");
+            toast("Đã đến chỗ của " + info.name + " tại " + getServerInfo(finalSrv).name + "!");
             sparkle(P.x, P.y - 20, "#ffd23f", 18);
             say("Chào " + info.name + ", mình tới chơi nè!");
           }, 260);
@@ -1000,20 +1026,18 @@ button, input { touch-action: manipulation; }
       ts: Date.now()
     };
     fbReq("/players/" + encodeURIComponent(targetPid) + "/summonReq", "PUT", reqPayload).then(function () {
-      toast("Đã gọi " + info.name + " đến " + (ZONE_NAMES[Z.id] || "khu vực của bạn") + "!");
-      say("Ê " + info.name + " ơi, qua " + (ZONE_NAMES[Z.id] || "đây") + " chơi với mình đi!");
+      toast("Đã gửi lời gọi đến cho " + info.name + "!");
+      say("Ê " + info.name + " ơi, qua " + mySrv.short + " chơi với mình đi!");
     });
   }
 
   function showSummonPrompt(req) {
-    if (sessionTerminated) return;
     incomingSummon = req;
     var modalEl = $("summonModal");
     $("summonTitle").textContent = (req.fromName || "Bạn bè") + " đang gọi bạn đến!";
-    $("summonDesc").textContent = (req.fromName || "Bạn của bạn") + " đang ở " + (req.zoneName || "Làng Vui Vẻ") + " và muốn rủ bạn qua chơi cùng!";
+    $("summonDesc").textContent = (req.fromName || "Bạn của bạn") + " đang ở " + (req.serverName || "Server Plaza 1") + " (" + (req.zoneName || "Làng Vui Vẻ") + ") và muốn rủ bạn qua chơi cùng!";
     modalEl.hidden = false;
   }
-
   function refreshDirectory() {
     return fbReq("/players").then(function (all) {
       if (all && typeof all === "object") {
@@ -1049,7 +1073,6 @@ button, input { touch-action: manipulation; }
     feed.scrollTop = feed.scrollHeight;
   }
   function sendChatMessage(rawText) {
-    if (sessionTerminated) return;
     var txt = (rawText || "").trim().slice(0, 80);
     if (!txt) return;
     say(txt);
@@ -1081,36 +1104,34 @@ button, input { touch-action: manipulation; }
     if (window.EventSource) {
       try {
         var esCfg = new EventSource(FB_URL + "/config.json");
-        esCfg.addEventListener("put", function (e) { if (sessionTerminated) return; var d = JSON.parse(e.data); if (d && d.path === "/") applyServerConfig(d.data); else fbReq("/config").then(applyServerConfig); });
-        esCfg.addEventListener("patch", function () { if (!sessionTerminated) fbReq("/config").then(applyServerConfig); });
+        esCfg.addEventListener("put", function (e) { var d = JSON.parse(e.data); if (d && d.path === "/") applyServerConfig(d.data); else fbReq("/config").then(applyServerConfig); });
+        esCfg.addEventListener("patch", function () { fbReq("/config").then(applyServerConfig); });
 
         var esMe = new EventSource(FB_URL + "/players/" + encodeURIComponent(save.pid) + ".json");
-        esMe.addEventListener("put", function (e) { if (sessionTerminated) return; var d = JSON.parse(e.data); if (d && d.path === "/") handleAdminPlayerPatch(d.data); else fbReq("/players/" + encodeURIComponent(save.pid)).then(handleAdminPlayerPatch); });
-        esMe.addEventListener("patch", function () { if (!sessionTerminated) fbReq("/players/" + encodeURIComponent(save.pid)).then(handleAdminPlayerPatch); });
+        esMe.addEventListener("put", function (e) { var d = JSON.parse(e.data); if (d && d.path === "/") handleAdminPlayerPatch(d.data); else fbReq("/players/" + encodeURIComponent(save.pid)).then(handleAdminPlayerPatch); });
+        esMe.addEventListener("patch", function () { fbReq("/players/" + encodeURIComponent(save.pid)).then(handleAdminPlayerPatch); });
 
         var esChat = new EventSource(FB_URL + "/chat.json");
-        esChat.addEventListener("put", function () { if (!sessionTerminated) fetchChatHistory(); });
-        esChat.addEventListener("patch", function () { if (!sessionTerminated) fetchChatHistory(); });
+        esChat.addEventListener("put", function () { fetchChatHistory(); });
+        esChat.addEventListener("patch", function () { fetchChatHistory(); });
       } catch (err) {}
     }
 
     setInterval(function () {
-      if (sessionTerminated) return;
       syncOnlinePresence();
       fbReq("/online").then(function (all) {
-        if (sessionTerminated) return;
         remotePlayers = all || {};
-        if (phoneOpen && app === "friends") renderPhone();
+        if (phoneOpen && (app === "friends" || app === "servers")) renderPhone();
       });
     }, 2500);
     setInterval(function () {
-      if (sessionTerminated) return;
       fbReq("/config").then(applyServerConfig);
       fbReq("/players/" + encodeURIComponent(save.pid)).then(handleAdminPlayerPatch);
       refreshDirectory();
     }, 8000);
-    window.addEventListener("beforeunload", function () {
-      try { navigator.sendBeacon(FB_URL + "/online/" + encodeURIComponent(save.pid) + ".json?x-http-method-override=DELETE", ""); } catch (e) {}
+    // Không xóa presence ngay khi chuyển tab/thoát tạm thời; heartbeat hết hạn sau 2 phút.
+    window.addEventListener("pagehide", function () {
+      try { fbReq("/online/" + encodeURIComponent(save.pid), "PATCH", { lastActive: Date.now() }); } catch (e) {}
     });
   }
 
@@ -1147,49 +1168,19 @@ button, input { touch-action: manipulation; }
     } };
   }
 
-  // Tòa nhà Sân Bay trong làng (khu vực ngoài làng)
-  function drawAirport(ap) {
-    var x = ap.x, y = ap.y, w = ap.w;
-    ctx.fillStyle = "rgba(0,0,0,.15)"; ell(ctx, x + w / 2, y + 132, w / 2 + 18, 16); ctx.fill();
-    // Sân đỗ / đường băng mini trước sân bay
-    ctx.fillStyle = "#5d6b82"; rr(ctx, x - 20, y + 118, w + 40, 22, 6); ctx.fill();
-    ctx.strokeStyle = "#ffd23f"; ctx.lineWidth = 2; ctx.setLineDash([10, 8]);
-    ctx.beginPath(); ctx.moveTo(x - 10, y + 129); ctx.lineTo(x + w + 10, y + 129); ctx.stroke();
-    ctx.setLineDash([]);
-    // Thân nhà ga sân bay
-    ctx.fillStyle = "#eef6ff"; rr(ctx, x + 8, y + 52, w - 16, 68, 8); ctx.fill();
-    ctx.strokeStyle = "#b8d0eb"; ctx.lineWidth = 2; ctx.stroke();
-    // Mái vòm xanh dương & trắng
-    ctx.fillStyle = "#38a3ff"; rr(ctx, x, y + 36, w, 24, 10); ctx.fill();
-    // Biển SÂN BAY
-    ctx.fillStyle = "#ffd23f"; rr(ctx, x + w / 2 - 68, y + 10, 136, 30, 9); ctx.fill();
-    ctx.strokeStyle = "#23324a"; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = "#23324a"; ctx.font = "800 16px 'Baloo 2', sans-serif"; ctx.textAlign = "center";
-    ctx.fillText("✈️ SÂN BAY", x + w / 2, y + 31);
-    // Cửa ra vào & kính
-    ctx.fillStyle = "#5ab0ff"; rr(ctx, x + 26, y + 72, 54, 30, 6); ctx.fill(); rr(ctx, x + w - 80, y + 72, 54, 30, 6); ctx.fill();
-    ctx.fillStyle = "#23324a"; rr(ctx, x + w / 2 - 22, y + 74, 44, 46, 6); ctx.fill();
-    ctx.fillStyle = "#ffd23f"; ctx.font = "700 10px 'Be Vietnam Pro', sans-serif";
-    ctx.fillText("CỔNG", x + w / 2, y + 92);
-    // Tháp không lưu nhỏ
-    ctx.fillStyle = "#cfd8e3"; ctx.fillRect(x + w - 34, y - 16, 12, 54);
-    ctx.fillStyle = "#ff7a6b"; rr(ctx, x + w - 42, y - 28, 28, 14, 4); ctx.fill();
-  }
-
   function buildVillage() {
     var z = { id: "village", w: 1800, h: 1200, spawn: [900, 640], water: { cx: 360, cy: 830, rx: 230, ry: 140 }, hasShop: true, bugsT: BUGS_V, fishT: FISH_V, bugN: 12, picks: null,
-      paths: [[[900, 520], [1340, 520], [1340, 360]], [[900, 520], [700, 700], [610, 790]], [[900, 520], [350, 520], [350, 300]], [[900, 650], [900, 700], [1760, 700]], [[900, 650], [900, 1170]], [[900, 520], [1160, 520], [1160, 820]]],
-      plaza: { x: 900, y: 520, r: 150 }, shop: { x: 1190, y: 190, w: 300, h: 150, door: { x: 1340, y: 372 } }, house: { x: 250, y: 170, w: 200, h: 120 },
-      airport: { x: 1050, y: 740, w: 220, h: 125, door: { x: 1160, y: 882 } }, fount: { x: 900, y: 520, r: 46 },
-      lamps: [[760, 420], [1040, 420], [1290, 380], [1390, 380], [560, 700], [1110, 730]],
+      paths: [[[900, 520], [1340, 520], [1340, 360]], [[900, 520], [700, 700], [610, 790]], [[900, 520], [350, 520], [350, 300]], [[350, 520], [470, 520], [615, 492]], [[900, 650], [900, 700], [1760, 700]], [[900, 650], [900, 1170]]],
+      plaza: { x: 900, y: 520, r: 150 }, airport: { x: 500, y: 330, w: 230, h: 132, door: { x: 615, y: 492 } }, shop: { x: 1190, y: 190, w: 300, h: 150, door: { x: 1340, y: 372 } }, house: { x: 250, y: 170, w: 200, h: 120 }, fount: { x: 900, y: 520, r: 46 },
+      lamps: [[760, 420], [1040, 420], [1290, 380], [1390, 380], [560, 700]],
       exits: [{ r: [1730, 640, 60, 120], to: "beach", x: 110, y: 500 }, { r: [820, 1140, 160, 60], to: "forest", x: 800, y: 130 }] };
-    z.rects = [[z.shop.x, z.shop.y + 40, z.shop.w, z.shop.h - 40], [z.house.x, z.house.y + 30, z.house.w, z.house.h - 30], [z.airport.x, z.airport.y + 36, z.airport.w, z.airport.h - 36]];
+    z.rects = [[z.shop.x, z.shop.y + 40, z.shop.w, z.shop.h - 40], [z.house.x, z.house.y + 30, z.house.w, z.house.h - 30], [z.airport.x, z.airport.y + 28, z.airport.w, z.airport.h - 20]];
     z.circles = [[z.fount.x, z.fount.y, z.fount.r]];
-    genTrees(z, 32, 11, 82, function (x, y) {
+    genTrees(z, 34, 11, 80, function (x, y) {
       Z = z;
       if (waterD(x, y, 1.35) < 1) return false;
       if (Math.hypot(x - z.plaza.x, y - z.plaza.y) < 210) return false;
-      if (inBox(x, y, [z.shop.x, z.shop.y, z.shop.w, z.shop.h], 60) || inBox(x, y, [z.house.x, z.house.y, z.house.w, z.house.h], 60) || inBox(x, y, [z.airport.x, z.airport.y, z.airport.w, z.airport.h], 65)) return false;
+      if (inBox(x, y, [z.shop.x, z.shop.y, z.shop.w, z.shop.h], 60) || inBox(x, y, [z.house.x, z.house.y, z.house.w, z.house.h], 60) || inBox(x, y, [z.airport.x, z.airport.y, z.airport.w, z.airport.h], 75)) return false;
       return !nearPath(x, y, 60);
     }, 0.6, 0.3, function (h) { return "round"; });
     z.tp = [["#3fa66b", "#55c27f"], ["#4cb872", "#6ad08a"]];
@@ -1200,6 +1191,18 @@ button, input { touch-action: manipulation; }
       var cols = ["#ffffff", "#ffd6e7", "#fff1a8", "#ffb3c1"];
       for (i = 0; i < 320; i++) { var fx = r() * z.w, fy = r() * z.h; g.fillStyle = cols[Math.floor(r() * 4)]; g.beginPath(); g.arc(fx, fy, 2 + r() * 1.6, 0, 6.3); g.fill(); g.fillStyle = "#f4c430"; g.beginPath(); g.arc(fx, fy, 1, 0, 6.3); g.fill(); }
       drawPaths(g, z.paths, "#e6cf98", "#f5e6bd", 78, 66);
+      // Sân bay là một công trình cố định trong bản đồ làng, nối với đường đi bộ.
+      var ap = z.airport;
+      g.fillStyle = "rgba(0,0,0,.16)"; ell(g, ap.x + ap.w / 2, ap.y + ap.h + 12, ap.w * .58, 15); g.fill();
+      g.fillStyle = "#b9d9e8"; rr(g, ap.x - 12, ap.y + 20, ap.w + 24, ap.h + 10, 18); g.fill();
+      g.fillStyle = "#f8fbff"; rr(g, ap.x, ap.y + 28, ap.w, ap.h - 4, 14); g.fill();
+      g.fillStyle = "#5aa9d6"; g.beginPath(); g.moveTo(ap.x - 14, ap.y + 34); g.lineTo(ap.x + ap.w / 2, ap.y - 18); g.lineTo(ap.x + ap.w + 14, ap.y + 34); g.closePath(); g.fill();
+      g.fillStyle = "#eaf6fb"; rr(g, ap.x + 18, ap.y + 48, 48, 38, 7); g.fill(); rr(g, ap.x + 82, ap.y + 48, 48, 38, 7); g.fill();
+      g.fillStyle = "#77c8e8"; rr(g, ap.x + 24, ap.y + 54, 36, 26, 4); g.fill(); rr(g, ap.x + 88, ap.y + 54, 36, 26, 4); g.fill();
+      g.fillStyle = "#5d6b82"; rr(g, ap.x + 157, ap.y + 72, 42, 62, 7); g.fill();
+      g.fillStyle = "#d8eff8"; rr(g, ap.x + 163, ap.y + 78, 30, 50, 5); g.fill();
+      g.fillStyle = "#fff"; rr(g, ap.x + 58, ap.y - 3, 114, 25, 8); g.fill();
+      g.fillStyle = "#31516b"; g.font = "800 15px 'Baloo 2', sans-serif"; g.textAlign = "center"; g.fillText("✈ SÂN BAY", ap.x + 115, ap.y + 15);
       g.fillStyle = "#e6cf98"; g.beginPath(); g.arc(z.plaza.x, z.plaza.y, z.plaza.r + 10, 0, 6.3); g.fill();
       g.fillStyle = "#f5e6bd"; g.beginPath(); g.arc(z.plaza.x, z.plaza.y, z.plaza.r, 0, 6.3); g.fill();
       g.strokeStyle = "#ecd9a6"; g.lineWidth = 3;
@@ -1214,50 +1217,8 @@ button, input { touch-action: manipulation; }
         if (i % 2 === 0) { g.fillStyle = "#ff9ec4"; g.beginPath(); g.arc(lx + 2, ly - 2, 4, 0, 6.3); g.fill(); }
       }
     };
-    z.statics = [{ y: z.house.y + z.house.h, f: drawHouse }, { y: z.shop.y + z.shop.h, f: drawShop }, { y: z.airport.y + z.airport.h, f: function () { drawAirport(z.airport); } }, { y: z.fount.y, f: function (t) { drawFountain(t); } },
-      signStatic(1690, 700, "Bãi biển →"), signStatic(860, 1110, "Khu rừng ↓"), signStatic(1100, 720, "✈️ Sân bay")];
-    return z;
-  }
-
-  // Tạo khu vực Phố Âu, Phố Á, Châu Âu, Châu Á (dùng chung Sân bay để bay về Làng hoặc chuyển sang các khu khác)
-  function buildThemedZone(id, opts) {
-    var z = {
-      id: id, w: 1600, h: 1100, spawn: [800, 560], water: null,
-      bugsT: BUGS_V, fishT: null, bugN: 10, picks: null,
-      paths: [[[800, 120], [800, 960]], [[200, 560], [1400, 560]]],
-      airport: { x: 690, y: 180, w: 220, h: 125, door: { x: 800, y: 322 } },
-      lamps: [[520, 460], [1080, 460], [520, 720], [1080, 720], [800, 420]],
-      exits: []
-    };
-    z.rects = [[z.airport.x, z.airport.y + 36, z.airport.w, z.airport.h - 36]];
-    z.circles = [];
-    genTrees(z, 26, opts.seed || 41, 90, function (x, y) {
-      Z = z;
-      if (inBox(x, y, [z.airport.x, z.airport.y, z.airport.w, z.airport.h], 75)) return false;
-      return !nearPath(x, y, 68);
-    }, 0.75, 0.3, function () { return opts.treeKind || "round"; });
-    z.tp = opts.tp || [["#3fa66b", "#55c27f"], ["#4cb872", "#6ad08a"]];
-    z.bgBuild = function (g) {
-      var r = mulberry(opts.seed || 41), i;
-      g.fillStyle = opts.ground || "#7ec488"; g.fillRect(0, 0, z.w, z.h);
-      for (i = 0; i < 180; i++) { g.fillStyle = opts.patch || "rgba(255,255,255,.12)"; ell(g, r() * z.w, r() * z.h, 30 + r() * 70, 20 + r() * 45); g.fill(); }
-      drawPaths(g, z.paths, opts.roadBorder || "#cbb89d", opts.roadFill || "#efe5d5", 82, 68);
-      // Quảng trường trung tâm khu vực
-      g.fillStyle = opts.roadBorder || "#cbb89d"; g.beginPath(); g.arc(800, 560, 130, 0, 6.3); g.fill();
-      g.fillStyle = opts.roadFill || "#efe5d5"; g.beginPath(); g.arc(800, 560, 118, 0, 6.3); g.fill();
-      // Trang trí đặc trưng từng khu
-      if (opts.decor) opts.decor(g, r);
-    };
-    z.statics = [
-      { y: z.airport.y + z.airport.h, f: function () { drawAirport(z.airport); } },
-      signStatic(730, 345, "✈️ Sân bay / Chuyển khu"),
-      { y: 560, f: function () {
-        ctx.fillStyle = "rgba(0,0,0,.12)"; ell(ctx, 800, 565, 48, 18); ctx.fill();
-        ctx.fillStyle = opts.accent || "#ff7a6b"; ctx.beginPath(); ctx.arc(800, 540, 28, 0, 6.3); ctx.fill();
-        ctx.fillStyle = "#fff"; ctx.font = "800 13px 'Baloo 2', sans-serif"; ctx.textAlign = "center";
-        ctx.fillText(opts.badge || "KHU", 800, 545);
-      }}
-    ];
+    z.statics = [{ y: z.house.y + z.house.h, f: drawHouse }, { y: z.shop.y + z.shop.h, f: drawShop }, { y: z.fount.y, f: function (t) { drawFountain(t); } },
+      signStatic(1690, 700, "Bãi biển →"), signStatic(860, 1110, "Khu rừng ↓")];
     return z;
   }
 
@@ -1348,34 +1309,7 @@ button, input { touch-action: manipulation; }
     return Math.abs(e.x - ox) + Math.abs(e.y - oy) > 0.01;
   }
 
-  ZONES.village = buildVillage();
-  ZONES.beach = buildBeach();
-  ZONES.forest = buildForest();
-  ZONES.euro_st = buildThemedZone("euro_st", {
-    seed: 51, ground: "#7fb892", roadBorder: "#9aa5b4", roadFill: "#d9e1eb",
-    accent: "#5b8def", badge: "PHỐ ÂU", treeKind: "round",
-    decor: function (g, r) {
-      g.fillStyle = "#ff7a6b";
-      for (var i = 0; i < 8; i++) { g.beginPath(); g.arc(320 + i * 135, 515, 6, 0, 6.3); g.fill(); }
-    }
-  });
-  ZONES.asia_st = buildThemedZone("asia_st", {
-    seed: 67, ground: "#6fa87a", roadBorder: "#b8893a", roadFill: "#edd9a3",
-    accent: "#ff4757", badge: "PHỐ Á", treeKind: "pine",
-    decor: function (g) {
-      g.fillStyle = "#ff4757";
-      for (var i = 0; i < 9; i++) { g.beginPath(); g.arc(280 + i * 130, 512, 7, 0, 6.3); g.fill(); }
-    }
-  });
-  ZONES.europe = buildThemedZone("europe", {
-    seed: 83, ground: "#76c48a", roadBorder: "#b8a99a", roadFill: "#e8dfd3",
-    accent: "#9b5de5", badge: "ÂU", treeKind: "round"
-  });
-  ZONES.asia = buildThemedZone("asia", {
-    seed: 97, ground: "#5da674", roadBorder: "#a88b5a", roadFill: "#dfd0a8",
-    accent: "#3fae6a", badge: "Á", treeKind: "pine"
-  });
-
+  ZONES.village = buildVillage(); ZONES.beach = buildBeach(); ZONES.forest = buildForest();
   Object.keys(ZONES).forEach(function (k) {
     var z = ZONES[k]; Z = z;
     var bg = document.createElement("canvas"); bg.width = z.w; bg.height = z.h; z.bgBuild(bg.getContext("2d")); z.bg = bg;
@@ -1388,8 +1322,7 @@ button, input { touch-action: manipulation; }
   var pet = { x: 860, y: 650, face: 1, walk: 0, moving: false };
   var target = null, stuck = 0, tapFx = 0, tapPos = { x: 0, y: 0 };
   var keys = {}, touchMoveX = 0, touchMoveY = 0, bugs = [], parts = [], pops = [], clock = 0, dark = 0, hourF = 6;
-  var modalOpen = false, phoneOpen = false, airportOpen = false, playerCardOpen = false, introOpen = false, ptgIntroOpen = true, atShop = false, tab = "bag", travelLock = false;
-  var selectedRemotePid = null;
+  var modalOpen = false, phoneOpen = false, introOpen = false, ptgIntroOpen = true, atShop = false, tab = "bag", travelLock = false;
   var npcs = NPC_DEFS.map(function (d) { return { id: d.id, name: d.name, zone: d.zone, x: d.x, y: d.y, shirt: d.shirt, hair: d.hair, lines: d.lines, t: null, wait: 0, bubble: null, bT: 0, cool: 0, face: 1, walk: 0, moving: false }; });
 
   function resize() {
@@ -1429,10 +1362,10 @@ button, input { touch-action: manipulation; }
   function sparkle(x, y, color, n) { for (var i = 0; i < n; i++) { var a = rand(0, 6.28), s = rand(40, 130); parts.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 30, life: rand(0.4, 0.8), max: 0.8, color: color }); } }
   function popText(x, y, t, c) { pops.push({ x: x, y: y, t: t, c: c, life: 1.2 }); }
   function isChatFocused() { return document.activeElement === $("chatInp"); }
-  function uiOpen() { return modalOpen || phoneOpen || airportOpen || playerCardOpen || introOpen || ptgIntroOpen || sessionTerminated || isChatFocused(); }
+  function uiOpen() { return modalOpen || phoneOpen || introOpen || ptgIntroOpen || isChatFocused(); }
   function itemInfo(id) { return byId(HATS, id) || byId(SHIRTS, id) || byId(PETS, id); }
 
-  // ---------- zones: enter / travel / airport ----------
+  // ---------- zones: enter / travel ----------
   function spawnBug() {
     var t = wpick(Z.bugsT), x, y, n = 0;
     do { x = rand(60, Z.w - 60); y = rand(100, Z.h - 60); n++; } while ((waterD(x, y, 1.1) < 1 || Math.hypot(x - P.x, y - P.y) < 200) && n < 25);
@@ -1444,16 +1377,14 @@ button, input { touch-action: manipulation; }
     p.x = x; p.y = y; p.k = wpick(Z.picks.table); p.t = 0;
   }
   function enterZone(id, x, y) {
-    Z = ZONES[id] || ZONES.village; P.x = x; P.y = y; P.fish = null; P.swingT = 0; pet.x = x; pet.y = y; target = null; parts = []; pops = []; bugs = [];
+    Z = ZONES[id]; P.x = x; P.y = y; P.fish = null; P.swingT = 0; pet.x = x; pet.y = y; target = null; parts = []; pops = []; bugs = [];
     for (var i = 0; i < Z.bugN; i++) spawnBug();
     if (Z.picks && !Z.pickState.length) for (var j = 0; j < Z.picks.n; j++) { var p = { x: 0, y: 0, k: null, t: 0 }; placePick(p); Z.pickState.push(p); }
     hud();
-    syncOnlinePresence();
-    syncPlayerToFb();
   }
   function banner(text) { var b = $("banner"); b.textContent = text; b.classList.remove("show"); void b.offsetWidth; b.classList.add("show"); }
   function travel(id, x, y) {
-    if (travelLock || sessionTerminated) return; travelLock = true; $("fade").classList.add("on");
+    if (travelLock) return; travelLock = true; $("fade").classList.add("on");
     setTimeout(function () {
       enterZone(id, x, y); banner(ZONE_NAMES[id]);
       if (!save.visited[id]) { save.visited[id] = true; save.coins += 50; gainXp(20); persist(); hud(); setTimeout(function () { toast("Lần đầu đến " + ZONE_NAMES[id] + ": thưởng 50 xu!"); }, 700); }
@@ -1461,131 +1392,6 @@ button, input { touch-action: manipulation; }
       setTimeout(function () { travelLock = false; }, 450);
     }, 400);
   }
-
-  function openAirport() {
-    if (modalOpen || phoneOpen || airportOpen || playerCardOpen || introOpen || ptgIntroOpen || sessionTerminated) return;
-    airportOpen = true; keys = {}; target = null;
-    $("airportModal").hidden = false;
-    renderAirport();
-  }
-  function closeAirport() { airportOpen = false; $("airportModal").hidden = true; }
-  $("airClose").addEventListener("click", closeAirport);
-  $("airportModal").addEventListener("pointerdown", function (e) { if (e.target === $("airportModal")) closeAirport(); });
-
-  // Ép buộc người chơi khác trong cùng phòng chuyển sang khu vực mà bạn chọn tại Sân bay
-  function forceRoomPlayersToZone(destId, destName) {
-    var nowMs = Date.now();
-    Object.keys(remotePlayers || {}).forEach(function (rpid) {
-      if (rpid === save.pid) return;
-      var rp = remotePlayers[rpid];
-      if (!rp || (nowMs - (rp.updatedAt || 0)) > 16000) return;
-      if ((rp.server || "room_a1") !== currentServer) return;
-      var sp = (ZONES[destId] && ZONES[destId].spawn) || [800, 560];
-      fbReq("/players/" + encodeURIComponent(rpid) + "/forceZone", "PUT", {
-        zone: destId,
-        zoneName: destName,
-        x: sp[0],
-        y: sp[1],
-        byName: save.name,
-        ts: Date.now()
-      });
-    });
-  }
-
-  function renderAirport() {
-    var body = $("airBody");
-    body.innerHTML = "";
-    var introTxt = el("p", "empty", "Chọn khu vực để bay tới. Nếu chọn Phố Âu / Phố Á / Châu Âu / Châu Á, tất cả sẽ chuyển sang chế độ BUỔI TỐI và ép buộc người chơi trong phòng đi cùng để cập nhật & theo dõi!");
-    body.appendChild(introTxt);
-
-    DESTINATIONS.forEach(function (d) {
-      var isHere = (Z && Z.id === d.id);
-      var card = el("div", "air-card" + (isHere ? " active" : ""));
-      var info = el("div", "srv-info");
-      var title = el("div", "srv-title", d.name);
-      var tag = el("span", "air-tag " + (d.night ? "night" : "day"), d.night ? "🌙 Buổi tối" : "☀️ Ban ngày");
-      title.appendChild(tag);
-      info.appendChild(title);
-      info.appendChild(el("div", "srv-desc", d.desc));
-
-      var btn = el("button", isHere ? "btn ghost" : "btn sun", isHere ? "Đang ở đây" : "Bay tới");
-      btn.type = "button";
-      btn.disabled = isHere;
-      btn.addEventListener("click", function () {
-        closeAirport();
-        if (d.night) {
-          globalForceNight = true;
-          forceRoomPlayersToZone(d.id, d.name);
-          toast("Đã ép buộc mọi người chuyển sang " + d.name + " (Buổi tối)!");
-        } else {
-          globalForceNight = false;
-        }
-        var sp = (ZONES[d.id] && ZONES[d.id].spawn) || [800, 560];
-        travel(d.id, sp[0], sp[1]);
-      });
-      card.appendChild(info);
-      card.appendChild(btn);
-      body.appendChild(card);
-    });
-  }
-
-  // Thẻ tương tác nhân vật người chơi khi chạm vào nhân vật trên map
-  function openPlayerCard(pid) {
-    if (sessionTerminated) return;
-    var info = getPlayerLiveInfo(pid);
-    if (!info || !info.online) return;
-    selectedRemotePid = pid;
-    modalOpen = false; phoneOpen = false; airportOpen = false;
-    $("modal").hidden = true; $("phoneModal").hidden = true; $("airportModal").hidden = true;
-    keys = {}; target = null; playerCardOpen = true;
-
-    var av = $("pcardAv");
-    av.style.background = info.shirt || "#5ab0ff";
-    av.textContent = (info.name || "?").charAt(0).toUpperCase();
-    $("pcardName").textContent = info.name || "Người chơi";
-    $("pcardMeta").textContent = (ZONE_NAMES[info.zone] || "Làng Vui Vẻ") + " · Trực tuyến";
-
-    var btns = $("pcardBtns");
-    btns.innerHTML = "";
-    var isFriend = !!(save.playerFriends && save.playerFriends[pid]);
-
-    if (!isFriend) {
-      var addBtn = el("button", "btn green", "➕ Kết bạn");
-      addBtn.type = "button";
-      addBtn.addEventListener("click", function () {
-        sendPlayerFriendReq(pid, info.name);
-        addBtn.textContent = "Đã gửi lời mời";
-        addBtn.disabled = true;
-      });
-      btns.appendChild(addBtn);
-    } else {
-      var fBtn = el("button", "btn", "✈️ Theo dõi");
-      fBtn.type = "button";
-      fBtn.addEventListener("click", function () {
-        closePlayerCard();
-        followPlayer(pid);
-      });
-
-      var cBtn = el("button", "btn purple", "📣 Gọi đến");
-      cBtn.type = "button";
-      cBtn.addEventListener("click", function () {
-        closePlayerCard();
-        summonFriend(pid);
-      });
-
-      btns.appendChild(fBtn);
-      btns.appendChild(cBtn);
-    }
-
-    $("playerCardModal").hidden = false;
-  }
-  function closePlayerCard() {
-    playerCardOpen = false;
-    selectedRemotePid = null;
-    $("playerCardModal").hidden = true;
-  }
-  $("pcardClose").addEventListener("click", closePlayerCard);
-  $("playerCardModal").addEventListener("pointerdown", function (e) { if (e.target === $("playerCardModal")) closePlayerCard(); });
 
   // ---------- actions ----------
   function doCatch() {
@@ -1614,13 +1420,10 @@ button, input { touch-action: manipulation; }
     Z.pickState.forEach(function (p) { if (p.t <= 0) { var d = Math.hypot(p.x - P.x, p.y - P.y); if (d < bd) { bd = d; best = p; } } });
     return best;
   }
-  function nearAirport() {
-    return !!(Z && Z.airport && Z.airport.door && Math.hypot(P.x - Z.airport.door.x, P.y - Z.airport.door.y) < 105);
-  }
   function ctxAction() {
     if (P.fish) return P.fish.phase === "bite" ? "reel" : "cancel";
+    if (Z.id === "village" && Z.airport && Math.hypot(P.x - Z.airport.door.x, P.y - Z.airport.door.y) < 105) return "airport";
     if (Z.hasShop && Math.hypot(P.x - Z.shop.door.x, P.y - Z.shop.door.y) < 90) return "shop";
-    if (nearAirport()) return "airport";
     if (nearPick()) return "pick";
     if (bobberPos()) return "fish";
     return "net";
@@ -1632,7 +1435,7 @@ button, input { touch-action: manipulation; }
     if (c === "reel") reel();
     else if (c === "cancel") { P.fish = null; toast("Kéo sớm quá, cá chạy mất rồi!"); }
     else if (c === "shop") openModal(true);
-    else if (c === "airport") openAirport();
+    else if (c === "airport") $("airportModal").hidden = false;
     else if (c === "pick") { var p = nearPick(); if (p) { addItem(p.k.n); save.stats.picks++; gainXp(2 + Math.round(p.k.v / 10)); sparkle(p.x, p.y - 8, p.k.c, 12); toast("Nhặt được " + p.k.n + "! Giá bán " + p.k.v + " xu."); p.t = 28; } }
     else if (c === "fish") { startFish(); toast("Thả cần rồi. Chờ dấu chấm than nhé."); }
     else if (P.swingT <= 0) { P.swingT = 0.4; P.swingHit = false; }
@@ -1640,14 +1443,11 @@ button, input { touch-action: manipulation; }
 
   // ---------- input ----------
   window.addEventListener("keydown", function (e) {
-    if (sessionTerminated) return;
     if (e.key === "Escape") {
       if (isChatFocused()) { $("chatInp").blur(); return; }
-      if (playerCardOpen) { closePlayerCard(); return; }
-      if (airportOpen) { closeAirport(); return; }
       if (phoneOpen) closePhone(); else if (modalOpen) closeModal(); return;
     }
-    if (e.key === "Enter" && !modalOpen && !phoneOpen && !airportOpen && !playerCardOpen && !introOpen && !ptgIntroOpen) {
+    if (e.key === "Enter" && !modalOpen && !phoneOpen && !introOpen && !ptgIntroOpen) {
       if (!isChatFocused()) {
         e.preventDefault();
         $("chatInp").focus();
@@ -1661,34 +1461,31 @@ button, input { touch-action: manipulation; }
     keys[k] = true;
   });
   window.addEventListener("keyup", function (e) { keys[e.key.toLowerCase()] = false; });
-
-  function findRemotePlayerAt(wx, wy) {
-    var nowMs = Date.now(), bestPid = null, bestD = 36;
-    Object.keys(remotePlayers || {}).forEach(function (rpid) {
-      if (rpid === save.pid) return;
-      var rp = remotePlayers[rpid];
-      if (!rp || (rp.server || "room_a1") !== currentServer || rp.zone !== Z.id || (nowMs - (rp.updatedAt || 0)) > 16000) return;
-      var d = Math.hypot(wx - rp.x, wy - (rp.y - 24));
-      if (d < bestD) { bestD = d; bestPid = rpid; }
-    });
-    return bestPid;
-  }
-
+  $("airportClose").addEventListener("click", function () { $("airportModal").hidden = true; });
+  $("goEurope").addEventListener("click", function () { enterRegion("europe"); });
+  $("goAsia").addEventListener("click", function () { enterRegion("asia"); });
+  $("playerModalClose").addEventListener("click", function () { $("playerModal").hidden = true; });
+  $("serverBtn").addEventListener("click", function () {
+    toast("Server được ghép ngẫu nhiên, không thể tự chuyển server.");
+  });
   cv.addEventListener("pointerdown", function (e) {
-    if (sessionTerminated) return;
     if (isChatFocused()) $("chatInp").blur();
     if (uiOpen() || travelLock) return;
     var rect = cv.getBoundingClientRect();
     var wx = (e.clientX - rect.left) / S + camX - offX, wy = (e.clientY - rect.top) / S + camY - offY;
-    var hitPid = findRemotePlayerAt(wx, wy);
-    if (hitPid) {
-      openPlayerCard(hitPid);
-      return;
-    }
+    var tappedPlayer = null, nearest = 42;
+    Object.keys(remotePlayers || {}).forEach(function (pid) {
+      if (pid === save.pid) return;
+      var rp = remotePlayers[pid];
+      if (!rp || rp.server !== currentServer || rp.zone !== Z.id || Date.now() - (rp.updatedAt || 0) > 120000) return;
+      var d = Math.hypot(wx - rp.x, wy - rp.y);
+      if (d < nearest) { nearest = d; tappedPlayer = pid; }
+    });
+    if (tappedPlayer) { openPlayerCard(tappedPlayer); return; }
     target = { x: clamp(wx, 30, Z.w - 30), y: clamp(wy, 70, Z.h - 20) }; tapPos = target; tapFx = 0.6; stuck = 0;
   });
   elAct.addEventListener("pointerdown", function (e) { e.preventDefault(); act(); });
-
+  // Virtual joystick: supports simultaneous touch movement and action button presses.
   (function initTouchPad() {
     var pad = $("touchPad"), knob = $("touchKnob"), activeId = null;
     if (!pad || !knob) return;
@@ -1716,6 +1513,12 @@ button, input { touch-action: manipulation; }
   document.querySelectorAll(".emotes button").forEach(function (b) { b.addEventListener("click", function () { sendChatMessage(b.getAttribute("data-say")); b.blur(); }); });
   $("bagBtn").addEventListener("click", function () { this.blur(); openModal(false); });
   $("phoneBtn").addEventListener("click", function () { this.blur(); openPhone(); });
+  $("serverBtn").addEventListener("click", function () {
+    this.blur();
+    if (modalOpen || phoneOpen || introOpen || ptgIntroOpen) return;
+    phoneOpen = true; keys = {}; target = null; app = "servers"; phoneModal.hidden = false;
+    renderPhone();
+  });
   $("summonDecline").addEventListener("click", function () {
     $("summonModal").hidden = true;
     fbReq("/players/" + encodeURIComponent(save.pid) + "/summonReq", "DELETE");
@@ -1729,9 +1532,6 @@ button, input { touch-action: manipulation; }
     if (req && req.fromPid) {
       followPlayer(req.fromPid);
     }
-  });
-  $("restartBtn").addEventListener("click", function () {
-    window.location.reload();
   });
 
   // Chat bar events
@@ -1764,7 +1564,7 @@ button, input { touch-action: manipulation; }
 
   // ---------- shop / bag modal ----------
   var modal = $("modal"), mBody = $("mBody"), tabsEl = $("tabs"), mTitle = $("mTitle");
-  function openModal(shop) { if (modalOpen || phoneOpen || airportOpen || playerCardOpen || introOpen || ptgIntroOpen || sessionTerminated) return; atShop = shop; modalOpen = true; keys = {}; tab = "bag"; target = null; mTitle.textContent = shop ? "Tiệm làng" : "Balo"; modal.hidden = false; renderModal(); }
+  function openModal(shop) { if (modalOpen || phoneOpen || introOpen || ptgIntroOpen) return; atShop = shop; modalOpen = true; keys = {}; tab = "bag"; target = null; mTitle.textContent = shop ? "Tiệm làng" : "Balo"; modal.hidden = false; renderModal(); }
   function closeModal() { modalOpen = false; modal.hidden = true; }
   $("mClose").addEventListener("click", closeModal);
   modal.addEventListener("pointerdown", function (e) { if (e.target === modal) closeModal(); });
@@ -1805,19 +1605,20 @@ button, input { touch-action: manipulation; }
     }
   }
 
-  // ---------- phone (không còn Server trong điện thoại) ----------
+  // ---------- phone ----------
   var phoneModal = $("phoneModal"), pScreen = $("pScreen"), app = "home", friendSubTab = "list", friendSearchQuery = "";
   var ICONS = {
     friends: '<svg viewBox="0 0 24 24" fill="#fff"><circle cx="9" cy="8" r="3.4"/><circle cx="17" cy="9.5" r="2.7"/><path d="M2.5 19c0-3.6 2.9-5.8 6.5-5.8s6.5 2.2 6.5 5.8z"/><path d="M15.5 14c3 .1 6 1.5 6 5h-4.6c0-2-.6-3.6-1.4-5z"/></svg>',
     profile: '<svg viewBox="0 0 24 24" fill="#fff"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2.4" fill="#5b8def"/><path d="M5.5 16.5c.4-2 1.8-2.8 3.5-2.8s3.1.8 3.5 2.8z" fill="#5b8def"/><rect x="14" y="9.5" width="5" height="1.8" rx=".9" fill="#5b8def"/><rect x="14" y="13" width="4" height="1.8" rx=".9" fill="#5b8def"/></svg>',
     code: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M12 9v11M3.5 13h17M12 9c-3-.5-5-2-4-3.6 1.2-1.7 3.6-.4 4 3.6zM12 9c3-.5 5-2 4-3.6-1.2-1.7-3.6-.4-4 3.6z"/></svg>',
     recycle: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14l-3 5h6M5.5 16.5C4.5 14 5.6 10.5 8.5 9M17 14l3 5h-6M18.5 16.5"/><path d="M10 4l3.5 2-2 3.4M14 5.2c3 .4 5.2 2.8 5.2 5.3M8.5 9L6 8.2"/><path d="M4 19h6M14 19h6"/></svg>',
+    servers: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><circle cx="7" cy="7" r="1" fill="#fff"/><circle cx="7" cy="17" r="1" fill="#fff"/></svg>',
     map: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.5a6.5 6.5 0 0 0-6.5 6.5c0 4.7 6.5 12.5 6.5 12.5s6.5-7.8 6.5-12.5A6.5 6.5 0 0 0 12 2.5z"/><circle cx="12" cy="9" r="2.5" fill="#f08a3c"/></svg>',
     bag: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M8 7V6a4 4 0 0 1 8 0v1h2.5a1 1 0 0 1 1 1.1l-1 11.2a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7l-1-11.2a1 1 0 0 1 1-1.1zm2 0h4V6a2 2 0 0 0-4 0z"/></svg>',
     mail: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg>'
   };
   function openPhone() {
-    if (modalOpen || phoneOpen || airportOpen || playerCardOpen || introOpen || ptgIntroOpen || sessionTerminated) return;
+    if (modalOpen || phoneOpen || introOpen || ptgIntroOpen) return;
     phoneOpen = true; keys = {}; target = null; app = "home"; phoneModal.hidden = false;
     refreshDirectory();
     renderPhone();
@@ -1850,6 +1651,7 @@ button, input { touch-action: manipulation; }
     else if (app === "profile") renderProfile();
     else if (app === "code") renderCode();
     else if (app === "recycle") renderRecycle();
+    else if (app === "servers") renderServers();
     else if (app === "map") renderMap();
     else if (app === "mail") renderMail();
     else if (app === "bag") { closePhone(); openModal(false); }
@@ -1873,7 +1675,7 @@ button, input { touch-action: manipulation; }
       grid.appendChild(b);
     });
     pScreen.appendChild(grid);
-    var tip = el("p", "empty", "Mẹo: Ra Sân bay trong làng để bay sang Phố Âu, Phố Á, Châu Âu hoặc Châu Á. Chạm vào nhân vật trên bản đồ để kết bạn!");
+    var tip = el("p", "empty", "Mẹo: Dùng Bạn bè để tìm tên người chơi (kể cả offline), nhận lời mời kết bạn hoặc trò chuyện dưới màn hình chính.");
     tip.style.marginTop = "22px"; pScreen.appendChild(tip);
   }
 
@@ -2011,6 +1813,7 @@ button, input { touch-action: manipulation; }
       var q = friendSearchQuery.toLowerCase();
       var candidates = [];
       var seenPids = {};
+      // Combine directory (includes offline players) + live online players
       Object.keys(allDirectory || {}).forEach(function (pid) {
         if (pid === save.pid) return;
         var p = allDirectory[pid];
@@ -2086,6 +1889,7 @@ button, input { touch-action: manipulation; }
       return;
     }
 
+    // Default tab: list (Player friends + Villager NPCs)
     var pfIds = Object.keys(save.playerFriends || {});
     if (pfIds.length) {
       pScreen.appendChild(el("span", "lbl", "Bạn bè người chơi (" + pfIds.length + ")"));
@@ -2094,6 +1898,7 @@ button, input { touch-action: manipulation; }
         var pf = save.playerFriends[fpid];
         var live = getPlayerLiveInfo(fpid);
         var on = live.online;
+        var sameSrv = (live.server === currentServer);
 
         var row = el("div", "item");
         var chip = el("div", "chip");
@@ -2101,7 +1906,14 @@ button, input { touch-action: manipulation; }
         chip.appendChild(el("span", "status-dot" + (on ? " on" : "")));
 
         var nm = el("div", "name", live.name || pf.name || "Người chơi");
-        var subText = on ? ("🟢 Đang online · " + (ZONE_NAMES[live.zone] || "Làng Vui Vẻ")) : "Đang offline";
+        var subText = "Đang offline";
+        if (on) {
+          if (sameSrv) {
+            subText = "🟢 Cùng server (" + live.serverInfo.short + ") · " + (ZONE_NAMES[live.zone] || "Làng");
+          } else {
+            subText = "🌐 Khác server: " + live.serverInfo.name + " · " + (ZONE_NAMES[live.zone] || "Làng");
+          }
+        }
         nm.appendChild(el("small", null, subText));
 
         row.appendChild(chip);
@@ -2111,7 +1923,7 @@ button, input { touch-action: manipulation; }
           var acts = el("div", "friend-acts");
           var followBtn = el("button", "btn sm", "Theo dõi");
           followBtn.type = "button";
-          followBtn.title = "Vào phòng và dịch chuyển đến chỗ của " + live.name;
+          followBtn.title = "Chuyển sang server và đến ngay chỗ của " + live.name;
           followBtn.addEventListener("click", function () {
             followPlayer(fpid);
           });
@@ -2207,7 +2019,7 @@ button, input { touch-action: manipulation; }
     pScreen.appendChild(sv);
 
     var st = el("div", "card"); st.style.marginTop = "12px";
-    [["Mã bạn bè", save.fcode], ["Bạn bè", friendCount() + " người"], ["Côn trùng đã bắt", save.stats.bugs], ["Cá đã câu", save.stats.fish], ["Đồ đã nhặt", save.stats.picks], ["Món đã tái chế", save.stats.recycled], ["Xu kiếm được", save.stats.earned], ["Điểm xanh", save.eco], ["Khu vực đã đến", Object.keys(save.visited).length + "/" + DESTINATIONS.length], ["Ngày tham gia", new Date(save.joined).toLocaleDateString("vi-VN")]].forEach(function (r) {
+    [["Mã bạn bè", save.fcode], ["Bạn bè", friendCount() + " người"], ["Côn trùng đã bắt", save.stats.bugs], ["Cá đã câu", save.stats.fish], ["Đồ đã nhặt", save.stats.picks], ["Món đã tái chế", save.stats.recycled], ["Xu kiếm được", save.stats.earned], ["Điểm xanh", save.eco], ["Khu vực đã đến", Object.keys(save.visited).length + "/3"], ["Ngày tham gia", new Date(save.joined).toLocaleDateString("vi-VN")]].forEach(function (r) {
       var d = el("div", "kv"); d.appendChild(el("span", null, r[0])); d.appendChild(el("b", null, String(r[1]))); st.appendChild(d);
     });
     pScreen.appendChild(st);
@@ -2335,21 +2147,48 @@ button, input { touch-action: manipulation; }
     pScreen.appendChild(g);
   }
 
+  function renderServers() {
+    pScreen.appendChild(el("h2", "ph1", "Danh sách Server"));
+    pScreen.appendChild(el("p", "empty", "Chọn kênh server để tham gia. Bạn chỉ nhìn thấy và trò chuyện trực tiếp với người chơi cùng server (bạn bè khác server vẫn hiện online trong danh bạ)."));
+    var g = el("div", "srv-grid");
+    SERVERS.forEach(function (s) {
+      var isCur = (s.id === currentServer);
+      var pop = getServerPlayerCount(s.id);
+      var card = el("div", "srv-card" + (isCur ? " active" : ""));
+      var info = el("div", "srv-info");
+      var title = el("div", "srv-title", s.name);
+      info.appendChild(title);
+      info.appendChild(el("div", "srv-desc", s.desc));
+
+      var popBadge = el("div", "srv-pop" + (pop >= s.cap ? " full" : pop >= Math.floor(s.cap * 0.7) ? " busy" : ""));
+      popBadge.appendChild(el("i"));
+      popBadge.appendChild(document.createTextNode(" " + pop + "/" + s.cap + " người chơi"));
+      info.appendChild(popBadge);
+
+      var btn = el("button", isCur ? "btn ghost" : "btn sun", isCur ? "Đang ở đây" : "Vào kênh");
+      btn.type = "button";
+      btn.disabled = isCur;
+      btn.addEventListener("click", function () {
+        closePhone();
+        setServer(s.id, false);
+        renderChatFeed();
+      });
+
+      card.appendChild(info);
+      card.appendChild(btn);
+      g.appendChild(card);
+    });
+    pScreen.appendChild(g);
+  }
+
   function renderMap() {
     pScreen.appendChild(el("h2", "ph1", "Bản đồ"));
-    pScreen.appendChild(el("p", "empty", "Ra Sân bay trong làng để bay tới Phố Âu, Phố Á, Châu Âu hoặc Châu Á; hoặc đi ra rìa Làng sang Biển / Rừng."));
+    pScreen.appendChild(el("p", "empty", "Đi bộ ra rìa khu vực để sang nơi khác, hoặc dùng bản đồ để di chuyển nhanh."));
     var g = el("div", "pgrid");
-    DESTINATIONS.forEach(function (d) {
-      var row = el("div", "item"), nm = el("div", "name", d.name + (d.night ? " 🌙" : ""));
-      nm.appendChild(el("small", null, d.desc + (save.visited[d.id] ? "" : " · chưa đến, thưởng 50 xu")));
-      var b = el("button", "btn", Z.id === d.id ? "Đang ở đây" : "Đến đó"); b.type = "button"; b.disabled = Z.id === d.id;
-      b.addEventListener("click", function () {
-        closePhone();
-        if (d.night) { globalForceNight = true; forceRoomPlayersToZone(d.id, d.name); }
-        else globalForceNight = false;
-        var sp = (ZONES[d.id] && ZONES[d.id].spawn) || [800, 560];
-        travel(d.id, sp[0], sp[1]);
-      });
+    [["village", "Phía trung tâm"], ["beach", "Phía đông của làng"], ["forest", "Phía nam của làng"]].forEach(function (z) {
+      var row = el("div", "item"), nm = el("div", "name", ZONE_NAMES[z[0]]); nm.appendChild(el("small", null, z[1] + (save.visited[z[0]] ? "" : " · chưa đến, thưởng 50 xu")));
+      var b = el("button", "btn", Z.id === z[0] ? "Đang ở đây" : "Đến đó"); b.type = "button"; b.disabled = Z.id === z[0];
+      b.addEventListener("click", function () { closePhone(); var sp = ZONES[z[0]].spawn; travel(z[0], sp[0], sp[1]); });
       row.appendChild(nm); row.appendChild(b); g.appendChild(row);
     });
     pScreen.appendChild(g);
@@ -2565,19 +2404,13 @@ button, input { touch-action: manipulation; }
 
   // ---------- update ----------
   function update(dt) {
-    if (sessionTerminated) return;
-    clock += dt;
-    var isNightNow = !!(globalForceNight || (Z && ZONE_ENFORCED_NIGHT[Z.id]));
-    if (isNightNow) {
-      dark = 0.52;
-      hourF = 21;
-      elClock.textContent = "🌙 Buổi tối";
-    } else {
-      var ph = 0.5 + clock / 360; ph -= Math.floor(ph);
-      dark = 0.45 * Math.pow(Math.max(0, Math.sin(ph * 6.2832)), 1.5);
-      hourF = ((ph - 0.5) * 24 + 6 + 24) % 24;
-      elClock.textContent = dark < 0.08 ? "Ban ngày" : dark < 0.25 ? "Hoàng hôn" : "Ban đêm";
-    }
+    // Đồng hồ thế giới dùng UTC, nên tất cả người chơi thấy cùng thời điểm ngày/đêm.
+    var worldNow = new Date();
+    var worldMinutes = worldNow.getUTCHours() * 60 + worldNow.getUTCMinutes();
+    var ph = worldMinutes / 1440;
+    dark = 0.45 * Math.pow(Math.max(0, Math.sin(ph * 6.2832)), 1.5);
+    hourF = ((ph - 0.5) * 24 + 6 + 24) % 24;
+    elClock.textContent = dark < 0.08 ? "Ban ngày" : dark < 0.25 ? "Hoàng hôn" : "Ban đêm";
     if (phoneOpen) { var hh = Math.floor(hourF), mm = Math.floor((hourF - hh) * 60); $("pTime").textContent = (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm; }
     if (introOpen || ptgIntroOpen) return;
 
@@ -2608,283 +2441,328 @@ button, input { touch-action: manipulation; }
 
     if (save.eq.pet) {
       var tx = P.x - P.face * 36, ty = P.y + 6, pdx = tx - pet.x, pdy = ty - pet.y, pd = Math.hypot(pdx, pdy);
-      if (pd > 16) { var ps = clamp(pd * 3.5, 40, 210); moveEnt(pet, pdx / pd * ps * dt, pdy / pd * ps * dt); pet.moving = true; pet.walk += dt * 12; if (Math.abs(pdx) > 2) pet.face = pdx > 0 ? 1 : -1; }
-      else pet.moving = false;
+      pet.moving = pd > 10; if (pd > 400) { pet.x = P.x; pet.y = P.y; }
+      if (pet.moving) { pet.x += pdx / pd * Math.min(190 * dt, pd); pet.y += pdy / pd * Math.min(190 * dt, pd); pet.walk += dt * 14; if (Math.abs(pdx) > 2) pet.face = pdx > 0 ? 1 : -1; }
     }
 
     npcs.forEach(function (n) {
-      if (n.cool > 0) n.cool -= dt; if (n.bT > 0) { n.bT -= dt; if (n.bT <= 0) n.bubble = null; }
       if (n.zone !== Z.id) return;
-      n.moving = false;
+      n.wait -= dt; n.cool -= dt; n.bT -= dt; if (n.bT <= 0) n.bubble = null; n.moving = false;
+      if (!n.t && n.wait <= 0) { var tx2 = n.x + rand(-170, 170), ty2 = n.y + rand(-130, 130); if (!blocked(tx2, ty2) && waterD(tx2, ty2, 1.1) > 1) n.t = { x: tx2, y: ty2 }; n.wait = rand(1, 3); }
       if (n.t) {
-        var ndx = n.t.x - n.x, ndy = n.t.y - n.y, nd = Math.hypot(ndx, ndy);
-        if (nd < 6 || !moveEnt(n, ndx / nd * 55 * dt, ndy / nd * 55 * dt)) { n.t = null; n.wait = rand(1.5, 4); }
-        else { n.moving = true; n.walk += dt * 8; if (Math.abs(ndx) > 1) n.face = ndx > 0 ? 1 : -1; }
-      } else if ((n.wait -= dt) <= 0) {
-        var ax = clamp(n.x + rand(-180, 180), 80, Z.w - 80), ay = clamp(n.y + rand(-180, 180), 120, Z.h - 60);
-        if (!blocked(ax, ay) && waterD(ax, ay, 1.1) > 1) n.t = { x: ax, y: ay }; else n.wait = 1;
+        var ddx = n.t.x - n.x, ddy = n.t.y - n.y, dd = Math.hypot(ddx, ddy);
+        if (dd < 6) { n.t = null; n.wait = rand(2, 5); }
+        else { var mv = moveEnt(n, ddx / dd * 55 * dt, ddy / dd * 55 * dt); n.moving = mv; n.walk += dt * 9; n.face = ddx > 0 ? 1 : -1; if (!mv) n.t = null; }
       }
-      if (n.cool <= 0 && Math.hypot(P.x - n.x, P.y - n.y) < 110) { n.bubble = pick(n.lines); n.bT = 3.2; n.cool = 12; n.face = P.x > n.x ? 1 : -1; }
+      if (Math.hypot(P.x - n.x, P.y - n.y) < 130 && n.cool <= 0) { n.bubble = save.friends[n.id] && Math.random() < 0.4 ? "Chào " + save.name + "!" : pick(n.lines); n.bT = 3.2; n.cool = 9; }
     });
 
-    if (Z.picks) Z.pickState.forEach(function (p) { if (p.t > 0 && (p.t -= dt) <= 0) placePick(p); });
-    while (bugs.length < Z.bugN) spawnBug();
     bugs.forEach(function (b) {
-      b.ph += dt * 12;
-      if (b.t.fly) b.z = 14 + Math.sin(b.ph * 0.4) * 5;
-      if ((b.timer -= dt) <= 0) { b.ang = rand(0, 6.28); b.timer = rand(0.6, 2.2); }
-      var nx = b.x + Math.cos(b.ang) * b.t.sp * dt, ny = b.y + Math.sin(b.ang) * b.t.sp * dt;
-      if (nx < 50 || nx > Z.w - 50 || ny < 90 || ny > Z.h - 50 || waterD(nx, ny, 1.05) < 1) b.ang += 3.14; else { b.x = nx; b.y = ny; }
+      b.ph += dt * (b.t.shape === "butterfly" ? 9 : b.t.shape === "dragonfly" ? 30 : b.t.shape === "firefly" ? 4 : 4);
+      b.timer -= dt; if (b.timer <= 0) { b.ang += rand(-1.2, 1.2); b.timer = rand(0.6, 1.6); }
+      var sp = b.t.sp, d = Math.hypot(P.x - b.x, P.y - b.y);
+      if (d < 110) { b.ang = Math.atan2(b.y - P.y, b.x - P.x) + rand(-0.3, 0.3); sp *= 2.2; }
+      var nx = b.x + Math.cos(b.ang) * sp * dt, ny = b.y + Math.sin(b.ang) * sp * dt;
+      if (!b.t.fly && Z.water && waterD(nx, ny, 1.05) < 1) { b.ang += 2.5; nx = b.x; ny = b.y; }
+      b.x = nx; b.y = ny;
+      if (b.x < 40 || b.x > Z.w - 40) { b.ang = Math.PI - b.ang; b.x = clamp(b.x, 40, Z.w - 40); }
+      if (b.y < 80 || b.y > Z.h - 40) { b.ang = -b.ang; b.y = clamp(b.y, 80, Z.h - 40); }
+      b.z = b.t.fly ? 24 + Math.sin(b.ph * 0.4) * 7 : 0;
     });
-    for (var i = parts.length - 1; i >= 0; i--) { var pt = parts[i]; pt.x += pt.vx * dt; pt.y += pt.vy * dt; pt.vy += 260 * dt; pt.life -= dt; if (pt.life <= 0) parts.splice(i, 1); }
-    for (var j = pops.length - 1; j >= 0; j--) { pops[j].y -= 28 * dt; pops[j].life -= dt; if (pops[j].life <= 0) pops.splice(j, 1); }
+    while (bugs.length < Z.bugN) spawnBug();
+    if (Z.picks) Z.pickState.forEach(function (p) { if (p.t > 0) { p.t -= dt; if (p.t <= 0) placePick(p); } });
 
-    var vw = W / S, vh = H / S;
-    if (Z.w <= vw) { camX = 0; offX = (vw - Z.w) / 2; } else { camX = clamp(P.x - vw / 2, 0, Z.w - vw); offX = 0; }
-    if (Z.h <= vh) { camY = 0; offY = (vh - Z.h) / 2; } else { camY = clamp(P.y - vh / 2, 0, Z.h - vh); offY = 0; }
+    for (var i = parts.length - 1; i >= 0; i--) { var p = parts[i]; p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.95; p.vy = p.vy * 0.95 + 90 * dt; if (p.life <= 0) parts.splice(i, 1); }
+    for (var j = pops.length - 1; j >= 0; j--) { pops[j].life -= dt; pops[j].y -= 28 * dt; if (pops[j].life <= 0) pops.splice(j, 1); }
 
-    var c = ctxAction(); elActLabel.textContent = LABEL[c]; elAct.classList.toggle("reel", c === "reel");
-    elActKey.textContent = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ? "Chạm" : "Space";
+    var c = ctxAction();
+    elActLabel.textContent = LABEL[c]; elAct.classList.toggle("reel", c === "reel"); elActKey.textContent = c === "reel" ? "Nhanh lên!" : "Space";
   }
 
-  // ---------- render ----------
-  function render() {
-    ctx.save(); ctx.scale(dpr, dpr);
-    ctx.fillStyle = Z.tp[0][0]; ctx.fillRect(0, 0, W, H);
-    ctx.save(); ctx.scale(S, S); ctx.translate(offX - camX, offY - camY);
+  // ---------- draw ----------
+  function draw(now) {
+    var t = now / 1000, vw = W / S, vh = H / S;
+    camX = clamp(P.x - vw / 2, 0, Math.max(0, Z.w - vw)); camY = clamp(P.y - 20 - vh / 2, 0, Math.max(0, Z.h - vh));
+    offX = vw > Z.w ? (vw - Z.w) / 2 : 0; offY = vh > Z.h ? (vh - Z.h) / 2 : 0;
+    ctx.setTransform(dpr * S, 0, 0, dpr * S, 0, 0);
+    ctx.fillStyle = Z.id === "forest" ? "#3f8a5c" : Z.id === "beach" ? "#f2dc9a" : "#86cf8e"; ctx.fillRect(0, 0, vw, vh);
+    ctx.translate(-camX + offX, -camY + offY);
     ctx.drawImage(Z.bg, 0, 0);
-
-    if (Z.picks) Z.pickState.forEach(function (p) { if (p.t <= 0) { if (Z.picks.kind === "mushroom") drawMushroom(p.x, p.y, p.k.c, 1); else drawShell(p.x, p.y, p.k.c); } });
-    if (tapFx > 0) { ctx.strokeStyle = "rgba(255,255,255," + (tapFx / 0.6 * 0.8) + ")"; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(tapPos.x, tapPos.y, (1 - tapFx / 0.6) * 22 + 4, 0, 6.3); ctx.stroke(); }
-
-    var bob = bobberPos();
-    if (bob && !P.fish) { ctx.strokeStyle = "rgba(255,255,255,.55)"; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(bob.x, bob.y, 12, 0, 6.3); ctx.stroke(); ctx.setLineDash([]); }
-    if (P.fish && bob) {
-      var by = bob.y + Math.sin(clock * 4) * 2 + (P.fish.phase === "bite" ? Math.sin(clock * 38) * 6 : 0);
-      ctx.strokeStyle = "rgba(255,255,255,.75)"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(P.x + P.face * 10, P.y - 26); ctx.quadraticCurveTo((P.x + bob.x) / 2, P.y - 54, bob.x, by); ctx.stroke();
-      ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.beginPath(); ctx.arc(bob.x, by + 2, 7 + (clock * 8) % 8, 0, 6.3); ctx.stroke();
-      ctx.fillStyle = "#ff5e57"; ctx.beginPath(); ctx.arc(bob.x, by, 5, 0, 6.3); ctx.fill(); ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(bob.x, by - 3, 2.5, 0, 6.3); ctx.fill();
-      if (P.fish.phase === "bite") { ctx.fillStyle = "#ffd23f"; ctx.strokeStyle = "#23324a"; ctx.lineWidth = 3; ctx.font = "900 28px 'Baloo 2', sans-serif"; ctx.textAlign = "center"; ctx.strokeText("!", bob.x, by - 22); ctx.fillText("!", bob.x, by - 22); }
+    if (Z.water) {
+      var w = Z.water; ctx.strokeStyle = "rgba(255,255,255,.55)"; ctx.lineWidth = 2;
+      for (var i = 0; i < 3; i++) { var k = (t * 0.25 + i / 3) % 1; ell(ctx, w.cx + 40, w.cy + 10, w.rx * (0.3 + k * 0.5), w.ry * (0.3 + k * 0.5)); ctx.globalAlpha = 1 - k; ctx.stroke(); }
+      ctx.globalAlpha = 1;
+      if (Z.id === "beach") { ctx.strokeStyle = "rgba(255,255,255,.75)"; ctx.lineWidth = 5; ell(ctx, w.cx - Math.sin(t * 1.2) * 8, w.cy, w.rx + 6 + Math.sin(t * 1.2) * 8, w.ry + 6); ctx.stroke(); }
     }
+    if (tapFx > 0) { ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(tapPos.x, tapPos.y, 8 + (0.6 - tapFx) * 30, 0, 6.3); ctx.globalAlpha = tapFx / 0.6; ctx.stroke(); ctx.globalAlpha = 1; }
 
-    var dl = [], sh = byId(SHIRTS, save.eq.shirt);
-    Z.trees.forEach(function (t) { dl.push({ y: t.y, f: function () { drawTree(t); } }); });
-    Z.statics.forEach(function (s) { dl.push({ y: s.y, f: function () { s.f(clock); } }); });
-    if (Z.lamps) Z.lamps.forEach(function (l) { dl.push({ y: l[1], f: function () { drawLamp(l); } }); });
-    npcs.forEach(function (n) { if (n.zone === Z.id) dl.push({ y: n.y, f: function () { drawAvatar({ x: n.x, y: n.y, face: n.face, walk: n.walk, moving: n.moving, shirt: n.shirt, hair: n.hair, hat: null, swingT: 0 }); nameTag(n.x, n.y - 60, n.name, !!save.friends[n.id]); if (n.bubble) bubbleAt(n.x, n.y - 78, n.bubble); } }); });
-    if (save.eq.pet) dl.push({ y: pet.y, f: drawPet });
-
-    // Remote players in same server & zone (chạm vào nhân vật để mở thẻ kết bạn / theo dõi / gọi đến)
+    var list = [];
+    Z.trees.forEach(function (tr) { list.push({ y: tr.y, f: function () { drawTree(tr); } }); });
+    Z.statics.forEach(function (s) { list.push({ y: s.y, f: function () { s.f(t); } }); });
+    Z.lamps.forEach(function (l) { list.push({ y: l[1], f: function () { drawLamp(l); } }); });
+    if (Z.picks) Z.pickState.forEach(function (p) { if (p.t <= 0) list.push({ y: p.y, f: function () { if (Z.picks.kind === "mushroom") drawMushroom(p.x, p.y, p.k.c, 1); else drawShell(p.x, p.y, p.k.c); } }); });
+    bugs.forEach(function (b) { list.push({ y: b.y + 1, f: function () { drawBug(b); } }); });
+    npcs.forEach(function (n) { if (n.zone === Z.id) list.push({ y: n.y, f: function () { drawAvatar({ x: n.x, y: n.y, face: n.face, walk: n.walk, moving: n.moving, shirt: n.shirt, hair: n.hair, hat: null, swingT: 0 }); } }); });
     var nowMs = Date.now();
-    Object.keys(remotePlayers || {}).forEach(function (rpid) {
+    Object.keys(remotePlayers).forEach(function (rpid) {
       if (rpid === save.pid) return;
       var rp = remotePlayers[rpid];
-      if (!rp || (rp.server || "room_a1") !== currentServer || rp.zone !== Z.id || (nowMs - (rp.updatedAt || 0)) > 16000) return;
-      dl.push({
-        y: rp.y || 600,
-        f: function () {
-          var isFr = !!(save.playerFriends && save.playerFriends[rpid]);
-          drawAvatar({ x: rp.x || 800, y: rp.y || 600, face: rp.face || 1, walk: clock * 8, moving: false, shirt: rp.shirt || "#5ab0ff", hair: "#3a2e39", hat: rp.hat || null, swingT: 0 });
-          nameTag(rp.x || 800, (rp.y || 600) - 60, (rp.name || "Người chơi") + (isFr ? "" : " · Chạm"), isFr);
-          if (rp.bubble) bubbleAt(rp.x || 800, (rp.y || 600) - 78, rp.bubble);
-        }
-      });
+      var rpSrv = rp && rp.server ? rp.server : "plaza_1";
+      if (!rp || rpSrv !== currentServer || (rp.region && rp.region !== currentRegion) || rp.zone !== Z.id || (nowMs - (rp.updatedAt || 0)) > 120000) return;
+      list.push({ y: rp.y, f: function () { drawAvatar({ x: rp.x, y: rp.y, face: rp.face || 1, walk: 0, moving: false, shirt: rp.shirt || "#5ab0ff", hair: "#3a2e39", hat: rp.hat || null, swingT: 0 }); } });
     });
+    if (save.eq.pet) list.push({ y: pet.y, f: drawPet });
+    var sh = byId(SHIRTS, save.eq.shirt);
+    list.push({ y: P.y, f: function () { drawAvatar({ x: P.x, y: P.y, face: P.face, walk: P.walk, moving: P.moving, shirt: sh ? sh.color : "#ff7a6b", hair: "#5b3a29", hat: save.eq.hat, swingT: P.swingT }); } });
+    list.sort(function (a, b) { return a.y - b.y; });
+    list.forEach(function (o) { o.f(); });
 
-    dl.push({ y: P.y, f: function () { drawAvatar({ x: P.x, y: P.y, face: P.face, walk: P.walk, moving: P.moving, shirt: sh ? sh.color : "#ff7a6b", hair: "#5b3a29", hat: save.eq.hat, swingT: P.swingT }); nameTag(P.x, P.y - 60, save.name, false); if (P.bubble) bubbleAt(P.x, P.y - 78, P.bubble.text); } });
-    bugs.forEach(function (b) { dl.push({ y: b.y + b.z, f: function () { drawBug(b); } }); });
-    dl.sort(function (a, b) { return a.y - b.y; });
-    dl.forEach(function (d) { d.f(); });
-
-    parts.forEach(function (pt) { ctx.globalAlpha = clamp(pt.life / pt.max, 0, 1); ctx.fillStyle = pt.color; ctx.beginPath(); ctx.arc(pt.x, pt.y, 4, 0, 6.3); ctx.fill(); });
+    if (P.fish) {
+      var bp = bobberPos() || { x: P.x + P.face * 60, y: P.y }, bite = P.fish.phase === "bite", dip = bite ? 5 + Math.sin(t * 40) * 2 : Math.sin(t * 3) * 1.5;
+      ctx.strokeStyle = "#8d5a3b"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(P.x + P.face * 10, P.y - 24); ctx.lineTo(P.x + P.face * 30, P.y - 52); ctx.stroke();
+      ctx.strokeStyle = "rgba(35,50,74,.55)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(P.x + P.face * 30, P.y - 52); ctx.quadraticCurveTo((P.x + bp.x) / 2, Math.min(P.y, bp.y) - 30, bp.x, bp.y + dip); ctx.stroke();
+      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(bp.x, bp.y + dip, 5, 0, 6.3); ctx.fill(); ctx.fillStyle = "#e63946"; ctx.beginPath(); ctx.arc(bp.x, bp.y + dip - 2, 5, Math.PI, 0); ctx.fill();
+      if (bite) { ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(bp.x, bp.y, 10 + (t * 30) % 14, 0, 6.3); ctx.stroke();
+        var hop = Math.abs(Math.sin(t * 12)) * 4; ctx.fillStyle = "#e63946"; ctx.beginPath(); ctx.arc(P.x, P.y - 78 - hop, 13, 0, 6.3); ctx.fill(); ctx.fillStyle = "#fff"; ctx.font = "800 20px 'Baloo 2', sans-serif"; ctx.textAlign = "center"; ctx.fillText("!", P.x, P.y - 71 - hop); }
+    }
+    parts.forEach(function (p) { ctx.globalAlpha = clamp(p.life / p.max, 0, 1); ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, 6.3); ctx.fill(); });
     ctx.globalAlpha = 1;
-    pops.forEach(function (po) { ctx.globalAlpha = clamp(po.life / 1.2, 0, 1); ctx.font = "800 15px 'Baloo 2', sans-serif"; ctx.textAlign = "center"; ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.strokeText(po.t, po.x, po.y); ctx.fillStyle = po.c; ctx.fillText(po.t, po.x, po.y); });
-    ctx.globalAlpha = 1; ctx.restore();
+    nameTag(P.x, P.y - 62, save.name, false);
+    npcs.forEach(function (n) { if (n.zone !== Z.id) return; nameTag(n.x, n.y - 62, n.name, !!save.friends[n.id]); if (n.bubble) bubbleAt(n.x, n.y - 72, n.bubble); });
+    Object.keys(remotePlayers).forEach(function (rpid) {
+      if (rpid === save.pid) return;
+      var rp = remotePlayers[rpid];
+      var rpSrv = rp && rp.server ? rp.server : "plaza_1";
+      if (!rp || rpSrv !== currentServer || (rp.region && rp.region !== currentRegion) || rp.zone !== Z.id || (nowMs - (rp.updatedAt || 0)) > 120000) return;
+      var isPf = !!(save.playerFriends && save.playerFriends[rpid]);
+      nameTag(rp.x, rp.y - 62, rp.name || "Người chơi", isPf);
+      if (rp.bubble) bubbleAt(rp.x, rp.y - 72, rp.bubble);
+    });
+    if (P.bubble) bubbleAt(P.x, P.y - 72, P.bubble.text);
+    ctx.font = "800 18px 'Baloo 2', sans-serif"; ctx.textAlign = "center";
+    pops.forEach(function (p) { ctx.globalAlpha = clamp(p.life, 0, 1); ctx.lineWidth = 4; ctx.strokeStyle = "#fff"; ctx.strokeText(p.t, p.x, p.y); ctx.fillStyle = p.c; ctx.fillText(p.t, p.x, p.y); });
+    ctx.globalAlpha = 1;
 
-    if (dark > 0.01) {
-      ctx.fillStyle = "rgba(18,28,54," + dark.toFixed(3) + ")"; ctx.fillRect(0, 0, W, H);
-      if (Z.lamps) {
-        ctx.save(); ctx.scale(S, S); ctx.translate(offX - camX, offY - camY); ctx.globalCompositeOperation = "lighter";
-        Z.lamps.forEach(function (l) { var lx = l[0], ly = l[1] - 58, g = ctx.createRadialGradient(lx, ly, 4, lx, ly, 95); g.addColorStop(0, "rgba(255,224,130," + (dark * 0.85) + ")"); g.addColorStop(1, "rgba(255,224,130,0)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(lx, ly, 95, 0, 6.3); ctx.fill(); });
-        ctx.restore();
-      }
-    }
-    ctx.restore();
-  }
-
-  // ---------- intro ----------
-  var introEl = $("intro"), ic = document.getElementById("ic"), ictx = ic.getContext("2d"), iCard = $("iCard"), iStep = 0, iTimer = 0;
-  var SLIDES = [
-    { t: "Chào mừng đến Làng Vui Vẻ", b: "Một ngôi làng nhỏ yên bình bên bờ biển và khu rừng xanh. Ở đây không có vội vã — chỉ có dạo chơi, câu cá và kết bạn." },
-    { t: "Vợt, câu cá và nhặt đồ", b: "Dùng nút Vợt, Câu cá hoặc Nhặt khi lại gần côn trùng, mặt nước hay vỏ sò và nấm. Đem tất cả tới tiệm làng để bán lấy xu." },
-    { t: "Khu vực ngoài làng & Buổi tối", b: "Ra Sân bay trong làng để chuyển sang Phố Âu, Phố Á, Châu Âu, Châu Á; tất cả sẽ là buổi tối và người chơi trong phòng sẽ cập nhật theo!" },
-    { t: "Tạo nhân vật của bạn", b: "Chọn màu áo yêu thích và đặt tên cho mình. Bạn luôn có thể đổi lại sau trong ứng dụng Hồ sơ trên điện thoại." }
-  ];
-  function startIntro(replay) {
-    introOpen = true; iStep = 0; iTimer = 0; keys = {}; target = null;
-    introEl.hidden = false; introEl.classList.remove("out");
-    $("iSkip").style.display = replay ? "" : "none"; renderSlide();
-  }
-  function finishIntro() {
-    save.intro = true; persist(); introOpen = false;
-    introEl.classList.add("out"); setTimeout(function () { introEl.hidden = true; }, 650);
-    banner(ZONE_NAMES[Z.id]); toast("Chào mừng " + save.name + " đến Làng Vui Vẻ!");
-  }
-  $("iSkip").addEventListener("click", finishIntro);
-
-  function renderSlide() {
-    var s = SLIDES[iStep], last = iStep === SLIDES.length - 1;
-    iCard.innerHTML = "";
-    var dots = el("div", "dots"); for (var i = 0; i < SLIDES.length; i++) dots.appendChild(el("i", i === iStep ? "on" : ""));
-    iCard.appendChild(dots); iCard.appendChild(el("h1", null, s.t)); iCard.appendChild(el("p", null, s.b));
-    if (last) {
-      iCard.appendChild(el("span", "lbl", "Màu áo"));
-      var sws = el("div", "swatches");
-      SHIRTS.filter(function (sh) { return sh.price != null && sh.price <= 80; }).forEach(function (sh) {
-        var b = el("button", "sw"); b.type = "button"; b.style.background = sh.color; b.setAttribute("aria-label", sh.name);
-        b.setAttribute("aria-pressed", save.eq.shirt === sh.id ? "true" : "false");
-        b.addEventListener("click", function () { save.owned[sh.id] = true; save.eq.shirt = sh.id; renderSlide(); });
-        sws.appendChild(b);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var dk = Z.id === "forest" ? Math.min(0.6, dark + 0.12) : dark;
+    if (dk > 0.01) {
+      ctx.fillStyle = "rgba(16,22,72," + dk.toFixed(3) + ")"; ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = "lighter";
+      var lights = Z.lamps.map(function (l) { return [l[0], l[1] - 58, 120, "255,220,130"]; });
+      if (Z.picks && Z.picks.kind === "mushroom") Z.pickState.forEach(function (p) { if (p.t <= 0 && p.k.n === "Nấm xanh") lights.push([p.x, p.y - 12, 70, "90,230,240"]); });
+      lights.forEach(function (L) {
+        var sx = (L[0] - camX + offX) * S, sy = (L[1] - camY + offY) * S, rad = L[2] * S;
+        var g = ctx.createRadialGradient(sx, sy, 0, sx, sy, rad); g.addColorStop(0, "rgba(" + L[3] + "," + Math.min(0.8, dk * 1.2).toFixed(3) + ")"); g.addColorStop(1, "rgba(" + L[3] + ",0)");
+        ctx.fillStyle = g; ctx.fillRect(sx - rad, sy - rad, rad * 2, rad * 2);
       });
-      iCard.appendChild(sws);
-      iCard.appendChild(el("span", "lbl", "Tên của bạn"));
-      var inp = el("input", "inp"); inp.type = "text"; inp.maxLength = 12; inp.value = save.name === "Bạn" ? "" : save.name; inp.placeholder = "Nhập tên..."; inp.setAttribute("aria-label", "Tên của bạn");
-      iCard.appendChild(inp);
-      var go = el("button", "go", "Bắt đầu dạo chơi"); go.type = "button";
-      go.addEventListener("click", function () { var v = inp.value.trim().slice(0, 12); if (v) save.name = v; finishIntro(); });
-      iCard.appendChild(go); setTimeout(function () { inp.focus(); }, 100);
-    } else {
-      var nx = el("button", "go", "Tiếp tục"); nx.type = "button";
-      nx.addEventListener("click", function () { iStep++; renderSlide(); }); iCard.appendChild(nx);
+      ctx.globalCompositeOperation = "source-over";
     }
   }
-  function renderIntroCanvas(dt) {
-    iTimer += dt;
-    var w = W, h = H, horizon = h * 0.56, i;
-    ictx.save(); ictx.scale(dpr, dpr);
-    var sky = ictx.createLinearGradient(0, 0, 0, horizon); sky.addColorStop(0, "#7ec8ff"); sky.addColorStop(1, "#dff3ff");
-    ictx.fillStyle = sky; ictx.fillRect(0, 0, w, horizon);
-    ictx.fillStyle = "#fff3b0"; ictx.beginPath(); ictx.arc(w * 0.78, h * 0.16, Math.min(w, h) * 0.06, 0, 6.3); ictx.fill();
-    ictx.fillStyle = "rgba(255,255,255,.85)";
-    for (i = 0; i < 4; i++) { var cx = ((i * 340 + iTimer * (12 + i * 3)) % (w + 200)) - 100, cy = h * (0.12 + (i % 3) * 0.08); ell(ictx, cx, cy, 52, 16); ictx.fill(); ell(ictx, cx - 22, cy + 4, 32, 12); ictx.fill(); ell(ictx, cx + 24, cy + 5, 34, 12); ictx.fill(); }
-    ictx.fillStyle = "#9fd4a3"; ictx.beginPath(); ictx.moveTo(0, horizon);
-    for (i = 0; i <= 8; i++) ictx.lineTo(i / 8 * w, horizon - 28 - Math.sin(i * 1.4 + 0.6) * 22);
-    ictx.lineTo(w, horizon); ictx.closePath(); ictx.fill();
-    ictx.fillStyle = "#86cf8e"; ictx.fillRect(0, horizon, w, h - horizon);
-    ictx.fillStyle = "#f5e6bd"; ictx.beginPath(); ictx.moveTo(w * 0.44, horizon); ictx.quadraticCurveTo(w * 0.36, horizon + (h - horizon) * 0.45, w * 0.5, h); ictx.lineTo(w * 0.66, h); ictx.quadraticCurveTo(w * 0.52, horizon + (h - horizon) * 0.45, w * 0.54, horizon); ictx.closePath(); ictx.fill();
-    var sh = byId(SHIRTS, save.eq.shirt), px = w * 0.5 + Math.sin(iTimer * 0.8) * 30, py = horizon + (h - horizon) * 0.42;
-    withCtx(ictx, function () { ictx.save(); ictx.translate(px, py); ictx.scale(1.5, 1.5); drawAvatar({ x: 0, y: 0, face: Math.cos(iTimer * 0.8) >= 0 ? 1 : -1, walk: iTimer * 6, moving: true, shirt: sh ? sh.color : "#ff7a6b", hair: "#5b3a29", hat: save.eq.hat, swingT: 0 }); ictx.restore(); });
-    ictx.restore();
-  }
 
-  // ---------- Play Together Intro & Away-Session Auto-Shutdown Logic ----------
+  // ---------- Play Together style intro ----------
   function initPtgIntro() {
     var wrap = $("ptg-intro-wrap");
     var splash = $("ptg-splash-studio");
     var screen = $("ptg-intro-screen");
-    var fill = $("ptg-loadingFill");
-    var pctText = $("ptg-loadingPercent");
-    var box = $("ptg-loadingBox");
-    var startBtn = $("ptg-startBtn");
-    var tipEl = $("ptgTipText");
+    var loadingBox = $("ptgLoadingBox");
+    var loadingFill = $("ptgLoadingFill");
+    var loadingPercent = $("ptgLoadingPercent");
+    var startBtn = $("ptgStartBtn");
+    var tipText = $("ptgTipText");
 
-    var tips = [
-      "💡 Mẹo: Ra Sân bay trong làng để bay sang Phố Âu, Phố Á, Châu Âu hoặc Châu Á!",
-      "💡 Mẹo: Khi vào Phố Âu / Phố Á / Châu Âu / Châu Á, tất cả sẽ là buổi tối!",
-      "💡 Mẹo: Chạm vào nhân vật trên bản đồ để kết bạn, rồi bấm Theo dõi hoặc Gọi đến!",
-      "💡 Mẹo: Mỗi lần vào phòng sẽ ghép ngẫu nhiên — dùng Theo dõi để tới đúng phòng bạn bè!"
+    function dismissIntroNow() {
+      if (!ptgIntroOpen) return;
+      ptgIntroOpen = false;
+      if (wrap) wrap.hidden = true;
+      if (splash) splash.style.display = "none";
+      if (screen) screen.classList.add("hide");
+      startGameAfterIntro();
+    }
+
+    if (!wrap) {
+      ptgIntroOpen = false;
+      startGameAfterIntro();
+      return;
+    }
+
+    var ptgTips = [
+      "💡 Mẹo: Hãy kết bạn với dân làng và khám phá 3 khu vực nhé!",
+      "🎣 Mẹo: Kéo cần câu ngay khi thấy dấu chấm than (!) trên đầu!",
+      "🦋 Mẹo: Bướm xanh và bọ cánh vàng bán được rất nhiều xu!",
+      "♻️ Mẹo: Dùng app Tái chế trong điện thoại để đổi điểm xanh lấy quà!"
     ];
-    if (tipEl) tipEl.textContent = pick(tips);
+    if (tipText) tipText.textContent = ptgTips[Math.floor(Math.random() * ptgTips.length)];
 
-    setTimeout(function () {
-      if (splash) {
-        splash.style.opacity = "0";
-        splash.style.visibility = "hidden";
-      }
+    var startedLoading = false;
+    function startPtgLoading() {
+      if (startedLoading) return;
+      startedLoading = true;
       var progress = 0;
       var interval = setInterval(function () {
-        progress += Math.floor(Math.random() * 14) + 8;
+        progress += Math.floor(Math.random() * 16) + 8;
         if (progress >= 100) {
           progress = 100;
           clearInterval(interval);
-          if (fill) fill.style.width = "100%";
-          if (pctText) pctText.textContent = "Sẵn sàng! 100%";
           setTimeout(function () {
-            if (box) box.style.display = "none";
-            if (startBtn) startBtn.style.display = "inline-block";
-          }, 260);
-        } else {
-          if (fill) fill.style.width = progress + "%";
-          if (pctText) pctText.textContent = "Đang tải dữ liệu... " + progress + "%";
+            if (!ptgIntroOpen) return;
+            if (loadingBox) loadingBox.style.display = "none";
+            if (tipText) tipText.style.display = "none";
+            if (startBtn) startBtn.style.display = "block";
+          }, 180);
         }
-      }, 130);
-    }, 950);
-
-    function enterMainWorld() {
-      if (!ptgIntroOpen) return;
-      ptgIntroOpen = false;
-      if (screen) screen.classList.add("hide");
-      setTimeout(function () {
-        if (wrap) wrap.hidden = true;
-        startGameAfterIntro();
-      }, 450);
+        if (loadingFill) loadingFill.style.width = progress + "%";
+        if (loadingPercent) loadingPercent.textContent = "Đang tải dữ liệu... " + progress + "%";
+      }, 110);
     }
 
-    if (startBtn) startBtn.addEventListener("click", enterMainWorld);
+    function hideSplashAndLoad() {
+      if (!splash) { startPtgLoading(); return; }
+      splash.style.opacity = "0";
+      splash.style.visibility = "hidden";
+      setTimeout(function () {
+        if (splash) splash.style.display = "none";
+        startPtgLoading();
+      }, 250);
+    }
+
+    // Allow tapping splash screen to skip immediately if user wants
+    if (splash) {
+      splash.addEventListener("click", hideSplashAndLoad);
+    }
+
+    setTimeout(hideSplashAndLoad, 950);
+
+    // Hard watchdog: never stay stuck on intro past 3.6s even if timer/webview throttles
+    setTimeout(function () {
+      if (ptgIntroOpen) {
+        if (splash) splash.style.display = "none";
+        if (loadingBox) loadingBox.style.display = "none";
+        if (tipText) tipText.style.display = "none";
+        if (startBtn) startBtn.style.display = "block";
+      }
+    }, 3200);
+
     if (screen) {
-      screen.addEventListener("click", function (e) {
-        if (startBtn && startBtn.style.display !== "none" && e.target !== startBtn) {
-          enterMainWorld();
+      screen.addEventListener("click", function () {
+        if (startBtn && startBtn.style.display === "block") {
+          dismissIntroNow();
         }
+      });
+    }
+    if (startBtn) {
+      startBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dismissIntroNow();
       });
     }
   }
 
-  // Thoát/ẩn app/trình duyệt: vẫn giữ trạng thái online bình thường; nếu thoát quá lâu rồi quay lại thì tự tắt & yêu cầu khởi động lại
-  function handleAppHidden() {
-    if (sessionTerminated) return;
-    if (!hiddenSinceTs) hiddenSinceTs = Date.now();
-    // Vẫn cập nhật trạng thái online bình thường khi thoát/ẩn
-    syncOnlinePresence();
+  // ---------- intro ----------
+  var STEPS = [
+    ["Làng Vui Vẻ", "Một ngày mới bắt đầu ở ngôi làng nhỏ bên mặt hồ."],
+    ["Chào mừng người mới!", "Bướm bay khắp vườn, cá cắn câu ngoài ao, và dân làng đang chờ làm bạn với bạn."],
+    ["Còn nhiều nơi để khám phá", "Đi về phía đông để ra bãi biển, đi về phía nam để vào khu rừng. Điện thoại giúp bạn kết bạn, nhập code và tái chế đồ."],
+    ["Bạn tên là gì?", ""]
+  ];
+  var istep = 0, ireplay = false, iColor = "sh_coral", iName = "Bạn", ictx = $("ic").getContext("2d"), iRaf = 0;
+  function startIntro(replay) {
+    ireplay = !!replay; istep = 0; introOpen = true; keys = {}; target = null; iColor = save.eq.shirt; iName = save.name;
+    var it = $("intro"); it.hidden = false; it.classList.remove("out"); renderIntro(); cancelAnimationFrame(iRaf); iRaf = requestAnimationFrame(introFrame);
   }
-  function handleAppVisible() {
-    if (sessionTerminated) return;
-    if (hiddenSinceTs > 0) {
-      var awayMs = Date.now() - hiddenSinceTs;
-      hiddenSinceTs = 0;
-      if (awayMs >= AWAY_LIMIT_MS) {
-        sessionTerminated = true;
-        keys = {}; target = null;
-        try { navigator.sendBeacon(FB_URL + "/online/" + encodeURIComponent(save.pid) + ".json?x-http-method-override=DELETE", ""); } catch (e) {}
-        $("restartOverlay").hidden = false;
-        return;
-      }
+  function endIntro(skip) {
+    if (!ireplay) { if (skip) { iName = save.name || "Bạn"; } save.name = iName.trim() || "Bạn"; if (!save.owned[iColor]) save.owned[iColor] = true; save.eq.shirt = iColor; save.intro = true; persist(); }
+    var it = $("intro"); it.classList.add("out"); setTimeout(function () { it.hidden = true; introOpen = false; cancelAnimationFrame(iRaf); hud(); if (!ireplay) { banner(ZONE_NAMES[Z.id]); toast("Chạm vào bản đồ hoặc dùng WASD để đi dạo. Mở Điện thoại ở góc phải."); } }, 600);
+  }
+  function renderIntro() {
+    var c = $("iCard"); c.innerHTML = ""; c.style.animation = "none"; void c.offsetWidth; c.style.animation = "";
+    var last = STEPS.length - 1, hasName = !ireplay;
+    var dots = el("div", "dots"); for (var i = 0; i < (hasName ? STEPS.length : STEPS.length - 1); i++) dots.appendChild(el("i", i === istep ? "on" : "")); c.appendChild(dots);
+    if (istep < last || !hasName) {
+      c.appendChild(el("h1", null, STEPS[istep][0])); c.appendChild(el("p", null, STEPS[istep][1]));
+      var b = el("button", "go", istep >= (hasName ? last : last - 1) ? "Quay lại làng" : "Tiếp"); b.type = "button";
+      b.addEventListener("click", function () { if (istep >= (hasName ? last : last - 1)) endIntro(false); else { istep++; renderIntro(); } });
+      if (istep >= last - 1 && !hasName) b.textContent = "Quay lại làng";
+      c.appendChild(b);
+    } else {
+      c.appendChild(el("h1", null, STEPS[last][0]));
+      var inp = el("input", "inp"); inp.type = "text"; inp.maxLength = 12; inp.value = iName; inp.id = "introName"; inp.setAttribute("aria-label", "Tên của bạn");
+      inp.addEventListener("input", function () { iName = inp.value; }); c.appendChild(inp);
+      c.appendChild(el("span", "lbl", "Chọn màu áo đầu tiên"));
+      var sw = el("div", "swatches");
+      ["sh_coral", "sh_sky", "sh_mint", "sh_sun", "sh_pink"].forEach(function (id) {
+        var s = byId(SHIRTS, id), b = el("button", "sw"); b.type = "button"; b.style.background = s.color; b.setAttribute("aria-label", s.name); b.setAttribute("aria-pressed", iColor === id ? "true" : "false");
+        b.addEventListener("click", function () { iColor = id; Array.prototype.forEach.call(sw.children, function (x) { x.setAttribute("aria-pressed", "false"); }); b.setAttribute("aria-pressed", "true"); }); sw.appendChild(b);
+      });
+      c.appendChild(sw);
+      var go = el("button", "go", "Vào làng"); go.type = "button"; go.addEventListener("click", function () { iName = inp.value; endIntro(false); }); c.appendChild(go);
     }
-    syncOnlinePresence();
   }
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) handleAppHidden();
-    else handleAppVisible();
-  });
-  window.addEventListener("pagehide", handleAppHidden);
-  window.addEventListener("pageshow", handleAppVisible);
+  $("iSkip").addEventListener("click", function () { endIntro(true); });
+  function introFrame(now) {
+    if (!introOpen) return;
+    var t = now / 1000, c = ictx, w = W, h = H;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var sky = c.createLinearGradient(0, 0, 0, h); sky.addColorStop(0, "#7ec8ff"); sky.addColorStop(0.6, "#ffe9c2"); sky.addColorStop(1, "#ffd1a1");
+    c.fillStyle = sky; c.fillRect(0, 0, w, h);
+    var sx = w * (0.25 + istep * 0.15), sy = h * 0.22;
+    var sg = c.createRadialGradient(sx, sy, 0, sx, sy, 110); sg.addColorStop(0, "rgba(255,246,200,.95)"); sg.addColorStop(1, "rgba(255,246,200,0)"); c.fillStyle = sg; c.beginPath(); c.arc(sx, sy, 110, 0, 6.3); c.fill();
+    c.fillStyle = "#fff6c8"; c.beginPath(); c.arc(sx, sy, 34, 0, 6.3); c.fill();
+    c.fillStyle = "rgba(255,255,255,.85)";
+    for (var i = 0; i < 6; i++) { var cx = ((t * (10 + i * 4) + i * 260) % (w + 300)) - 150, cy = h * (0.1 + (i % 3) * 0.1); ell(c, cx, cy, 70, 20); c.fill(); ell(c, cx + 38, cy - 12, 42, 18); c.fill(); ell(c, cx - 36, cy - 6, 36, 15); c.fill(); }
+    var layers = [["#9fd8a8", 0.58, 12, 0.004, 0.3], ["#7cc48c", 0.68, 16, 0.006, 0.6], ["#5fb176", 0.8, 22, 0.008, 1.0]];
+    layers.forEach(function (L, li) {
+      c.fillStyle = L[0]; c.beginPath(); c.moveTo(0, h);
+      var shift = t * 14 * L[4] + istep * 90 * L[4];
+      for (var x = 0; x <= w; x += 10) c.lineTo(x, h * L[1] + Math.sin((x + shift) * L[3] * 3) * L[2] + Math.sin((x + shift) * L[3] * 7) * L[2] * 0.3);
+      c.lineTo(w, h); c.closePath(); c.fill();
+      if (li === 1) { for (var k = 0; k < 7; k++) { var hx = ((k * 220 - shift * 1.1) % (w + 260) + w + 260) % (w + 260) - 60, hy = h * L[1] + Math.sin((hx + shift) * L[3] * 3) * L[2] + 6; c.fillStyle = "#fff6e0"; c.fillRect(hx, hy - 26, 34, 26); c.fillStyle = k % 2 ? "#ff7a6b" : "#5a8fd6"; c.beginPath(); c.moveTo(hx - 5, hy - 26); c.lineTo(hx + 17, hy - 46); c.lineTo(hx + 39, hy - 26); c.closePath(); c.fill(); c.fillStyle = "#8d5a3b"; c.fillRect(hx + 13, hy - 14, 9, 14); } }
+    });
+    c.strokeStyle = "#4a4e69"; c.lineWidth = 2; c.lineCap = "round";
+    for (var b = 0; b < 4; b++) { var bx = ((t * 40 + b * 180) % (w + 200)) - 100, by = h * 0.3 + Math.sin(t * 1.5 + b) * 18 + b * 14, fl = Math.sin(t * 9 + b) * 6; c.beginPath(); c.moveTo(bx - 10, by + fl); c.quadraticCurveTo(bx - 4, by - 6, bx, by); c.quadraticCurveTo(bx + 4, by - 6, bx + 10, by + fl); c.stroke(); }
+    var s = byId(SHIRTS, iColor);
+    c.save(); c.translate(w / 2, h * 0.5 + Math.sin(t * 2) * 4); var sc = Math.min(w, h) / 160; c.scale(sc, sc);
+    withCtx(c, function () { drawAvatar({ x: 0, y: 0, face: 1, walk: t * 8, moving: istep < 3, shirt: s ? s.color : "#ff7a6b", hair: "#5b3a29", hat: null, swingT: 0 }); }); c.restore();
+    iRaf = requestAnimationFrame(introFrame);
+  }
 
-  // ---------- main loop ----------
-  resize();
-  var lblSrv = $("serverLabel");
-  if (lblSrv) lblSrv.textContent = getServerInfo(currentServer).short;
-  enterZone("village", ZONES.village.spawn[0], ZONES.village.spawn[1]);
-  initFirebase();
-  initPtgIntro();
-
+  // ---------- boot ----------
   var last = performance.now();
+  var hiddenSince = 0;
+  document.addEventListener("visibilitychange", function () {
+    last = performance.now();
+    if (document.hidden) {
+      hiddenSince = Date.now();
+      touchMoveX = 0; touchMoveY = 0; target = null;
+    } else if (hiddenSince && Date.now() - hiddenSince > 30 * 60 * 1000) {
+      $("maintTitle").textContent = "Phiên chơi đã kết thúc";
+      $("maintMsg").textContent = "Bạn đã rời trò chơi quá lâu. Vui lòng khởi động lại trang để tiếp tục.";
+      $("maintOverlay").hidden = false;
+      hiddenSince = 0;
+    } else {
+      hiddenSince = 0;
+      syncOnlinePresence();
+    }
+  });
   function frame(now) {
-    var dt = Math.min((now - last) / 1000, 0.05); last = now;
-    update(dt);
-    if (introOpen) renderIntroCanvas(dt);
-    else if (!ptgIntroOpen && !sessionTerminated) render();
-    requestAnimationFrame(frame);
+    if (document.hidden) { last = now; requestAnimationFrame(frame); return; }
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    update(dt); draw(now); requestAnimationFrame(frame);
   }
+  try {
+    resize();
+    try {
+      var savedRegion = localStorage.getItem("lang-vui-region");
+      if (savedRegion === "europe" || savedRegion === "asia") currentRegion = savedRegion;
+    } catch (e) {}
+    currentServer = randomServerForRegion(currentRegion);
+    if ($("serverLabel")) $("serverLabel").textContent = getServerInfo(currentServer).short;
+    enterZone("village", 900, 640);
+    hud();
+    initFirebase();
+  } catch (bootErr) {
+    console.error("Boot error:", bootErr);
+  }
+  initPtgIntro();
   requestAnimationFrame(frame);
 })();
 </script>
